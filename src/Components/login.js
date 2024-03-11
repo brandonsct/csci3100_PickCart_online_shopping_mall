@@ -8,6 +8,7 @@ import ClockCircleOutlined from "@ant-design/icons/ClockCircleOutlined";
 import { useForm } from "antd/lib/form/Form";
 
 const { Title } = Typography;
+const API_URL = process.env.REACT_APP_API_URL;
 
 const onFinishFailed = (errorInfo) => {
   console.log("Failed:", errorInfo);
@@ -45,7 +46,7 @@ const Login = () => {
           password: formData.password,
         },
         withCredentials: true,
-        url: "http://localhost:8000/login",
+        url: `${API_URL}/login`,
       })
         .then(async (res) => {
           console.log("res>>", res);
@@ -55,7 +56,7 @@ const Login = () => {
             setSessionStorageWithExpiration("role", res.data.user.role, 120);
             setSessionStorageWithExpiration("lastUpdatedTime", res.data.timestamp, 120);
             //expire after 2 hrs
-            navigate("/venue");
+            navigate("/home");
           }
         })
         .catch((err) => {
