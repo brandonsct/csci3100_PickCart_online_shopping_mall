@@ -72,3 +72,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+//git pull and then need to npm install every time
+
+//To use this website:
+
+go to url/register input email. then use OTP in register page for registration
+
+And then go url/login with your password and username.
