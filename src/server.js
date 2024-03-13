@@ -9,6 +9,9 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const LoginSchema = require("./schemas.js").LoginSchema;
 const LoginModel = mongoose.model("login", LoginSchema);
+const TokenSchema = require("./schemas.js").TokenSchema;
+const TokenModel = mongoose.model("token", TokenSchema);
+const sendemail = require("./tokenSender.js")
 require('dotenv').config();
 
 const port = process.env.PORT || 3000;
@@ -48,6 +51,42 @@ db.once("open", function () {
 app.get("/register", (req, res) => {
   res.send("Authenticated");
 });
+
+app.post("/sendemail", async (req, res) => {
+  try {
+    console.log("reqqq>>", req.body)
+    const { formData: values } = req?.body;
+    const token = sendemail(values.email)
+    TokenModel.create({
+      email: values.email,
+      token: token
+    })
+      .then((user) => res.json(user))
+      .catch((err) => res.json(err));
+  } catch (error) {
+    console.log("error>>", error);
+    res.json(error);
+  }
+})
+
+app.post("/checkotp", async (req, res) => {
+  try {
+    console.log("req>>", req.body)
+    const { formData: values } = req?.body;
+    const userotp = parseInt(values.otp)
+    console.log(typeof(userotp))
+    TokenModel.find({ token: userotp })
+    .then((result) => {
+      console.log("resultofot[]>>", result)
+      if (result.length === 0) res.status(200).send(false);
+      else res.status(200).send(true);
+    })
+    .catch(() => res.status(500).send("Internal Server error"));
+  } catch (error) {
+    console.log("error>>", error);
+    res.json(error);
+  }
+})
 
 app.get("/login", (req, res) => {
   res.status(403).send("login");
@@ -105,81 +144,100 @@ app.post("/userbyusername", (req, res) => {
     .catch((error) => {
       res.status(404).send("Error finding user:", error);
     });
+});
 
-  app.post("/register", async (req, res) => {
-    try {
-      const { formData: values } = req.body;
-      console.log("values>>", values);
-      const username = values.username ? values.username : "";
-      const email = "test@cuhk.edu.hk";
-      const password = values.password ? await bcrypt.hash(values.password, 10) : "";
-      const role = values.role ? values.role : "user";
-      console.log("username>> ", username);
-      console.log("email>> ", email);
-      console.log("password>> ", password);
+app.post("/register", async (req, res) => {
+  try {
+    const { formData: values } = req.body;
+    console.log("values>>", values);
+    const username = values.username ? values.username : "";
+    const email = values.email ? values.email : "";
+    const password = values.password ? await bcrypt.hash(values.password, 10) : "";
+    const role = values.role ? values.role : "user";
+    console.log("username>> ", username);
+    console.log("email>> ", email);
+    console.log("password>> ", password);
 
-      if (!username || !email || !password || !role) {
-        return res.status(406).send("Field missing");
-      }
-
-      LoginModel.create({
-        username: username,
-        email: email,
-        password: password,
-        role: role,
-      })
-        .then((user) => res.json(user))
-        .catch((err) => res.json(err));
-    } catch (error) {
-      console.log("error>>", error);
-      res.json(error);
+    if (!username || !email || !password || !role) {
+      return res.status(406).send("Field missing");
     }
-  });
 
-  app.delete("/logout", (req, res, next) => {
-    req.logout(function (err) {
-      if (err) {
-        return next(err);
-      }
-      res.status(200).send("OK");
-    });
-  });
-
-  app.get("/checkAuth", (req, res) => {
-    res.set("Content-Type", "application/json");
-    console.log("checking>>>");
-    if (req.isAuthenticated()) {
-      console.log("checkAuth");
-      return res.status(200).send(req.user);
-    }
-    return res.status(403).send("Not Auth");
-  });
-
-  function checkAuth(req, res, next) {
-    console.log("req.user>", req.user);
-    console.log("req.isAuthenticated())>>", req.isAuthenticated());
-    if (req.isAuthenticated()) {
-      console.log("req.isAuthenticated>>", req.isAuthenticated);
-      return next();
-    }
-    console.log("redirectted");
-    res.redirect("/login");
+    LoginModel.create({
+      username: username,
+      email: email,
+      password: password,
+      role: role,
+    })
+      .then((user) => res.json(user))
+      .catch((err) => res.json(err));
+  } catch (error) {
+    console.log("error>>", error);
+    res.json(error);
   }
+});
 
-  app.get("/home", checkAuth, (req, res) => {
-    res.send("Authenticated");
-  });
-
-  app.get("/checkUsername", (req, res) => {
-    LoginModel.find({})
-      .then((result) => {
-        const usernames = result.map((obj) => obj.username);
-        console.log("usernames>>", usernames);
-        res.status(200).send(usernames);
-      })
-      .catch(() => res.status(500).send("Internal Server error"));
+app.delete("/logout", (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.status(200).send("OK");
   });
 });
+
+app.get("/checkAuth", (req, res) => {
+  res.set("Content-Type", "application/json");
+  console.log("checking>>>");
+  if (req.isAuthenticated()) {
+    console.log("checkAuth");
+    return res.status(200).send(req.user);
+  }
+  return res.status(403).send("Not Auth");
+});
+
+function checkAuth(req, res, next) {
+  console.log("req.user>", req.user);
+  console.log("req.isAuthenticated())>>", req.isAuthenticated());
+  if (req.isAuthenticated()) {
+    console.log("req.isAuthenticated>>", req.isAuthenticated);
+    return next();
+  }
+  console.log("redirectted");
+  res.redirect("/login");
+}
+
+app.get("/home", checkAuth, (req, res) => {
+  res.send("Authenticated");
+});
+
+app.post("/checkemail", (req, res) => {
+  console.log("req.body>>", req.body)
+  const { formData: values } = req?.body;
+  console.log("email>>", values.email)
+  LoginModel.find({ email: values.email })
+    .then((result) => {
+      console.log("resultEmail>>", result)
+      if (result.length === 0) res.status(200).send(false);
+      else res.status(200).send(true);
+    })
+    .catch(() => res.status(500).send("Internal Server error"));
+});
+
+app.post("/checkusername", (req, res) => {
+  const { formData: values } = req?.body;
+  console.log("valeu.s", values.username)
+  LoginModel.find({ username: values.username })
+    .then((result) => {
+      console.log("resultUser>>", result)
+      if (result.length === 0) res.status(200).send(false);
+      else res.status(200).send(true);
+    })
+    .catch(() => res.status(500).send("Internal Server error"));
+});
+
+
+
+
 
 
 // get users data
@@ -245,6 +303,7 @@ app.put("/updateuser/:id", async (req, res) => {
       console.log(error);
     });
 });
+
 
 // listen to port 8000
 const server = app.listen(api_port);
