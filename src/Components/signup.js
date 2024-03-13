@@ -6,23 +6,35 @@ import NavBar from "./navbar";
 import { UserAddOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import { useForm } from "antd/lib/form/Form";
 import SuccessPage from "./Success";
+import VerifyMailPage from "./verifyMail"
+const API_URL = process.env.REACT_APP_API_URL;
 const { Title } = Typography;
 
 const onFinishFailed = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
 
+
+
 const RegisterPage = () => {
+  const [isVerified, setIsVerified] = useState(false)
+  const handleDataFromChild = (data) => {
+    setIsVerified(data)
+  }
+  console.log("isVerified>>", isVerified)
   return (
     <>
       {/* <NavBar /> */}
-      <div>
-        <SignUp />
-      </div>
+      {isVerified ? (
+        <div>
+          <SignUp email={isVerified.email}/>
+        </div>) :
+        <VerifyMailPage sendVerifyToParent={handleDataFromChild} />
+      }
     </>
   );
 };
-export const SignUp = () => {
+export const SignUp = ({email}) => {
   const [form] = useForm();
   const [showErr, setShowErr] = useState(false);
   const [userNameUsed, setUserNameUsed] = useState(false);
@@ -33,19 +45,13 @@ export const SignUp = () => {
     password: "",
     confirmPassword: "",
     role: "",
+    email: email
   });
   const [formSubmit, setFormSubmit] = useState(false);
   const [userdata, setUserData] = useState();
   const passwordRegex = /^(?=.*[A-Z]).{4,}$/;
   const navigate = useNavigate();
-  let role;
-  try {
-    role = JSON.parse(sessionStorage.getItem("role")).value;
-  } catch (error) {
-    console.log("error>>", error);
-  }
-  console.log("type>>", typeof role);
-  console.log("role>>", role);
+  console.log("getEmail>>", email)
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
@@ -53,22 +59,33 @@ export const SignUp = () => {
     cb(state);
     form.resetFields();
   };
+  const getUserNames = () => {
+    axios
+      .post(`${API_URL}/checkusername`, {formData})
+      .then((res) => {
+       if (res.data === true) setUserNameUsed(true)
+       else setUserNameUsed(false)
+      console.log("userNameUsed>>", userNameUsed)
+      })
+      .catch((err) => console.log("err>>", err));
+  };
 
   const handleSubmit = async (values) => {
+    getUserNames();
     console.log("submit");
     console.log("values>>", formData);
     if (formData.password !== formData.confirmPassword) return setError(setShowErr, true);
     else setError(setShowErr, false);
     if (!passwordRegex.test(formData.password)) return setError(setWrongPw, true);
     else setError(setWrongPw, false);
-    if (usernames.includes(formData.username)) return setError(setUserNameUsed, true);
+    if (userNameUsed) return setError(setUserNameUsed, true);
     else setError(setUserNameUsed, false);
     console.log("cp877", !passwordRegex.test(formData.password))
     if (showErr || userNameUsed || wrongPw) return;
 
     console.log("Success:", values);
     try {
-      const postResult = await axios.post("http://localhost:8000/register", { formData });
+      const postResult = await axios.post(`${API_URL}/register`, { formData });
       console.log("postResult>>", postResult);
       if (postResult.status === 200) {
         setUserData(postResult.data);
@@ -79,29 +96,9 @@ export const SignUp = () => {
     }
   };
   useEffect(() => {
-    const getUserNames = () => {
-      axios
-        .get("http://localhost:8000/checkUsername")
-        .then((res) => {
-          setUsernames(res.data);
-        })
-        .catch((err) => console.log("err>>", err));
-    };
-    getUserNames();
+    
   }, []);
 
-  // if (role !== "admin") {
-  //   return (
-  //     <div style={{ width: "50%", margin: "auto" }}>
-  //       <SuccessPage
-  //         status="403"
-  //         title="403"
-  //         subTitle="Sorry, you are not authorized to access this page."
-  //         path="/venue"
-  //       />
-  //     </div>
-  //   );
-  // }
   return (
     <>
       {!formSubmit ? (
@@ -121,12 +118,31 @@ export const SignUp = () => {
             }}
             initialValues={{
               remember: true,
+              ['email']: email
             }}
             onFinish={handleSubmit}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
-            // disabled={true}
+          // disabled={true}
+          > <Form.Item
+            labelCol={{
+              span: 8,
+            }}
+            wrapperCol={{
+              span: 16,
+            }}
+            label="email"
+            name="email"
+            rules={[{ required: true, message: "email is required" }]}
+            style={{ color: "red", textAlign: "left" }}
+            disabled={true}
           >
+              <Input
+                type="string"
+                name="email"
+                disabled={true}
+              />
+            </Form.Item>
             <Form.Item
               labelCol={{
                 span: 8,
