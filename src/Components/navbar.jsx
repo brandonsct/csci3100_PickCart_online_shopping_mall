@@ -33,7 +33,9 @@ const NavBar = (props) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/checkAuth", { withCredentials: true });
+        const res = await axios.get("http://localhost:8000/checkAuth", {
+          withCredentials: true,
+        });
         setUser(res.data);
       } catch (error) {
         setUser(null);
@@ -45,19 +47,34 @@ const NavBar = (props) => {
   // console.log("user>>", user);
   if (!user) {
     return (
-      <Menu mode="horizontal" theme="dark" style={{ display: "flex", justifyContent: "space-between" }}>
+      <Menu
+        mode="horizontal"
+        theme="dark"
+        style={{ display: "flex", justifyContent: "space-between" }}
+      >
         <Menu.Item key="left-item" style={{ marginLeft: 100 }}>
           {component}
         </Menu.Item>
-        <Menu.Item key="right-item" style={{ marginLeft: "auto" }} icon={<UserOutlined />} />
+        <Menu.Item
+          key="right-item"
+          style={{ marginLeft: "auto" }}
+          icon={<UserOutlined />}
+        />
       </Menu>
     );
   } else {
     return (
-      <Menu mode="horizontal" theme="dark" style={{ justifyContent: "flex-end" }}>
+      <Menu
+        mode="horizontal"
+        theme="dark"
+        style={{ justifyContent: "flex-end" }}
+      >
         <Row>
           <Menu.Item key="venue" onClick={() => navigate("/venue")}>
-            <HomeOutlined style={{ marginRight: 10 }} />
+            <HomeOutlined
+              // style={{ marginRight: 10 }}
+              class="mr-2.5"
+            />
             Venues
           </Menu.Item>
           <Menu.Item key="favourites" onClick={() => navigate("/venue/fav")}>
@@ -69,19 +86,29 @@ const NavBar = (props) => {
             Event Invitations
           </Menu.Item>
           <Menu.Item key="right-item" style={{ marginLeft: "auto" }}>
-            <SubMenu key="SubMenu" icon={<UserOutlined />} title={user.username}>
+            <SubMenu
+              key="SubMenu"
+              icon={<UserOutlined />}
+              title={user.username}
+            >
               <Menu.Item key="setting:1" onClick={logOut}>
                 Logout
               </Menu.Item>
               {user.role == "admin" ? (
-                <Menu.Item key="setting:2" onClick={() => navigate("/admin/user")}>
+                <Menu.Item
+                  key="setting:2"
+                  onClick={() => navigate("/admin/user")}
+                >
                   Manage Users
                 </Menu.Item>
               ) : (
                 <></>
               )}
               {user.role == "admin" ? (
-                <Menu.Item key="setting:3" onClick={() => navigate("/admin/event")}>
+                <Menu.Item
+                  key="setting:3"
+                  onClick={() => navigate("/admin/event")}
+                >
                   Manage Events
                 </Menu.Item>
               ) : (

@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import { Button, Checkbox, Form, Input, Typography, Col, Row, Space } from "antd";
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Typography,
+  Col,
+  Row,
+  Space,
+} from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import NavBar from "./navbar";
-import "bootstrap/dist/css/bootstrap.css";
+import NavBar from "../Components/navbar";
+
 import ClockCircleOutlined from "@ant-design/icons/ClockCircleOutlined";
 import { useForm } from "antd/lib/form/Form";
 
@@ -52,9 +61,17 @@ const Login = () => {
           console.log("res>>", res);
           if (res.status == 200) {
             console.log("res.data>>", res.data);
-            setSessionStorageWithExpiration("username", res.data.user.username, 120);
+            setSessionStorageWithExpiration(
+              "username",
+              res.data.user.username,
+              120
+            );
             setSessionStorageWithExpiration("role", res.data.user.role, 120);
-            setSessionStorageWithExpiration("lastUpdatedTime", res.data.timestamp, 120);
+            setSessionStorageWithExpiration(
+              "lastUpdatedTime",
+              res.data.timestamp,
+              120
+            );
             //expire after 2 hrs
             navigate("/home");
           }
@@ -71,7 +88,9 @@ const Login = () => {
   return (
     <>
       <NavBar />
-      <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: 100 }}
+      >
         <Form
           name="basic"
           labelCol={{
@@ -108,7 +127,9 @@ const Login = () => {
           >
             <Input
               type="string"
-              placeholder={!formData.username ? "username is required" : "input username"}
+              placeholder={
+                !formData.username ? "username is required" : "input username"
+              }
               name="username"
               onChange={handleChange}
               status={!formData.username ? "error" : ""}
@@ -131,7 +152,9 @@ const Login = () => {
             help={showErr ? "username and password not match" : ""}
           >
             <Input.Password
-              placeholder={!formData.password ? "password is required" : "input password"}
+              placeholder={
+                !formData.password ? "password is required" : "input password"
+              }
               name="password"
               onChange={handleChange}
               status={!formData.password ? "error" : ""}

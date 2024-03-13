@@ -1,0 +1,157 @@
+import React, { useEffect, useState } from "react";
+import { Button, Form, Input } from "antd";
+import { ClockCircleOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { useForm } from "antd/lib/form/Form";
+const API_URL = process.env.REACT_APP_API_URL;
+
+const VerifyPage = ({ sendVerifyToParent }) => {
+  const [form] = useForm();
+  const [emailPassed, setEmailPassed] = useState(false);
+  const [emailUsed, setEmailUsed] = useState(false);
+  const [otpinValid, setOtpinValid] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    otp: "",
+  });
+  const handleChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+  const sendEmail = async () => {
+    try {
+      const postResult = await axios.post(`${API_URL}/sendemail`, { formData });
+      console.log("postResult>>", postResult);
+      if (postResult.status === 200) {
+        console.log("email send");
+      }
+    } catch (error) {
+      console.log("error>>", error);
+    }
+  };
+
+  const getEmail = () => {
+    console.log("formData>>", formData);
+    axios
+      .post(`${API_URL}/checkemail`, { formData })
+      .then((res) => {
+        if (res.data === true) {
+          setEmailUsed(res.data);
+          return form.resetFields();
+        } else {
+          sendEmail();
+          return setEmailPassed(true);
+        }
+      })
+      .catch((err) => console.log("err>>", err));
+  };
+
+  const handleSubmit = async (values) => {
+    try {
+      const postResult = await axios.post(`${API_URL}/checkotp`, { formData });
+      console.log("postResult>>", postResult);
+      if (postResult && postResult?.status === 200) {
+        if (postResult.data === false) return setOtpinValid(true);
+        else sendVerifyToParent({ verified: true, email: values.email });
+      }
+    } catch (error) {
+      console.log("error>>", error);
+    }
+  };
+  return (
+    <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
+      <Form
+        form={form}
+        name="basic"
+        labelCol={{
+          span: 8,
+        }}
+        wrapperCol={{
+          span: 16,
+        }}
+        style={{
+          width: "50%",
+          alignContent: "center",
+        }}
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={handleSubmit}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
+        <Form.Item
+          labelCol={{
+            span: 8,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
+          label="email"
+          name="email"
+          rules={[{ required: true, message: "email is required" }]}
+          style={{ color: "red", textAlign: "left" }}
+        >
+          <Input
+            type="string"
+            name="email"
+            placeholder={
+              emailUsed ? "email is in used" : "please enter your email"
+            }
+            onChange={handleChange}
+            status={emailUsed ? "error" : ""}
+            prefix={emailUsed ? <ClockCircleOutlined /> : null}
+            disabled={emailPassed}
+          />
+        </Form.Item>
+        {!emailPassed && (
+          <Button
+            type="primary"
+            onClick={getEmail}
+            disabled={!formData.email ? true : false}
+          >
+            Verify
+          </Button>
+        )}
+        {emailPassed && (
+          <Form.Item
+            labelCol={{
+              span: 8,
+            }}
+            wrapperCol={{
+              span: 16,
+            }}
+            label="otp"
+            name="otp"
+            rules={[{ required: true, message: "otp is required" }]}
+            style={{ color: "red", textAlign: "left" }}
+          >
+            <Input
+              type="number"
+              name="otp"
+              placeholder={
+                otpinValid ? "otp is inValid" : "please enter your otp"
+              }
+              onChange={handleChange}
+              status={otpinValid ? "error" : ""}
+              prefix={otpinValid ? <ClockCircleOutlined /> : null}
+            />
+          </Form.Item>
+        )}
+        {emailPassed && (
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={!formData.otp ? true : false}
+          >
+            VerifyOtp
+          </Button>
+        )}
+      </Form>
+    </div>
+  );
+};
+
+export default VerifyPage;

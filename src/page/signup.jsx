@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Form, Input, Typography, Radio } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import NavBar from "./navbar";
+import NavBar from "../Components/navbar";
 import { UserAddOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import { useForm } from "antd/lib/form/Form";
-import SuccessPage from "./Success";
-import VerifyMailPage from "./verifyMail"
+import SuccessPage from "../Components/Success";
+import VerifyMailPage from "../Components/verifyMail";
 const API_URL = process.env.REACT_APP_API_URL;
 const { Title } = Typography;
 
@@ -14,27 +14,26 @@ const onFinishFailed = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
 
-
-
 const RegisterPage = () => {
-  const [isVerified, setIsVerified] = useState(false)
+  const [isVerified, setIsVerified] = useState(false);
   const handleDataFromChild = (data) => {
-    setIsVerified(data)
-  }
-  console.log("isVerified>>", isVerified)
+    setIsVerified(data);
+  };
+  console.log("isVerified>>", isVerified);
   return (
     <>
-      {/* <NavBar /> */}
+      <NavBar />
       {isVerified ? (
         <div>
-          <SignUp email={isVerified.email}/>
-        </div>) :
+          <SignUp email={isVerified.email} />
+        </div>
+      ) : (
         <VerifyMailPage sendVerifyToParent={handleDataFromChild} />
-      }
+      )}
     </>
   );
 };
-export const SignUp = ({email}) => {
+export const SignUp = ({ email }) => {
   const [form] = useForm();
   const [showErr, setShowErr] = useState(false);
   const [userNameUsed, setUserNameUsed] = useState(false);
@@ -45,13 +44,13 @@ export const SignUp = ({email}) => {
     password: "",
     confirmPassword: "",
     role: "",
-    email: email
+    email: email,
   });
   const [formSubmit, setFormSubmit] = useState(false);
   const [userdata, setUserData] = useState();
   const passwordRegex = /^(?=.*[A-Z]).{4,}$/;
   const navigate = useNavigate();
-  console.log("getEmail>>", email)
+  console.log("getEmail>>", email);
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
@@ -61,11 +60,11 @@ export const SignUp = ({email}) => {
   };
   const getUserNames = () => {
     axios
-      .post(`${API_URL}/checkusername`, {formData})
+      .post(`${API_URL}/checkusername`, { formData })
       .then((res) => {
-       if (res.data === true) setUserNameUsed(true)
-       else setUserNameUsed(false)
-      console.log("userNameUsed>>", userNameUsed)
+        if (res.data === true) setUserNameUsed(true);
+        else setUserNameUsed(false);
+        console.log("userNameUsed>>", userNameUsed);
       })
       .catch((err) => console.log("err>>", err));
   };
@@ -74,13 +73,15 @@ export const SignUp = ({email}) => {
     getUserNames();
     console.log("submit");
     console.log("values>>", formData);
-    if (formData.password !== formData.confirmPassword) return setError(setShowErr, true);
+    if (formData.password !== formData.confirmPassword)
+      return setError(setShowErr, true);
     else setError(setShowErr, false);
-    if (!passwordRegex.test(formData.password)) return setError(setWrongPw, true);
+    if (!passwordRegex.test(formData.password))
+      return setError(setWrongPw, true);
     else setError(setWrongPw, false);
     if (userNameUsed) return setError(setUserNameUsed, true);
     else setError(setUserNameUsed, false);
-    console.log("cp877", !passwordRegex.test(formData.password))
+    console.log("cp877", !passwordRegex.test(formData.password));
     if (showErr || userNameUsed || wrongPw) return;
 
     console.log("Success:", values);
@@ -95,14 +96,14 @@ export const SignUp = ({email}) => {
       console.log("error>>", error);
     }
   };
-  useEffect(() => {
-    
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <>
       {!formSubmit ? (
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
+        <div
+          style={{ display: "flex", justifyContent: "center", marginTop: 100 }}
+        >
           <Form
             form={form}
             name="basic"
@@ -118,30 +119,28 @@ export const SignUp = ({email}) => {
             }}
             initialValues={{
               remember: true,
-              ['email']: email
+              ["email"]: email,
             }}
             onFinish={handleSubmit}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
-          // disabled={true}
-          > <Form.Item
-            labelCol={{
-              span: 8,
-            }}
-            wrapperCol={{
-              span: 16,
-            }}
-            label="email"
-            name="email"
-            rules={[{ required: true, message: "email is required" }]}
-            style={{ color: "red", textAlign: "left" }}
-            disabled={true}
+            // disabled={true}
           >
-              <Input
-                type="string"
-                name="email"
-                disabled={true}
-              />
+            {" "}
+            <Form.Item
+              labelCol={{
+                span: 8,
+              }}
+              wrapperCol={{
+                span: 16,
+              }}
+              label="email"
+              name="email"
+              rules={[{ required: true, message: "email is required" }]}
+              style={{ color: "red", textAlign: "left" }}
+              disabled={true}
+            >
+              <Input type="string" name="email" disabled={true} />
             </Form.Item>
             <Form.Item
               labelCol={{
@@ -178,7 +177,9 @@ export const SignUp = ({email}) => {
               style={{ color: "red", textAlign: "left" }}
             >
               <Input.Password
-                placeholder={wrongPw ? "password not strong enough" : "input password"}
+                placeholder={
+                  wrongPw ? "password not strong enough" : "input password"
+                }
                 name="password"
                 onChange={handleChange}
                 status={wrongPw ? "error" : ""}
@@ -198,7 +199,9 @@ export const SignUp = ({email}) => {
               style={{ color: "red", textAlign: "left" }}
             >
               <Input.Password
-                placeholder={showErr ? "password not match" : "confirm password"}
+                placeholder={
+                  showErr ? "password not match" : "confirm password"
+                }
                 name="confirmPassword"
                 onChange={handleChange}
                 status={showErr ? "error" : ""}
@@ -216,7 +219,11 @@ export const SignUp = ({email}) => {
               name="role"
               style={{ textAlign: "left" }}
             >
-              <Radio.Group name="role" onChange={handleChange} defaultValue={"user"}>
+              <Radio.Group
+                name="role"
+                onChange={handleChange}
+                defaultValue={"user"}
+              >
                 <Radio.Button value="user">User</Radio.Button>
                 <Radio.Button value="admin">Admin</Radio.Button>
               </Radio.Group>
@@ -224,7 +231,13 @@ export const SignUp = ({email}) => {
             <Button
               type="primary"
               htmlType="submit"
-              disabled={!formData.username || !formData.password || !formData.confirmPassword ? true : false}
+              disabled={
+                !formData.username ||
+                !formData.password ||
+                !formData.confirmPassword
+                  ? true
+                  : false
+              }
             >
               Register
             </Button>

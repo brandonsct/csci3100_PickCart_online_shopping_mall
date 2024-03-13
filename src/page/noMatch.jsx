@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Result } from 'antd';
-import '../App.css'
+import { Button, Result } from "antd";
+import "../App.css";
 
 function NoMatch(props) {
   const navigate = useNavigate();
