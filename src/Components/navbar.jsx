@@ -70,12 +70,12 @@ const NavBar = (props) => {
         style={{ justifyContent: "flex-end" }}
       >
         <Row>
-          <Menu.Item key="venue" onClick={() => navigate("/venue")}>
+          <Menu.Item key="cart" onClick={() => navigate("/cart")}>
             <HomeOutlined
               // style={{ marginRight: 10 }}
               class="mr-2.5"
             />
-            Venues
+            Cart
           </Menu.Item>
           <Menu.Item key="favourites" onClick={() => navigate("/venue/fav")}>
             <FaHeart style={{ marginRight: 10 }} />

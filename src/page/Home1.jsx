@@ -20,8 +20,7 @@ const Home1 = () => {
   return (
     <div class="h-screen">
       <NavBar />
-
-      <Layout>
+      <Layout style={{ height: "100vh" }}>
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="demo-logo-vertical" />
           <Menu
@@ -38,6 +37,11 @@ const Home1 = () => {
                 key: "2",
                 icon: <VideoCameraOutlined />,
                 label: "nav 2",
+              },
+              {
+                key: "3",
+                icon: <UploadOutlined />,
+                label: "nav 3",
               },
               {
                 key: "3",

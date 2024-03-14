@@ -35,6 +35,12 @@ const items = [
     getItem("Option 11", "11"),
     getItem("Option 12", "12"),
   ]),
+  getItem("Navigation Four", "sub5", <SettingOutlined />, [
+    getItem("Option 13", "13"),
+    getItem("Option 14", "14"),
+    getItem("Option 15", "15"),
+    getItem("Option 16", "16"),
+  ]),
 ];
 const VerticalNav = ({ themeColor }) => {
   //   const [theme, setTheme] = useState("dark");
@@ -49,7 +55,7 @@ const VerticalNav = ({ themeColor }) => {
     <>
       <Menu
         theme={themeColor}
-        // onClick={onClick}
+        onClick={onClick}
         style={{
           width: 256,
         }}
