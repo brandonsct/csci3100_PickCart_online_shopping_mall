@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./page/login.jsx";
 import NoMatch from "./page/noMatch.jsx";
 import RegisterPage from "./page/signup.jsx";
-import Home from "./page/Home.jsx";
+import Home from "./page/Home1.jsx";
 
 function App() {
   return (
