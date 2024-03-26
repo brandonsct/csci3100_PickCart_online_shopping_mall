@@ -52,6 +52,7 @@ const VerifyPage = ({ sendVerifyToParent }) => {
           setEmailUsed(res.data);
           return form.resetFields();
         } else {
+          setEmailUsed(res.data);
           sendEmail();
           return setEmailPassed(true);
         }

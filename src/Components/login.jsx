@@ -163,9 +163,10 @@ const Login = () => {
               prefix={!formData.password ? <ClockCircleOutlined /> : null}
             />
           </Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" style={{width: '100%'}}>
             Sign In
         </Button>
+        <a>Forgot password?</a>
         </Form>
       </div>
     </>
