@@ -96,8 +96,8 @@ const data = [
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
-const Home1 = () => {
-  const [collapsed, setCollapsed] = useState(false);
+const Home2 = ({collapsed, setCollapsed}) => {
+//   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -124,58 +124,7 @@ const Home1 = () => {
   const onSearch = (value, _e, info) => console.log(info?.source, value);
 
   return (
-    <div class="" id="bottomPage">
-      <Layout style={{ height: "100vh" }}>
-         <Sider trigger={null} collapsible collapsed={collapsed} >
-          <Row gutter={16}>
-            <Col span={8}>
-              <div className="demo-logo-vertical" style={{ margin: 10 }}>
-                <LogoSidebar /> 
-              </div>
-            </Col>
-            { !collapsed ? <Col span={16}>
-              <div style={{ fontFamily: "Times New Roman", fontSize: 24, color: "white", marginTop: 20}}>
-                Pick Cart
-              </div>
-            </Col>
-            : ""
-            }
-          </Row>
-          <div className="demo-logo-vertical" />
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultSelectedKeys={["1"]}
-            items={[
-              {
-                key: "1",
-                icon: <UserOutlined />,
-                label: "nav 1",
-              },
-              {
-                key: "2",
-                icon: <VideoCameraOutlined />,
-                label: "nav 2",
-              },
-              {
-                key: "3",
-                icon: <UploadOutlined />,
-                label: "nav 3",
-              },
-              {
-                key: "4",
-                icon: <UploadOutlined />,
-                label: "nav 3",
-              },
-              {
-                key: "5",
-                icon: <LogoutOutlined />,
-                label: "logout",
-                onClick: logOut
-              },
-            ]}
-          />
-        </Sider>
+    <>
         <Layout>
           <Header
             style={{
@@ -183,16 +132,6 @@ const Home1 = () => {
               background: colorBgContainer,
             }}
           >
-            <Button
-              type="text"
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => setCollapsed(!collapsed)}
-              style={{
-                fontSize: "16px",
-                width: 64,
-                height: 64,
-              }}
-            />
           </Header>
           <Content
             style={{
@@ -249,8 +188,7 @@ const Home1 = () => {
             />
           </Content>
         </Layout>
-      </Layout>
-    </div>
+      </>
   );
 };
-export default Home1;
+export default Home2;
