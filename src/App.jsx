@@ -6,6 +6,8 @@ import UserLogin from "./page/UserLogin.jsx";
 import NoMatch from "./page/noMatch.jsx";
 import RegisterPage from "./Components/signup.jsx";
 import Home from "./page/Home1.jsx";
+import Main from "./page/Main.jsx"
+import Home2 from "./page/Home2.jsx";
 
 function App() {
   return (
@@ -15,7 +17,7 @@ function App() {
         <Route path="/admin/login" element={<UserLogin admin={true}/>} />
           <Route path="/login" element={<UserLogin admin={false}/>} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<Main Page_component={<Home2/>}/>} />
 
           <Route path="*" element={<NoMatch />} />
         </Routes>
