@@ -5,8 +5,9 @@ import {
     MenuUnfoldOutlined,
     UploadOutlined,
     UserOutlined,
-    VideoCameraOutlined,
-    LogoutOutlined
+    ShoppingCartOutlined,
+    LogoutOutlined,
+    HomeOutlined
 } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Input, Layout, Menu, Image, Button, theme, Card, List, Row, Col } from "antd";
@@ -46,36 +47,38 @@ const Main = ({ Page_component }) => {
     const items = [
         {
             key: "1",
-            icon: <UserOutlined />,
-            label: "nav 1",
+            icon: <HomeOutlined />,
+            label: "Home",
+            onClick: () => navigate("/home")
         },
         {
             key: "2",
-            icon: <VideoCameraOutlined />,
-            label: "nav 2",
+            icon: <UserOutlined />,
+            label: "User Profile",
+            onClick: () => navigate("/profile")
         },
         {
             key: "3",
-            icon: <UploadOutlined />,
-            label: "nav 3",
+            icon: <ShoppingCartOutlined />,
+            label: "Cart",
         },
+        // {
+        //     key: "4",
+        //     icon: <UploadOutlined />,
+        //     label: "nav 3",
+        // },
+        // {
+        //     key: "5",
+        //     icon: <UploadOutlined />,
+        //     label: "nav 3",
+        // },
         {
-            key: "4",
-            icon: <UploadOutlined />,
-            label: "nav 3",
-        },
-        {
-            key: "5",
+            key: "6",
             icon: <LogoutOutlined />,
             label: "logout",
             onClick: logOut
         },
     ]
-    const childProps = {
-        collapsed: collapsed,
-        setCollapsed: setCollapsed,
-    };
-
     return (
         <div class="" id="bottomPage">
             <Layout style={{ height: "100vh" }}>
@@ -119,7 +122,6 @@ const Main = ({ Page_component }) => {
                         />
                     </div>
                 </Sider>
-
                 {Page_component}
             </Layout>
         </div>
