@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, Checkbox, Form, Input, Typography, Radio } from "antd";
+import { Button, Checkbox, Form, Input, Typography, Radio, DatePicker, Row, Col } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../Components/navbar";
+import NavBar from "./navbar";
 import { UserAddOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import { useForm } from "antd/lib/form/Form";
-import SuccessPage from "../Components/Success";
-import VerifyMailPage from "../Components/verifyMail";
+import SuccessPage from "./Success";
+import VerifyMailPage from "./verifyMail";
 const API_URL = process.env.REACT_APP_API_URL;
 const { Title } = Typography;
 
@@ -22,7 +22,7 @@ const RegisterPage = () => {
   console.log("isVerified>>", isVerified);
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       {isVerified ? (
         <div>
           <SignUp email={isVerified.email} />
@@ -39,12 +39,14 @@ export const SignUp = ({ email }) => {
   const [userNameUsed, setUserNameUsed] = useState(false);
   const [usernames, setUsernames] = useState([]);
   const [wrongPw, setWrongPw] = useState(false);
+  const [date, setDate]=useState('')
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     confirmPassword: "",
     role: "",
     email: email,
+    birthday: ""
   });
   const [formSubmit, setFormSubmit] = useState(false);
   const [userdata, setUserData] = useState();
@@ -58,19 +60,32 @@ export const SignUp = ({ email }) => {
     cb(state);
     form.resetFields();
   };
-  const getUserNames = () => {
-    axios
-      .post(`${API_URL}/checkusername`, { formData })
-      .then((res) => {
-        if (res.data === true) setUserNameUsed(true);
-        else setUserNameUsed(false);
-        console.log("userNameUsed>>", userNameUsed);
-      })
-      .catch((err) => console.log("err>>", err));
+
+  const handleDateChange = (dates, dateStrings) => {
+    console.log(`data>> ${dates}>>dateStrings>>${dateStrings}`)
+    setFormData({ ...formData, birthday: dateStrings });
   };
 
+  const getUserNames = async () => {
+    try {
+      const res = await axios.post(`${API_URL}/checkusername`, { formData });
+      console.log("res.dataUsern>>", res.data);
+      if (res.data === true) {
+        setUserNameUsed(res.data);
+        return true
+      } else {
+        setUserNameUsed(res.data);
+        return false
+      }
+    } catch (err) {
+      console.log("err>>", err);
+    }
+  };
+
+
   const handleSubmit = async (values) => {
-    getUserNames();
+    let used = await getUserNames();
+    console.log("userNameUsed>>", userNameUsed);
     console.log("submit");
     console.log("values>>", formData);
     if (formData.password !== formData.confirmPassword)
@@ -83,7 +98,6 @@ export const SignUp = ({ email }) => {
     else setError(setUserNameUsed, false);
     console.log("cp877", !passwordRegex.test(formData.password));
     if (showErr || userNameUsed || wrongPw) return;
-
     console.log("Success:", values);
     try {
       const postResult = await axios.post(`${API_URL}/register`, { formData });
@@ -96,25 +110,28 @@ export const SignUp = ({ email }) => {
       console.log("error>>", error);
     }
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+
+    getUserNames()
+  }, [userNameUsed]);
 
   return (
     <>
       {!formSubmit ? (
         <div
-          style={{ display: "flex", justifyContent: "center", marginTop: 100 }}
+          style={{ display: "flex", justifyContent: "center" }}
         >
           <Form
             form={form}
             name="basic"
             labelCol={{
-              span: 8,
+              span: 24,
             }}
             wrapperCol={{
-              span: 16,
+              span: 24,
             }}
             style={{
-              width: "50%",
+              width: "100%",
               alignContent: "center",
             }}
             initialValues={{
@@ -124,15 +141,15 @@ export const SignUp = ({ email }) => {
             onFinish={handleSubmit}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
-            // disabled={true}
+            layout="vertical"
+          // disabled={true}
           >
-            {" "}
             <Form.Item
               labelCol={{
-                span: 8,
+                span: 24,
               }}
               wrapperCol={{
-                span: 16,
+                span: 24,
               }}
               label="email"
               name="email"
@@ -144,10 +161,10 @@ export const SignUp = ({ email }) => {
             </Form.Item>
             <Form.Item
               labelCol={{
-                span: 8,
+                span: 24,
               }}
               wrapperCol={{
-                span: 16,
+                span: 24,
               }}
               label="username"
               name="username"
@@ -165,10 +182,24 @@ export const SignUp = ({ email }) => {
             </Form.Item>
             <Form.Item
               labelCol={{
-                span: 8,
+                span: 24,
               }}
               wrapperCol={{
-                span: 16,
+                span: 24,
+              }}
+              label="birthday"
+              name="birthday"
+              rules={[{ required: true, message: "Birithday is required" }]}
+              style={{ color: "red", textAlign: "left" }}
+            > 
+              <DatePicker style={{width: '100%'}} placeholder="input birthday" picker="date" onChange={handleDateChange} />
+            </Form.Item>
+            <Form.Item
+              labelCol={{
+                span: 24,
+              }}
+              wrapperCol={{
+                span: 24,
               }}
               label="password"
               name="password"
@@ -188,10 +219,10 @@ export const SignUp = ({ email }) => {
             </Form.Item>
             <Form.Item
               labelCol={{
-                span: 8,
+                span: 24,
               }}
               wrapperCol={{
-                span: 16,
+                span: 24,
               }}
               label="Confirm password"
               name="confirmPassword"
@@ -208,12 +239,12 @@ export const SignUp = ({ email }) => {
                 prefix={showErr ? <ClockCircleOutlined /> : null}
               />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               labelCol={{
-                span: 8,
+                span: 24,
               }}
               wrapperCol={{
-                span: 16,
+                span: 24,
               }}
               label="User Role"
               name="role"
@@ -227,14 +258,14 @@ export const SignUp = ({ email }) => {
                 <Radio.Button value="user">User</Radio.Button>
                 <Radio.Button value="admin">Admin</Radio.Button>
               </Radio.Group>
-            </Form.Item>
+            </Form.Item> */}
             <Button
               type="primary"
               htmlType="submit"
               disabled={
                 !formData.username ||
-                !formData.password ||
-                !formData.confirmPassword
+                  !formData.password ||
+                  !formData.confirmPassword
                   ? true
                   : false
               }
@@ -249,6 +280,7 @@ export const SignUp = ({ email }) => {
           path={"/venue"}
           title={`Successfully create ${userdata.role}: ${userdata.username}`}
           subTitle={"Thank you for signing up."}
+          alttitle={"Go Login"}
         />
       )}
     </>

@@ -7,6 +7,8 @@ const LoginSchema = new Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   role: { type: String, enum: ['admin', 'user'], required: true, default: "user" },
+  birthday: { type: Date, default: Date.now },
+  cTime: { type: Date, default: Date.now }
 });
 
 const TokenSchema = new Schema({

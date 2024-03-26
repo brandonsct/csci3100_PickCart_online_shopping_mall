@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import {
   Button,
-  Checkbox,
   Form,
   Input,
   Typography,
   Col,
   Row,
   Space,
+  Tabs
 } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../Components/navbar";
+import NavBar from "./navbar";
 
-import ClockCircleOutlined from "@ant-design/icons/ClockCircleOutlined";
+import { UserOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { useForm } from "antd/lib/form/Form";
+import {ReactComponent as LoginLogoSVG} from '../asset/icon/login_logo.svg'
 
 const { Title } = Typography;
 const API_URL = process.env.REACT_APP_API_URL;
@@ -87,20 +88,20 @@ const Login = () => {
   };
   return (
     <>
-      <NavBar />
+
       <div
-        style={{ display: "flex", justifyContent: "center", marginTop: 100 }}
+        style={{ display: "flex", justifyContent: "center"}}
       >
         <Form
           name="basic"
           labelCol={{
-            span: 6,
+            span: 24,
           }}
           wrapperCol={{
-            span: 12,
+            span: 24,
           }}
           style={{
-            width: "50%",
+            width: "100%",
             alignContent: "center",
           }}
           initialValues={{
@@ -109,13 +110,14 @@ const Login = () => {
           onFinish={handleSubmit}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
+          layout="vertical"
         >
           <Form.Item
             labelCol={{
-              span: 6,
+              span: 24,
             }}
             wrapperCol={{
-              span: 12,
+              span: 24,
             }}
             label="username"
             name="username"
@@ -139,10 +141,10 @@ const Login = () => {
 
           <Form.Item
             labelCol={{
-              span: 6,
+              span: 24,
             }}
             wrapperCol={{
-              span: 12,
+              span: 24,
             }}
             label="password"
             name="password"
@@ -162,8 +164,8 @@ const Login = () => {
             />
           </Form.Item>
           <Button type="primary" htmlType="submit">
-            Login
-          </Button>
+            Sign In
+        </Button>
         </Form>
       </div>
     </>

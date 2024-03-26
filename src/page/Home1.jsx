@@ -1,16 +1,21 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
+  LogoutOutlined
 } from "@ant-design/icons";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Input, Layout, Menu, Image, Button, theme, Card, List } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
 import NavBar from "../Components/navbar";
 import appIcon from "../asset/icon.png";
 import ricePhoto from "../asset/productInfo/rice.jpeg";
+
+const API_URL = process.env.REACT_APP_API_URL;
 
 // const productPhotoPath = "../asset/productInfo";
 const data = [
@@ -95,6 +100,25 @@ const Home1 = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const navigate = useNavigate();
+  const logOut = () => {
+    axios({
+      method: "DELETE",
+      url: `${API_URL}/logout`,
+      withCredentials: true,
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Logged out");
+          sessionStorage.clear();
+          navigate("/login");
+        }
+      })
+
+      .catch((err) => {
+        return navigate("/login");
+      });
+  };
 
   const onSearch = (value, _e, info) => console.log(info?.source, value);
 
@@ -124,9 +148,15 @@ const Home1 = () => {
                 label: "nav 3",
               },
               {
-                key: "3",
+                key: "4",
                 icon: <UploadOutlined />,
                 label: "nav 3",
+              },
+              {
+                key: "5",
+                icon: <LogoutOutlined />,
+                label: "logout",
+                onClick: logOut
               },
             ]}
           />
