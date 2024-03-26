@@ -74,14 +74,14 @@ app.post("/checkotp", async (req, res) => {
     console.log("req>>", req.body)
     const { formData: values } = req?.body;
     const userotp = parseInt(values.otp)
-    console.log(typeof(userotp))
+    console.log(typeof (userotp))
     TokenModel.find({ token: userotp })
-    .then((result) => {
-      console.log("resultofot[]>>", result)
-      if (result.length === 0) res.status(200).send(false);
-      else res.status(200).send(true);
-    })
-    .catch(() => res.status(500).send("Internal Server error"));
+      .then((result) => {
+        console.log("resultofot[]>>", result)
+        if (result.length === 0) res.status(200).send(false);
+        else res.status(200).send(true);
+      })
+      .catch(() => res.status(500).send("Internal Server error"));
   } catch (error) {
     console.log("error>>", error);
     res.json(error);
@@ -152,21 +152,26 @@ app.post("/register", async (req, res) => {
     console.log("values>>", values);
     const username = values.username ? values.username : "";
     const email = values.email ? values.email : "";
+    const birthday = values.birthday ? new Date(values.birthday) : new Date();
     const password = values.password ? await bcrypt.hash(values.password, 10) : "";
     const role = values.role ? values.role : "user";
     console.log("username>> ", username);
     console.log("email>> ", email);
     console.log("password>> ", password);
-
+    console.log("birthday>>", birthday)
+   
     if (!username || !email || !password || !role) {
       return res.status(406).send("Field missing");
     }
 
+    const currentTime = new Date();
     LoginModel.create({
       username: username,
       email: email,
       password: password,
       role: role,
+      birthday: birthday,
+      cTime: currentTime
     })
       .then((user) => res.json(user))
       .catch((err) => res.json(err));

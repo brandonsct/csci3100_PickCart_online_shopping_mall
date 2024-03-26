@@ -14,6 +14,7 @@ const VerifyPage = ({ sendVerifyToParent }) => {
     email: "",
     otp: "",
   });
+  const [emailValid, setEmailValid] = useState(true)
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
@@ -34,6 +35,16 @@ const VerifyPage = ({ sendVerifyToParent }) => {
 
   const getEmail = () => {
     console.log("formData>>", formData);
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isEmailValid = (email) => {
+        return emailPattern.test(email);
+    };
+    if (isEmailValid(formData.email)) {
+        console.log('Email is valid');
+        setEmailValid(true)
+      } else {
+        return setEmailValid(false);
+      }
     axios
       .post(`${API_URL}/checkemail`, { formData })
       .then((res) => {
@@ -61,18 +72,18 @@ const VerifyPage = ({ sendVerifyToParent }) => {
     }
   };
   return (
-    <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       <Form
         form={form}
         name="basic"
         labelCol={{
-          span: 8,
+          span: 24,
         }}
         wrapperCol={{
-          span: 16,
+          span: 24,
         }}
         style={{
-          width: "50%",
+          width: "100%",
           alignContent: "center",
         }}
         initialValues={{
@@ -81,18 +92,22 @@ const VerifyPage = ({ sendVerifyToParent }) => {
         onFinish={handleSubmit}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
+        layout="vertical"
       >
         <Form.Item
           labelCol={{
-            span: 8,
+            span: 24,
           }}
           wrapperCol={{
-            span: 16,
+            span: 24,
           }}
           label="email"
           name="email"
           rules={[{ required: true, message: "email is required" }]}
           style={{ color: "red", textAlign: "left" }}
+          hasFeedback
+          validateStatus={ emailUsed || !emailValid? "error": ""}
+          help={!emailValid ? "Email is Invalid": ""}
         >
           <Input
             type="string"
@@ -118,10 +133,10 @@ const VerifyPage = ({ sendVerifyToParent }) => {
         {emailPassed && (
           <Form.Item
             labelCol={{
-              span: 8,
+              span: 24,
             }}
             wrapperCol={{
-              span: 16,
+              span: 24,
             }}
             label="otp"
             name="otp"
