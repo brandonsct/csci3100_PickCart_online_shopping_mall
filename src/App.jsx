@@ -12,7 +12,8 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<UserLogin />} />
+        <Route path="/admin/login" element={<UserLogin admin={true}/>} />
+          <Route path="/login" element={<UserLogin admin={false}/>} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/home" element={<Home />} />
 
