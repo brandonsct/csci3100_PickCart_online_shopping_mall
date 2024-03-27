@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Table, Button, Input, Collapse } from "antd";
-import NavBar from "./navbar";
+
 import { withRouter } from "react-router-dom";
 import { SignUp } from "./signup";
 class User extends Component {
@@ -102,7 +102,11 @@ class User extends Component {
           editingKey === record.id ? (
             <Input
               value={editingValues.username}
-              onChange={(e) => this.setState({ editingValues: { ...editingValues, username: e.target.value } })}
+              onChange={(e) =>
+                this.setState({
+                  editingValues: { ...editingValues, username: e.target.value },
+                })
+              }
               style={{ width: 200 }}
             />
           ) : (
@@ -118,7 +122,11 @@ class User extends Component {
           editingKey === record.id ? (
             <Input
               value={editingValues.password}
-              onChange={(e) => this.setState({ editingValues: { ...editingValues, password: e.target.value } })}
+              onChange={(e) =>
+                this.setState({
+                  editingValues: { ...editingValues, password: e.target.value },
+                })
+              }
               style={{ width: 600 }}
             />
           ) : (
@@ -140,11 +148,19 @@ class User extends Component {
                 Update User
               </Button>
             ) : (
-              <Button style={{ marginRight: "10px" }} type="primary" onClick={() => this.editUser(record)}>
+              <Button
+                style={{ marginRight: "10px" }}
+                type="primary"
+                onClick={() => this.editUser(record)}
+              >
                 Edit User
               </Button>
             )}
-            <Button type="primary" danger onClick={() => this.deleteUser(record.name)}>
+            <Button
+              type="primary"
+              danger
+              onClick={() => this.deleteUser(record.name)}
+            >
               Delete User
             </Button>
           </div>
@@ -155,7 +171,6 @@ class User extends Component {
     return (
       <main>
         <div>
-          {<NavBar />}
           <h1 style={{ textAlign: "left" }}>Manage Users</h1>
           {/*<Collapse
             size="large"
@@ -167,12 +182,20 @@ class User extends Component {
               },
             ]}
           ></Collapse>*/}
-          <Button style={{ float: "left", marginLeft: "7px", marginBottom: "10px" }} type="primary" href="/register">
+          <Button
+            style={{ float: "left", marginLeft: "7px", marginBottom: "10px" }}
+            type="primary"
+            href="/register"
+          >
             Create User
           </Button>
         </div>
         <div>
-          <Table columns={columns} dataSource={this.state.userList} rowKey="name" />
+          <Table
+            columns={columns}
+            dataSource={this.state.userList}
+            rowKey="name"
+          />
         </div>
       </main>
     );

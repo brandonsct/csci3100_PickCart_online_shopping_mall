@@ -1,21 +1,11 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Form,
-  Input,
-  Typography,
-  Col,
-  Row,
-  Space,
-  Tabs
-} from "antd";
+import { Button, Form, Input, Typography, Col, Row, Space, Tabs } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import NavBar from "./navbar";
 
-import { UserOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { UserOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import { useForm } from "antd/lib/form/Form";
-import {ReactComponent as LoginLogoSVG} from '../asset/icon/login_logo.svg'
+import { ReactComponent as LoginLogoSVG } from "../asset/icon/login_logo.svg";
 
 const { Title } = Typography;
 const API_URL = process.env.REACT_APP_API_URL;
@@ -88,10 +78,7 @@ const Login = () => {
   };
   return (
     <>
-
-      <div
-        style={{ display: "flex", justifyContent: "center"}}
-      >
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <Form
           name="basic"
           labelCol={{
@@ -163,10 +150,10 @@ const Login = () => {
               prefix={!formData.password ? <ClockCircleOutlined /> : null}
             />
           </Form.Item>
-          <Button type="primary" htmlType="submit" style={{width: '100%'}}>
+          <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
             Sign In
-        </Button>
-        <a>Forgot password?</a>
+          </Button>
+          <a>Forgot password?</a>
         </Form>
       </div>
     </>

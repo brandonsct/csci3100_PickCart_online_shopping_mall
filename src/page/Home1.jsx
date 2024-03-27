@@ -6,14 +6,25 @@ import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
-  LogoutOutlined
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Input, Layout, Menu, Image, Button, theme, Card, List, Row, Col } from "antd";
+import {
+  Input,
+  Layout,
+  Menu,
+  Image,
+  Button,
+  theme,
+  Card,
+  List,
+  Row,
+  Col,
+} from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
-import NavBar from "../Components/navbar";
+
 import appIcon from "../asset/icon.png";
-import { ReactComponent as LogoSidebar } from "../asset/icon/login_logo.svg"
+import { ReactComponent as LogoSidebar } from "../asset/icon/login_logo.svg";
 import ricePhoto from "../asset/productInfo/rice.jpeg";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -126,20 +137,29 @@ const Home1 = () => {
   return (
     <div class="" id="bottomPage">
       <Layout style={{ height: "100vh" }}>
-         <Sider trigger={null} collapsible collapsed={collapsed} >
+        <Sider trigger={null} collapsible collapsed={collapsed}>
           <Row gutter={16}>
             <Col span={8}>
               <div className="demo-logo-vertical" style={{ margin: 10 }}>
-                <LogoSidebar /> 
+                <LogoSidebar />
               </div>
             </Col>
-            { !collapsed ? <Col span={16}>
-              <div style={{ fontFamily: "Times New Roman", fontSize: 24, color: "white", marginTop: 20}}>
-                Pick Cart
-              </div>
-            </Col>
-            : ""
-            }
+            {!collapsed ? (
+              <Col span={16}>
+                <div
+                  style={{
+                    fontFamily: "Times New Roman",
+                    fontSize: 24,
+                    color: "white",
+                    marginTop: 20,
+                  }}
+                >
+                  Pick Cart
+                </div>
+              </Col>
+            ) : (
+              ""
+            )}
           </Row>
           <div className="demo-logo-vertical" />
           <Menu
@@ -171,7 +191,7 @@ const Home1 = () => {
                 key: "5",
                 icon: <LogoutOutlined />,
                 label: "logout",
-                onClick: logOut
+                onClick: logOut,
               },
             ]}
           />

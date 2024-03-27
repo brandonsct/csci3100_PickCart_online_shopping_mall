@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Button, Checkbox, Form, Input, Typography, Radio, DatePicker, Row, Col } from "antd";
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Typography,
+  Radio,
+  DatePicker,
+  Row,
+  Col,
+} from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import NavBar from "./navbar";
+
 import { UserAddOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import { useForm } from "antd/lib/form/Form";
 import SuccessPage from "./Success";
@@ -22,7 +32,6 @@ const RegisterPage = () => {
   console.log("isVerified>>", isVerified);
   return (
     <>
-      {/* <NavBar /> */}
       {isVerified ? (
         <div>
           <SignUp email={isVerified.email} />
@@ -39,14 +48,14 @@ export const SignUp = ({ email }) => {
   const [userNameUsed, setUserNameUsed] = useState(false);
   const [usernames, setUsernames] = useState([]);
   const [wrongPw, setWrongPw] = useState(false);
-  const [date, setDate]=useState('')
+  const [date, setDate] = useState("");
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     confirmPassword: "",
     role: "",
     email: email,
-    birthday: ""
+    birthday: "",
   });
   const [formSubmit, setFormSubmit] = useState(false);
   const [userdata, setUserData] = useState();
@@ -62,7 +71,7 @@ export const SignUp = ({ email }) => {
   };
 
   const handleDateChange = (dates, dateStrings) => {
-    console.log(`data>> ${dates}>>dateStrings>>${dateStrings}`)
+    console.log(`data>> ${dates}>>dateStrings>>${dateStrings}`);
     setFormData({ ...formData, birthday: dateStrings });
   };
 
@@ -72,16 +81,15 @@ export const SignUp = ({ email }) => {
       console.log("res.dataUsern>>", res.data);
       if (res.data === true) {
         setUserNameUsed(res.data);
-        return true
+        return true;
       } else {
         setUserNameUsed(res.data);
-        return false
+        return false;
       }
     } catch (err) {
       console.log("err>>", err);
     }
   };
-
 
   const handleSubmit = async (values) => {
     let used = await getUserNames();
@@ -111,16 +119,13 @@ export const SignUp = ({ email }) => {
     }
   };
   useEffect(() => {
-
-    getUserNames()
+    getUserNames();
   }, [userNameUsed]);
 
   return (
     <>
       {!formSubmit ? (
-        <div
-          style={{ display: "flex", justifyContent: "center" }}
-        >
+        <div style={{ display: "flex", justifyContent: "center" }}>
           <Form
             form={form}
             name="basic"
@@ -142,7 +147,7 @@ export const SignUp = ({ email }) => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
             layout="vertical"
-          // disabled={true}
+            // disabled={true}
           >
             <Form.Item
               labelCol={{
@@ -191,8 +196,13 @@ export const SignUp = ({ email }) => {
               name="birthday"
               rules={[{ required: true, message: "Birithday is required" }]}
               style={{ color: "red", textAlign: "left" }}
-            > 
-              <DatePicker style={{width: '100%'}} placeholder="input birthday" picker="date" onChange={handleDateChange} />
+            >
+              <DatePicker
+                style={{ width: "100%" }}
+                placeholder="input birthday"
+                picker="date"
+                onChange={handleDateChange}
+              />
             </Form.Item>
             <Form.Item
               labelCol={{
@@ -264,8 +274,8 @@ export const SignUp = ({ email }) => {
               htmlType="submit"
               disabled={
                 !formData.username ||
-                  !formData.password ||
-                  !formData.confirmPassword
+                !formData.password ||
+                !formData.confirmPassword
                   ? true
                   : false
               }
