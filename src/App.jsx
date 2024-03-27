@@ -17,10 +17,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/admin/login" element={<UserLogin admin={true} />} />
-          <Route path="/login" element={<UserLogin admin={false} />} />
-          <Route path="/register" element={<RegisterPage />} />
           <Route path="/home" element={<Main Page_component={<Home2 />} />} />
+          <Route path="/login" element={<UserLogin />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route
             path="/profile"
             element={<Main Page_component={<Profile />} />}
