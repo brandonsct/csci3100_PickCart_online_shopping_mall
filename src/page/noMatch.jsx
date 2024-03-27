@@ -14,7 +14,7 @@ function NoMatch(props) {
   useEffect(() => {
     if (!itemExists) {
       // Item exists in sessionStorage
-      navigate("/login");
+      navigate("/home");
       // Item does not exist in sessionStorage
     }
   });

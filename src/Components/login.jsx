@@ -25,7 +25,7 @@ function setSessionStorageWithExpiration(key, value, expirationTimeInMinutes) {
 
   sessionStorage.setItem(key, JSON.stringify(item));
 }
-const Login = () => {
+const Login = ({onSuccess}) => {
   const [form] = useForm();
   const [formData, setFormData] = useState({
     username: "",
@@ -64,6 +64,7 @@ const Login = () => {
               120
             );
             //expire after 2 hrs
+            onSuccess()
             navigate("/home");
           }
         })

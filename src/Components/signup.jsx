@@ -24,7 +24,7 @@ const onFinishFailed = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
 
-const RegisterPage = () => {
+const RegisterPage = ({onSuccess}) => {
   const [isVerified, setIsVerified] = useState(false);
   const handleDataFromChild = (data) => {
     setIsVerified(data);
@@ -34,7 +34,7 @@ const RegisterPage = () => {
     <>
       {isVerified ? (
         <div>
-          <SignUp email={isVerified.email} />
+          <SignUp email={isVerified.email} onSuccess={onSuccess}/>
         </div>
       ) : (
         <VerifyMailPage sendVerifyToParent={handleDataFromChild} />
@@ -42,7 +42,7 @@ const RegisterPage = () => {
     </>
   );
 };
-export const SignUp = ({ email }) => {
+export const SignUp = ({ email, onSuccess }) => {
   const [form] = useForm();
   const [showErr, setShowErr] = useState(false);
   const [userNameUsed, setUserNameUsed] = useState(false);
@@ -112,6 +112,7 @@ export const SignUp = ({ email }) => {
       console.log("postResult>>", postResult);
       if (postResult.status === 200) {
         setUserData(postResult.data);
+        onSuccess()
         return setFormSubmit(true);
       }
     } catch (error) {
