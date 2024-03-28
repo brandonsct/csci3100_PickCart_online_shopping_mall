@@ -166,13 +166,13 @@ const Main = ({ Page_component }) => {
                 key: "6",
                 icon: <UserOutlined />,
                 label: "user CRUD",
-                onClick: () => handleCompClick("/userCrud"),
+                onClick: () => handleCompClick("/userCRUD"),
               },
               showLogOutSideBar && {
                 key: "7",
                 icon: <AppstoreAddOutlined />,
                 label: "product CRUD",
-                onClick: () => handleCompClick("/productCrud"),
+                onClick: () => handleCompClick("/productCRUD"),
               },
               showLogOutSideBar && {
                 key: "8",

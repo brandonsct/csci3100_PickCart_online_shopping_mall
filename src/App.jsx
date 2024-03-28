@@ -12,6 +12,9 @@ import Profile from "./Components/profile.jsx";
 import OrderHistory from "./page/Orderhistory.jsx";
 import OrderStatus from "./page/OrderStatus.jsx";
 import Cart from "./page/Cart.jsx";
+import UserCRUD from "./page/UserCRUD.jsx";
+import ProductCRUD from "./page/ProductCRUD.jsx";
+
 function App() {
   return (
     <div className="App">
@@ -31,7 +34,15 @@ function App() {
           <Route
             path="/orderStatus"
             element={<Main Page_component={<OrderStatus />} />}
-          />{" "}
+          />
+          <Route
+            path="/productCRUD"
+            element={<Main Page_component={<ProductCRUD />} />}
+          />
+          <Route
+            path="/userCRUD"
+            element={<Main Page_component={<UserCRUD />} />}
+          />
           <Route path="/cart" element={<Main Page_component={<Cart />} />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
