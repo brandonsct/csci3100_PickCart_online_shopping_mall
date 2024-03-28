@@ -1,14 +1,50 @@
 import React, { useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
-const originData = [];
-for (let i = 0; i < 100; i++) {
-  originData.push({
-    key: i.toString(),
-    name: `Edward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
-}
+const originData = [
+  {
+    productID: "123",
+    productName: "Meadows Home 3摺式抹手紙 250PC",
+    price: "$123",
+    stockNum: "123",
+    saleNumber: "123",
+    productImage:
+      "https://img1.rtacdn-os.com/20240301/76d845f3-04c4-3775-a0d1-2e3dd2c3bfdc_360x360H.webp",
+  },
+  {
+    productID: "223",
+    productName: "Meadows Home 3摺式抹手紙 250PC",
+    price: "$223",
+    stockNum: "223",
+    saleNumber: "223",
+    productImage:
+      "https://img1.rtacdn-os.com/20240301/76d845f3-04c4-3775-a0d1-2e3dd2c3bfdc_360x360H.webp",
+  },
+  {
+    productID: "122",
+    productName: "Meadows Home 3摺式抹手紙 250PC",
+    price: "$223",
+    stockNum: "223",
+    saleNumber: "1333",
+    productImage:
+      "https://img1.rtacdn-os.com/20240301/76d845f3-04c4-3775-a0d1-2e3dd2c3bfdc_360x360H.webp",
+  },
+];
+// for (let i = 0; i < 100; i++) {
+//   originData.push({
+//     key: i.toString(),
+//     name: `Edward ${i}`,
+//     age: 32,
+//     address: `London Park no. ${i}`,
+//   });
+// }
+
+// originData.push({
+//   productID: "123",
+//   productName: "James",
+//   price: "123",
+//   stockNum: "123",
+//   saleNumber: "123",
+// });
 const EditableCell = ({
   editing,
   dataIndex,
@@ -84,10 +120,31 @@ const ProductTable = () => {
   };
   const columns = [
     {
-      title: "product name",
-      dataIndex: "productName",
-      width: "25%",
+      title: "Product ID",
+      dataIndex: "productID",
+      width: "5%",
       editable: true,
+    },
+
+    {
+      title: "Product Name",
+      dataIndex: "productName",
+      width: "20%",
+      editable: true,
+    },
+
+    {
+      title: "Image",
+      dataIndex: "productImage",
+      width: "10%",
+      editable: true,
+      render: (text, record) => (
+        <img
+          src={record.productImage}
+          alt={record.productName}
+          style={{ width: "100px", height: "100px" }}
+        />
+      ),
     },
     {
       title: "Price",
@@ -96,13 +153,19 @@ const ProductTable = () => {
       editable: true,
     },
     {
-      title: "Stock",
-      dataIndex: "stock",
-      width: "40%",
+      title: "Stock Number",
+      dataIndex: "stockNum",
+      width: "20%",
       editable: true,
     },
     {
-      title: "operation",
+      title: "Sales",
+      dataIndex: "saleNumber",
+      width: "20%",
+      editable: true,
+    },
+    {
+      title: "Operation",
       dataIndex: "operation",
       render: (_, record) => {
         const editable = isEditing(record);
