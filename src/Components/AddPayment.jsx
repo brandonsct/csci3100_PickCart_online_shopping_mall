@@ -19,18 +19,14 @@ const API_URL = process.env.REACT_APP_API_URL;
 const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
 };
-const UserDetails = ({user}) => {
+const AddPayment = () => {
     const [form] = useForm();
     const [formData, setFormData] = useState({
         username: "",
         password: "",
     });
     
-    const [userInit, setUserInit] = useState({
-        username: user.name
-    })
    
-    console.log("userInit>>", userInit)
     const [showErr, setShowErr] = useState(false);
     const navigate = useNavigate();
     const handleChange = (event) => {
@@ -63,9 +59,9 @@ const UserDetails = ({user}) => {
             console.log("error>>", error);
         }
     };
-    useEffect(() => {
-        form.setFieldsValue(userInit)
-       }, [form, userInit])
+    // useEffect(() => {
+    //     form.setFieldsValue(userInit)
+    //    }, [form, userInit])
 
     return (
         <>
@@ -85,9 +81,9 @@ const UserDetails = ({user}) => {
                         width: "100%",
                         alignContent: "center",
                     }}
-                    initialValues={
-                        userInit
-                    }
+                    // initialValues={
+                    //     userInit
+                    // }
                     onFinish={handleSubmit}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
@@ -124,18 +120,18 @@ const UserDetails = ({user}) => {
                         wrapperCol={{
                             span: 24,
                         }}
-                        label="username"
-                        name="username"
-                        rules={[{ required: true, message: "username is required" }]}
+                        label="PayMent"
+                        name="PayMent"
+                        rules={[{ required: true, message: "PayMent is required" }]}
                         style={{ color: "red", textAlign: "left" }}
                         validateStatus={showErr ? "error" : "success"}
-                        help={showErr ? "username and password not match" : ""}
+                        help={showErr ? "PayMent and password not match" : ""}
                     >
                         <Input
                             // placeholder={
                             //     !formData.password ? "password is required" : "input password"
                             // }
-                            name="username"
+                            name="PayMent"
                             // onChange={handleChange}
                             // status={!formData.password ? "error" : ""}
                             // prefix={!formData.password ? <ClockCircleOutlined /> : null}
@@ -197,8 +193,5 @@ const UserDetails = ({user}) => {
     );
 };
 
-UserDetails.defaultProps = {
-    name: ""
-  };
-  
-export default UserDetails;
+
+export default AddPayment;

@@ -250,7 +250,7 @@ app.get("/admin/user", (req, res) => {
   LoginModel.find()
     .then((data) => {
       let users = data.map((item, idx) => {
-        return { id: item._id, name: item.username, email: item.email, pw: item.password, fav: item.fav };
+        return { id: item._id, name: item.username, email: item.email, pw: item.password, birthday: item.birthday };
       });
       res.status(200);
       res.send(users);
