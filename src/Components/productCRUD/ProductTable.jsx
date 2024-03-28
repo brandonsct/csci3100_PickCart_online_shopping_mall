@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import {
+  Form,
+  Input,
+  InputNumber,
+  Popconfirm,
+  Table,
+  Typography,
+  Button,
+} from "antd";
 const originData = [
   {
     productID: "123",
@@ -9,6 +17,7 @@ const originData = [
     saleNumber: "123",
     productImage:
       "https://img1.rtacdn-os.com/20240301/76d845f3-04c4-3775-a0d1-2e3dd2c3bfdc_360x360H.webp",
+    category: "houseHold",
   },
   {
     productID: "223",
@@ -18,6 +27,7 @@ const originData = [
     saleNumber: "223",
     productImage:
       "https://img1.rtacdn-os.com/20240301/76d845f3-04c4-3775-a0d1-2e3dd2c3bfdc_360x360H.webp",
+    category: "houseHold",
   },
   {
     productID: "122",
@@ -27,6 +37,7 @@ const originData = [
     saleNumber: "1333",
     productImage:
       "https://img1.rtacdn-os.com/20240301/76d845f3-04c4-3775-a0d1-2e3dd2c3bfdc_360x360H.webp",
+    category: "houseHold",
   },
 ];
 // for (let i = 0; i < 100; i++) {
@@ -155,12 +166,18 @@ const ProductTable = () => {
     {
       title: "Stock Number",
       dataIndex: "stockNum",
-      width: "20%",
+      width: "5%",
       editable: true,
     },
     {
       title: "Sales",
       dataIndex: "saleNumber",
+      width: "5%",
+      editable: true,
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
       width: "20%",
       editable: true,
     },
@@ -209,8 +226,31 @@ const ProductTable = () => {
       }),
     };
   });
+
+  const handleAdd = () => {
+    const newData = {
+      productID: "123",
+      productName: "Meadows Home 3摺式抹手紙 250PC",
+      price: "$123",
+      stockNum: "123",
+      saleNumber: "123",
+      productImage:
+        "https://img1.rtacdn-os.com/20240301/76d845f3-04c4-3775-a0d1-2e3dd2c3bfdc_360x360H.webp",
+      category: "houseHold",
+    };
+    setData([...data, newData]);
+  };
   return (
     <Form form={form} component={false}>
+      <Button
+        onClick={handleAdd}
+        type="primary"
+        style={{
+          marginBottom: 16,
+        }}
+      >
+        Add a row
+      </Button>
       <Table
         components={{
           body: {
