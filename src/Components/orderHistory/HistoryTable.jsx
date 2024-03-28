@@ -85,6 +85,8 @@ const data = [
     NumProduct: "3",
     Price: "$234",
     DelieveryMethod: "delivery",
+    OrderDate: "1-2-2023",
+    CompleteDate: "10-2-2023",
     product: [
       {
         image:
@@ -105,20 +107,12 @@ const data = [
   },
   {
     OrderID: "1124",
-    NumProduct: "3",
+    NumProduct: "1",
     Price: "$234",
     DelieveryMethod: "delivery",
+    OrderDate: "1-2-2023",
+    CompleteDate: "10-2-2023",
     product: [
-      {
-        image:
-          "https://img.rtacdn-os.com/20230906/6f6cb414-b5e0-3004-b7af-d03222bb948f_360x360H.webp",
-        name: "Meadows Home軟抽面紙(大) 4PK",
-      },
-      {
-        image:
-          "https://img.rtacdn-os.com/20230906/6f6cb414-b5e0-3004-b7af-d03222bb948f_360x360H.webp",
-        name: "Meadows Home軟抽面紙(大) 4PK",
-      },
       {
         image:
           "https://img.rtacdn-os.com/20230906/6f6cb414-b5e0-3004-b7af-d03222bb948f_360x360H.webp",
@@ -128,15 +122,12 @@ const data = [
   },
   {
     OrderID: "1124",
-    NumProduct: "2",
+    NumProduct: "1",
     Price: "$234",
     DelieveryMethod: "delivery",
+    OrderDate: "1-2-2023",
+    CompleteDate: "10-2-2023",
     product: [
-      {
-        image:
-          "https://img.rtacdn-os.com/20230906/6f6cb414-b5e0-3004-b7af-d03222bb948f_360x360H.webp",
-        name: "Meadows Home軟抽面紙(大) 4PK",
-      },
       {
         image:
           "https://img.rtacdn-os.com/20230906/6f6cb414-b5e0-3004-b7af-d03222bb948f_360x360H.webp",

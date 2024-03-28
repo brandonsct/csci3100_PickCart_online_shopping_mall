@@ -23,7 +23,7 @@ import {
 } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
 
-import appIcon from "../asset/icon.png";
+import appIconPhoto from "../asset/icon.png";
 import { ReactComponent as LogoSidebar } from "../asset/icon/login_logo.svg";
 import ricePhoto from "../asset/productInfo/rice.jpeg";
 
@@ -108,7 +108,7 @@ const data = [
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 const Home2 = ({ test }) => {
-  console.log("test>>", test)
+  console.log("test>>", test);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -155,7 +155,7 @@ const Home2 = ({ test }) => {
         >
           <div class="flex flex-row w-screen text-center items-center justify-around">
             <div class="flex items-center">
-              <Image width={100} height={100} src={appIcon} />
+              <Image width={100} height={100} src={appIconPhoto} />
               <Search
                 placeholder="input search text"
                 onSearch={onSearch}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, Divider } from "antd";
+import { Card, Divider, Button } from "antd";
 import ProductItem from "../Components/cart/productItem";
 const Cart = () => {
   // return <Checkbox>Checkbox</Checkbox>;
@@ -10,7 +10,6 @@ const Cart = () => {
         {/* <Card type="inner" title="Inner Card title">
           Inner Card content
         </Card> */}
-
         <Card
           style={{
             marginTop: 16,
@@ -52,6 +51,7 @@ const Cart = () => {
             }}
           />
         </Card>
+        <Button danger> Check Out</Button>
       </Card>
     </div>
   );
