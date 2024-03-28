@@ -2,25 +2,33 @@ import React from "react";
 import { SmileOutlined } from "@ant-design/icons";
 import { Steps, Card, Avatar } from "antd";
 const { Meta } = Card;
-const description = "This is a description.";
+
 const OrderStatus = () => (
   <div class="grid grid-cols-2 gap-4 w-full m-6">
     <Steps
       direction="vertical"
       size="small"
-      current={1}
+      current={2}
       items={[
         {
-          title: "Finished",
-          description,
+          title: "Order recieved",
+          description: "order is recevieved",
         },
         {
           title: "In Progress",
-          description,
+          description: "order is in progress",
+        },
+        {
+          title: "In deliver",
+          description: "order is in delivery",
         },
         {
           title: "Waiting",
-          description,
+          description: "order is waiting for pick up",
+        },
+        {
+          title: "Complete",
+          description: "order is picked up and complete",
         },
       ]}
     />

@@ -7,9 +7,9 @@ const Cart = () => {
   return (
     <div class="w-full h-screen overflow-y-auto">
       <Card title="Cart">
-        <Card type="inner" title="Inner Card title">
+        {/* <Card type="inner" title="Inner Card title">
           Inner Card content
-        </Card>
+        </Card> */}
 
         <Card
           style={{
