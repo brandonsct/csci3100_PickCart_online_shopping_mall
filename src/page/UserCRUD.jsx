@@ -1,16 +1,17 @@
 import React, { Component, useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button, Input, Collapse, Space, Modal } from "antd";
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import UserDetails from "../Components/Profiledetails"
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import UserDetails from "../Components/profiledetails";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const UserCRUD = () => {
-  const [userList, setUserList] = useState([])
-  const [singleUser, setSingleUser] = useState({})
+  const [userList, setUserList] = useState([]);
+  const [singleUser, setSingleUser] = useState({});
   const loadUserList = () => {
-    axios.get(`${API_URL}/admin/user`)
+    axios
+      .get(`${API_URL}/admin/user`)
       .then((response) => {
         setUserList(response.data);
         // console.log("userList>>", userList)
@@ -22,7 +23,7 @@ const UserCRUD = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = (record) => {
-    setSingleUser(record)
+    setSingleUser(record);
     setIsModalOpen(true);
   };
 
@@ -36,45 +37,56 @@ const UserCRUD = () => {
 
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
       render: (text) => <a>{text}</a>,
     },
     {
-      title: 'Username',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Username",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: 'Birthday',
-      dataIndex: 'birthday',
-      key: 'birthday',
+      title: "Birthday",
+      dataIndex: "birthday",
+      key: "birthday",
     },
     {
-      title: 'Action',
-      key: 'action',
+      title: "Action",
+      key: "action",
       render: (_, record) => (
         <>
-          <Button onClick={() => showModal(record)} style={{ color: "blue" }} icon={<EditOutlined />} />
-          
+          <Button
+            onClick={() => showModal(record)}
+            style={{ color: "blue" }}
+            icon={<EditOutlined />}
+          />
+
           <Button style={{ color: "red" }} icon={<DeleteOutlined />} />
         </>
       ),
     },
   ];
-  useEffect(()=>{
-    loadUserList()
-  }, [])
+  useEffect(() => {
+    loadUserList();
+  }, []);
   return (
     <div className="overflow-x-auto w-full m-6">
-      <Modal destroyOnClose={true} title="Edit User" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={300}>
-            <UserDetails onSuccess={handleCancel} user={singleUser} />
+      <Modal
+        destroyOnClose={true}
+        title="Edit User"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        width={300}
+      >
+        <UserDetails onSuccess={handleCancel} user={singleUser} />
       </Modal>
       <Table columns={columns} dataSource={userList} />
     </div>
