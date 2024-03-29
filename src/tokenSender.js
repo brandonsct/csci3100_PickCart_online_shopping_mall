@@ -22,6 +22,7 @@ const sendMail = (receiver)=>{
     //     }, 'ourSecretKey', { expiresIn: '10m' }   
     // );     
     const token = Math.floor(100000 + Math.random() * 900000)
+    console.log("token>>", token)
       
     const mailConfigurations = { 
       

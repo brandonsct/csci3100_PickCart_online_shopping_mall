@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { EditOutlined, EllipsisOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useForm } from "antd/lib/form/Form";
 import SuccessPage from "./Success";
-import UserDetails from "./profiledetails"
+import UserDetails from "./Profiledetails"
+import AddPayment from "./AddPayment";
 const { Header, Content, Footer, Sider } = Layout;
 const API_URL = process.env.REACT_APP_API_URL;
 const { Title } = Typography;
@@ -13,22 +14,52 @@ const { Meta } = Card;
 
 
 const Profile = () => {
-    let username
-    try {
-        username = JSON.parse(sessionStorage.getItem("username"))?.value;
-    } catch (error) {
-        console.log("username not find>>", error);
-    }
+    // const [username, setUsername] = useState("")
+    
+    const username  =JSON.parse(sessionStorage.getItem("username"))?.value
+    // setUsername(value)
+    const storedData = Object.keys(sessionStorage).reduce((data, key) => {
+        try {
+          if (key === "username") {
+            data["name"] = JSON.parse(sessionStorage.getItem("username"))?.value ;
+          } else {
+            data[key] = JSON.parse(sessionStorage.getItem(key));
+          }
+        } catch (error) {
+          console.log(`Error retrieving ${key} from session storage:`, error);
+          data[key] = null;
+        }
+        return data;
+      }, {});
+      console.log("storedData>>", storedData )
+    
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const showModal = () => {
-      setIsModalOpen(true);
-    };
-    const handleOk = () => {
-      setIsModalOpen(false);
-    };
-    const handleCancel = () => {
-      setIsModalOpen(false);
-    };
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const showPaymentModal = () => {
+    setIsPaymentModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handlePaymentOk = () => {
+    setIsPaymentModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const handlePaymentCancel = () => {
+    setIsPaymentModalOpen(false);
+  };
 
     return (
         <Layout>
@@ -58,7 +89,7 @@ const Profile = () => {
                     actions={[
                         <SettingOutlined key="setting" />,
                         <EditOutlined key="edit" onClick={showModal}/>,
-                        <PlusOutlined key="plus" />,
+                        <PlusOutlined key="plus" onClick={showPaymentModal}/>,
                     ]}
                 >
                     <Meta
@@ -67,7 +98,10 @@ const Profile = () => {
                         description=" John Doe"
                     />
                     <Modal title="Edit Profile" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={300}>
-                     <UserDetails/>
+                        <UserDetails user={{storedData}} />
+                     </Modal>
+                     <Modal title="Add Payment Method" open={isPaymentModalOpen} onOk={handlePaymentOk} onCancel={handlePaymentCancel} width={300}>
+                        <AddPayment />
                      </Modal>
                 </Card>
             </Content>
