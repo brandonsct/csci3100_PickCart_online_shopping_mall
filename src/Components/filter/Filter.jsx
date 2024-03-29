@@ -64,6 +64,8 @@ function Filter() {
                     <p className='item'>beverage </p>
                 </div>
             </div>
+            <Button>Apply</Button>
+
             </div>
         </>
     )
