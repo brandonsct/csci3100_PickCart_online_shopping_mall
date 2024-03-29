@@ -23,6 +23,8 @@ import {
 } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
 
+import Filter from "../Components/filter/Filter";
+
 import appIconPhoto from "../asset/icon.png";
 import { ReactComponent as LogoSidebar } from "../asset/icon/login_logo.svg";
 import ricePhoto from "../asset/productInfo/rice.jpeg";
@@ -161,6 +163,7 @@ const Home2 = ({ test }) => {
                 onSearch={onSearch}
                 style={{ width: 300, height: 100, "padding-top": "30px" }}
               />
+              
             </div>
           </div>
           <div class="flex items-stretch w-full justify-center">
@@ -169,8 +172,10 @@ const Home2 = ({ test }) => {
                 <AppstoreOutlined />
                 Search box
               </div>
+              
             </div>
           </div>
+          <Filter />
           <List
             grid={{
               gutter: 16,

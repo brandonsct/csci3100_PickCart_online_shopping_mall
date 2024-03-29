@@ -1,0 +1,23 @@
+.Filter {
+    width: 500px;
+    height: 370px;
+    background-color: #f0f0f0;
+
+}
+
+.flex {
+    display: flex;
+}
+
+.heading {
+    font-family: "Libre Franklin" , sans-serif;
+}
+
+.item {
+    font-family: "Libre Franklin", sans-serif;
+}
+
+.box {
+    width: 50px;
+}
+
