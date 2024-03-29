@@ -6,11 +6,12 @@ import {
     Typography,
     Col,
     Row,
+    Avatar,
 } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import { UserOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { UserOutlined, ClockCircleOutlined , UploadOutlined} from '@ant-design/icons';
 import { useForm } from "antd/lib/form/Form";
 
 const { Title } = Typography;
@@ -19,17 +20,17 @@ const API_URL = process.env.REACT_APP_API_URL;
 const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
 };
-const UserDetails = ({user}) => {
+const UserDetails = ({ user }) => {
     const [form] = useForm();
     const [formData, setFormData] = useState({
         username: "",
         password: "",
     });
-    
+
     const [userInit, setUserInit] = useState({
         username: user.name
     })
-   
+
     console.log("userInit>>", userInit)
     const [showErr, setShowErr] = useState(false);
     const navigate = useNavigate();
@@ -65,7 +66,7 @@ const UserDetails = ({user}) => {
     };
     useEffect(() => {
         form.setFieldsValue(userInit)
-       }, [form, userInit])
+    }, [form, userInit])
 
     return (
         <>
@@ -124,6 +125,32 @@ const UserDetails = ({user}) => {
                         wrapperCol={{
                             span: 24,
                         }}
+                        label="Choose avatar or click to upload"
+                        name="avatar"
+                    >
+                        <Avatar.Group
+                            maxCount={6}
+                            maxStyle={{
+                                color: '#f56a00',
+                                backgroundColor: 'grey',
+                            }}
+                        >
+                            <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
+                            <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=2" />
+                            <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=3" />
+                            <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=4" />
+                            <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=5" />
+
+                        </Avatar.Group>
+                        <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                    </Form.Item>
+                    <Form.Item
+                        labelCol={{
+                            span: 24,
+                        }}
+                        wrapperCol={{
+                            span: 24,
+                        }}
                         label="username"
                         name="username"
                         rules={[{ message: "username is required" }]}
@@ -136,9 +163,9 @@ const UserDetails = ({user}) => {
                             //     !formData.password ? "password is required" : "input password"
                             // }
                             name="username"
-                            // onChange={handleChange}
-                            // status={!formData.password ? "error" : ""}
-                            // prefix={!formData.password ? <ClockCircleOutlined /> : null}
+                        // onChange={handleChange}
+                        // status={!formData.password ? "error" : ""}
+                        // prefix={!formData.password ? <ClockCircleOutlined /> : null}
                         />
                     </Form.Item>
 
@@ -151,19 +178,19 @@ const UserDetails = ({user}) => {
                         }}
                         label="email"
                         name="email"
-                        rules={[{   message: "email is required" }]}
+                        rules={[{ message: "email is required" }]}
                         style={{ color: "red", textAlign: "left" }}
                         validateStatus={showErr ? "error" : "success"}
                         help={showErr ? "email and password not match" : ""}
                     >
                         <Input.Password
-                            // placeholder={
-                            //     !formData.password ? "password is required" : "input password"
-                            // }
-                            // name="password"
-                            // onChange={handleChange}
-                            // status={!formData.password ? "error" : ""}
-                            // prefix={!formData.password ? <ClockCircleOutlined /> : null}
+                        // placeholder={
+                        //     !formData.password ? "password is required" : "input password"
+                        // }
+                        // name="password"
+                        // onChange={handleChange}
+                        // status={!formData.password ? "error" : ""}
+                        // prefix={!formData.password ? <ClockCircleOutlined /> : null}
                         />
                     </Form.Item>
 
@@ -199,6 +226,6 @@ const UserDetails = ({user}) => {
 
 UserDetails.defaultProps = {
     name: ""
-  };
-  
+};
+
 export default UserDetails;
