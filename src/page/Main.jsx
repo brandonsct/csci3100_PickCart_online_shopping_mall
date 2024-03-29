@@ -12,6 +12,7 @@ import {
   AimOutlined,
   LoginOutlined,
   AppstoreAddOutlined,
+  ExpandOutlined
 } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -39,6 +40,7 @@ const Main = ({ Page_component }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showLogOutSideBar, setShowLogOutSideBar] = useState(false);
   const [logIn, setLogin] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState([]);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -86,7 +88,7 @@ const Main = ({ Page_component }) => {
         if (res.status === 200) {
           console.log("Logged out");
           sessionStorage.clear();
-          setShowLogOutSideBar(false);
+          setLogin(false);
         }
       })
 
@@ -97,12 +99,11 @@ const Main = ({ Page_component }) => {
 
   useEffect(() => {
     isLogin();
-    setShowLogOutSideBar(logIn);
   }, [logIn, handleCancel]);
 
   return (
     <div class="" id="bottomPage">
-      <Layout style={{ height: "100vh" }}>
+      <Layout style={{ height: "115vh" }}>
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <Row gutter={16}>
             <Col span={8}>
@@ -131,6 +132,8 @@ const Main = ({ Page_component }) => {
             theme="dark"
             mode="inline"
             defaultSelectedKeys={["1"]}
+            selectedKeys={selectedKeys}
+            onClick={(e) => setSelectedKeys([e.key])}
             items={[
               {
                 key: "1",
@@ -138,19 +141,19 @@ const Main = ({ Page_component }) => {
                 label: "Home",
                 onClick: () => navigate("/home"),
               },
-              {
+              logIn && {
                 key: "2",
                 icon: <UserOutlined />,
                 label: "User Profile",
                 onClick: () => handleCompClick("/profile"),
               },
-              {
+              logIn && {
                 key: "3",
                 icon: <HistoryOutlined />,
                 label: "Order History",
                 onClick: () => handleCompClick("/orderHistory"),
               },
-              {
+              logIn && {
                 key: "4",
                 icon: <AimOutlined />,
                 label: "Order Status",
@@ -162,20 +165,27 @@ const Main = ({ Page_component }) => {
                 label: "Cart",
                 onClick: () => handleCompClick("/cart"),
               },
-              showLogOutSideBar && {
+              logIn &&  {
                 key: "6",
-                icon: <UserOutlined />,
-                label: "user CRUD",
-                onClick: () => handleCompClick("/userCRUD"),
+                icon: <ExpandOutlined />,
+                label: "Admin Actions",
+                children: [
+                  logIn && {
+                    key: "7",
+                    icon: <UserOutlined />,
+                    label: "user CRUD",
+                    onClick: () => handleCompClick("/userCRUD"),
+                  },
+                  logIn && {
+                    key: "8",
+                    icon: <AppstoreAddOutlined />,
+                    label: "product CRUD",
+                    onClick: () => handleCompClick("/productCRUD"),
+                  },
+                ]
               },
-              showLogOutSideBar && {
-                key: "7",
-                icon: <AppstoreAddOutlined />,
-                label: "product CRUD",
-                onClick: () => handleCompClick("/productCRUD"),
-              },
-              showLogOutSideBar && {
-                key: "8",
+              logIn && {
+                key: "9",
                 icon: <LogoutOutlined />,
                 label: "logout",
                 onClick: logOut,
