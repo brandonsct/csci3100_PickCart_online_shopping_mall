@@ -126,7 +126,7 @@ const UserDetails = ({user}) => {
                         }}
                         label="username"
                         name="username"
-                        rules={[{ required: true, message: "username is required" }]}
+                        rules={[{ message: "username is required" }]}
                         style={{ color: "red", textAlign: "left" }}
                         validateStatus={showErr ? "error" : "success"}
                         help={showErr ? "username and password not match" : ""}
@@ -151,7 +151,7 @@ const UserDetails = ({user}) => {
                         }}
                         label="email"
                         name="email"
-                        rules={[{ required: true, message: "email is required" }]}
+                        rules={[{   message: "email is required" }]}
                         style={{ color: "red", textAlign: "left" }}
                         validateStatus={showErr ? "error" : "success"}
                         help={showErr ? "email and password not match" : ""}

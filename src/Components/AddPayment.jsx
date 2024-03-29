@@ -6,11 +6,14 @@ import {
     Typography,
     Col,
     Row,
+    Img,
+    DatePicker,
+    Avatar, Divider, Tooltip
 } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import { UserOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { UserOutlined, ClockCircleOutlined, CreditCardOutlined } from '@ant-design/icons';
 import { useForm } from "antd/lib/form/Form";
 
 const { Title } = Typography;
@@ -25,8 +28,8 @@ const AddPayment = () => {
         username: "",
         password: "",
     });
-    
-   
+
+
     const [showErr, setShowErr] = useState(false);
     const navigate = useNavigate();
     const handleChange = (event) => {
@@ -89,30 +92,26 @@ const AddPayment = () => {
                     autoComplete="off"
                     layout="vertical"
                 >
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                label="First Name"
-                                name="firstName"
-                            // First Name Form.Item props
-                            >
-                                <Input
-                                // First Name Input props
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Last Name"
-                                name="lastName"
-                            // Last Name Form.Item props
-                            >
-                                <Input
-                                // Last Name Input props
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
+
+
+                    <Form.Item
+                        label="Please add your payment method"
+                        name="payment"
+                    // First Name Form.Item props
+                    >
+                        <Avatar.Group>
+                            <Avatar src="https://play-lh.googleusercontent.com/u18c1G3zGn92RIwU-NERrLBoLb2jcH_AeIjajZrjyK6ubm-D5t6ZLozIheQDhj6B5XDv" />
+                            <Avatar src="https://cdn-icons-png.flaticon.com/512/217/217425.png" />
+                            <Avatar src="https://cdn-icons-png.freepik.com/256/11378/11378340.png" />
+                            <Avatar
+                                style={{
+                                    backgroundColor: '#1677ff',
+                                }}
+                                icon={<CreditCardOutlined />}
+                            />
+                        </Avatar.Group>
+                    </Form.Item>
+
                     <Form.Item
                         labelCol={{
                             span: 24,
@@ -120,21 +119,21 @@ const AddPayment = () => {
                         wrapperCol={{
                             span: 24,
                         }}
-                        label="PayMent"
-                        name="PayMent"
-                        rules={[{ required: true, message: "PayMent is required" }]}
-                        style={{ color: "red", textAlign: "left" }}
-                        validateStatus={showErr ? "error" : "success"}
-                        help={showErr ? "PayMent and password not match" : ""}
+                        label="Credit Card Number"
+                        name="creditcardnumber"
+                    // rules={[{ required: true, message: "PayMent is required" }]}
+                    // style={{ color: "red", textAlign: "left" }}
+                    // validateStatus={showErr ? "error" : "success"}
+                    // help={showErr ? "PayMent and password not match" : ""}
                     >
                         <Input
-                            // placeholder={
-                            //     !formData.password ? "password is required" : "input password"
-                            // }
-                            name="PayMent"
-                            // onChange={handleChange}
-                            // status={!formData.password ? "error" : ""}
-                            // prefix={!formData.password ? <ClockCircleOutlined /> : null}
+                            placeholder={
+                                "XXXX-XXXX-XXXX-XXXX"
+                            }
+                            name="creditcardnumber"
+                        // onChange={handleChange}
+                        // status={!formData.password ? "error" : ""}
+                        // prefix={!formData.password ? <ClockCircleOutlined /> : null}
                         />
                     </Form.Item>
 
@@ -145,22 +144,21 @@ const AddPayment = () => {
                         wrapperCol={{
                             span: 24,
                         }}
-                        label="email"
-                        name="email"
-                        rules={[{ required: true, message: "email is required" }]}
-                        style={{ color: "red", textAlign: "left" }}
-                        validateStatus={showErr ? "error" : "success"}
-                        help={showErr ? "email and password not match" : ""}
+                        label="Expiration"
+                        name="expiration"
+                    // rules={[{ required: true, message: "Expiration is required" }]}
+                    // style={{ color: "red", textAlign: "left" }}
+                    // validateStatus={showErr ? "error" : "success"}
+                    // help={showErr ? "Expiration and password not match" : ""}
                     >
-                        <Input.Password
-                            // placeholder={
-                            //     !formData.password ? "password is required" : "input password"
-                            // }
-                            // name="password"
-                            // onChange={handleChange}
-                            // status={!formData.password ? "error" : ""}
-                            // prefix={!formData.password ? <ClockCircleOutlined /> : null}
-                        />
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <DatePicker picker="month" />
+                            </Col>
+                            <Col span={12}>
+                                <DatePicker picker="year" />
+                            </Col>                        </Row>
+
                     </Form.Item>
 
                     {/* <Form.Item
