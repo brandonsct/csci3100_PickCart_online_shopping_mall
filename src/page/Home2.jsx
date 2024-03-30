@@ -115,6 +115,7 @@ const Home2 = ({ test }) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const navigate = useNavigate();
+  const [openFilter, setOpenFilter] = useState("false");
   const logOut = () => {
     axios({
       method: "DELETE",
@@ -163,19 +164,22 @@ const Home2 = ({ test }) => {
                 onSearch={onSearch}
                 style={{ width: 300, height: 100, "padding-top": "30px" }}
               />
-              
             </div>
           </div>
           <div class="flex items-stretch w-full justify-center">
             <div class="justify-items-start grid border-2 border-gray-800 h-10 items-stretch w-full bg-red-100 rounded">
-              <div class=" pl-1 align">
+              <Button
+                type="secondary"
+                class=" pl-1 align text-black"
+                ghost
+                onClick={() => setOpenFilter(!openFilter)}
+              >
                 <AppstoreOutlined />
                 Search box
-              </div>
-              
+              </Button>
             </div>
           </div>
-          <Filter />
+          {openFilter && <Filter />}
           <List
             grid={{
               gutter: 16,
