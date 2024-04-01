@@ -319,21 +319,45 @@ app.put("/updateuser/:id", async (req, res) => {
 
 const { ProductSchema } = require("./schemas.js"); // Assuming you have a Product model
 
-app.post("/getProduct", async (req, res) => {
-  // Extract the product ID from the request body
+// app.post("/getProducts", async (req, res) => {
+//   // Extract the product ID and product name from the request body
+//   const productId = req.body.id;
+//   const productName = req.body.name;
+//   const Product = mongoose.model("Product", ProductSchema);
+//   // Use the product ID or product name to retrieve the products from the database
+//   const products = await Product.find({
+//     $or: [
+//       { productId: productId },
+//       { productName: { $regex: new RegExp(productName, "i") } },
+//     ],
+//   });
+
+//   // Check if any products were found
+//   if (products.length > 0) {
+//     // If any products were found, send them back in the response
+//     res.json(products);
+//   } else {
+//     // If no products were found, send a 404 status code and an error message
+//     res.status(404).json({ message: "No products found" });
+//   }
+// });
+
+app.post("/getProducts", async (req, res) => {
   const productId = req.body.id;
+  const productName = req.body.name;
   const Product = mongoose.model("Product", ProductSchema);
-
-  // Use the product ID to retrieve the product from the database
-  const product = await Product.findOne({ productId: productId });
-
-  // Check if the product was found
-  if (product) {
-    // If the product was found, send it back in the response
-    res.json(product);
+  const conditions = [];
+  if (productId) {
+    conditions.push({ productId: productId });
+  }
+  if (productName) {
+    conditions.push({ productName: { $regex: new RegExp(productName, "i") } });
+  }
+  const products = await Product.find({ $or: conditions });
+  if (products.length > 0) {
+    res.json(products);
   } else {
-    // If the product was not found, send a 404 status code and an error message
-    res.status(404).json({ message: "Product not found" });
+    res.status(404).json({ message: "No products found" });
   }
 });
 app.get("/testRun", (req, res) => {
