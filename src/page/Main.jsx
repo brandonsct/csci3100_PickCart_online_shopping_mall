@@ -12,7 +12,7 @@ import {
   AimOutlined,
   LoginOutlined,
   AppstoreAddOutlined,
-  ExpandOutlined
+  ExpandOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -103,7 +103,7 @@ const Main = ({ Page_component }) => {
 
   return (
     <div class="" id="bottomPage">
-      <Layout style={{ height: "115vh" }}>
+      <Layout style={{ height: "100vh", overflow: "hidden" }}>
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <Row gutter={16}>
             <Col span={8}>
@@ -165,7 +165,7 @@ const Main = ({ Page_component }) => {
                 label: "Cart",
                 onClick: () => handleCompClick("/cart"),
               },
-              logIn &&  {
+              logIn && {
                 key: "6",
                 icon: <ExpandOutlined />,
                 label: "Admin Actions",
@@ -182,7 +182,7 @@ const Main = ({ Page_component }) => {
                     label: "product CRUD",
                     onClick: () => handleCompClick("/productCRUD"),
                   },
-                ]
+                ],
               },
               logIn && {
                 key: "9",
