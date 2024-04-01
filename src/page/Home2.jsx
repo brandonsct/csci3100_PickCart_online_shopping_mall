@@ -13,6 +13,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   Input,
   Layout,
+  Collapse,
   Menu,
   Image,
   Button,
@@ -22,14 +23,15 @@ import {
   Row,
   Col,
 } from "antd";
+
 import { AppstoreOutlined } from "@ant-design/icons";
 
 import Filter from "../Components/filter/Filter";
 
 import appIconPhoto from "../asset/icon.png";
 import { ReactComponent as LogoSidebar } from "../asset/icon/login_logo.svg";
-import ricePhoto from "../asset/productInfo/rice.jpeg";
 
+const { Panel } = Collapse;
 const API_URL = process.env.REACT_APP_API_URL;
 
 // const productPhotoPath = "../asset/productInfo";
@@ -118,6 +120,7 @@ const Home2 = ({ test }) => {
   } = theme.useToken();
   const navigate = useNavigate();
   const [openFilter, setOpenFilter] = useState("false");
+
   const logOut = () => {
     axios({
       method: "DELETE",
@@ -142,9 +145,8 @@ const Home2 = ({ test }) => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [searchFunc, setSearchFunc] = useState(false);
+
   useEffect(() => {
-    // if (!searchFunc) {
     axios
       .get(`${API_URL}/getAllProducts`)
       .then((response) => {
@@ -155,21 +157,6 @@ const Home2 = ({ test }) => {
         console.error("Error fetching data: ", error);
         setIsLoading(false);
       });
-    // } else {
-    //   axios({
-    //     method: "POST",
-    //     data: {},
-    //     url: `${API_URL}/getProducts`,
-    //   })
-    //     .then((response) => {
-    //       setProducts(response.data);
-    //       setIsLoading(false);
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error fetching data: ", error);
-    //       setIsLoading(false);
-    //     });
-    // }
   }, []);
 
   const onSearch = (value, _e, info) => {
@@ -201,6 +188,11 @@ const Home2 = ({ test }) => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const updateProducts = (newProducts) => {
+    console.log("newProducts:", newProducts);
+    setProducts(newProducts.data);
+  };
 
   return (
     <>
@@ -258,12 +250,16 @@ const Home2 = ({ test }) => {
                   ghost
                   onClick={() => setOpenFilter(!openFilter)}
                 >
-                  <AppstoreOutlined />
-                  Search box
+                  <div class="flex flex-row ">
+                    <AppstoreOutlined style={{ fontSize: "30px" }} />
+                    <div class=" align-bottom text-lg">Search box</div>
+                  </div>
                 </Button>
               </div>
             </div>
-            {/* {openFilter && <Filter />} */}
+
+            {!openFilter && <Filter updateProducts={updateProducts} />}
+
             <List
               grid={{
                 gutter: 16,
@@ -283,6 +279,7 @@ const Home2 = ({ test }) => {
                       src={item.imgSrc}
                       alt={item.productName}
                     />
+                    <p>{item.price}</p>
                     <p>Description: {item.description}</p>
                     <Button onClick={() => console.log(item.productName)}>
                       Add to Cart

@@ -360,6 +360,25 @@ app.post("/getProducts", async (req, res) => {
     res.status(404).json({ message: "No products found" });
   }
 });
+app.post("/filterProducts", async (req, res) => {
+  const filterByCat = req.body.category;
+  const filterByPrice = req.body.priceRange;
+  const Product = mongoose.model("Product", ProductSchema);
+  console.log("filterByCat", filterByCat);
+  console.log("filterByPrice", filterByPrice[0]);
+
+  await Product.find({
+    category: { $in: filterByCat },
+    // price: { $gte: filterByPrice[0], $lte: filterByPrice[1] },
+  })
+    .then((products) => {
+      console.log("products:", products);
+      res.status(200).json(products);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: "server error" });
+    });
+});
 app.get("/testRun", (req, res) => {
   res.status(200).json({ message: "Here i am " });
 });
@@ -373,5 +392,6 @@ app.get("/getAllProducts", async (req, res) => {
   // Send the products back in the response
   res.json(products);
 });
+
 // listen to port 8000a
 const server = app.listen(api_port);

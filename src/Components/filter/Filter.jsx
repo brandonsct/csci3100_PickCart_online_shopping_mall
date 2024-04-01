@@ -1,74 +1,105 @@
-import React from 'react';
-import "./filter.css";
-import
-{ 
-    Button,
-    Slider,
-    Rate,
-}
-from
-"antd"
-;
+import React, { useState } from "react";
+import { Card, Select, Button, Slider } from "antd";
+import axios from "axios";
 
+const Filter = (props) => {
+  const OPTIONS = [
+    "HouseHold Supply",
+    "Meat and Seafood",
+    "Dairy, Chilled and Eggs",
+    "Breakfast and Bakery",
+  ];
+  let translationTable = {
+    "HouseHold Supply": "HouseHoldSupply",
+    "Meat and Seafood": "MeatNSeafood",
+    "Dairy, Chilled and Eggs": "DairyChilledEggs",
+    "Breakfast and Bakery": "BreakfastNBakery",
+  };
+  const API_URL = process.env.REACT_APP_API_URL;
 
-function Filter() {
-    const sliderStyle = {
-        width: '220px', // Set the desired width here
-      };
-    
-    
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [sliderOption, setSliderOption] = useState([0, 200]);
+  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
-    return (
-        <>
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  const onChangeComplete = (value) => {
+    console.log("onChangeComplete: ", value);
 
-            <div className='Filter'>
-            <h1 className='heading'>Select Category</h1>
-            <Button>Open</Button>
-            <Button>Sale Off</Button>                
-            <Button>Pick Up</Button>
-            <Button>Preferred</Button>
-            <Button>Ordered</Button>                
-            <Button>Verified</Button>
-            <br />
-            <h1 className='heading'>Price</h1>
+    setSliderOption(value);
+  };
 
-            <Slider style={sliderStyle} />
+  const applyFilter = () => {
+    let translatedSelected = [];
+    selectedItems.forEach((item) => {
+      translatedSelected.push(translationTable[item]);
+    });
 
-            <h1 className='heading'>Rating</h1>
-            <Rate />
-            <br />            
-            <br />           
-            <br />
+    let filterData = {
+      category: translatedSelected,
+      priceRange: sliderOption,
+    };
+    console.log("category:", translatedSelected);
+    axios({
+      method: "POST",
+      data: filterData,
+      url: `${API_URL}/filterProducts`,
+    })
+      .then((response) => {
+        props.updateProducts(response);
 
+        console.log("response:::::", response);
+        // setProducts(response.data);
+        // setIsLoading(false);
+      })
+      .catch((error) => {
+        // console.error("Error fetching data: ", error);
+        // setIsLoading(false);
+      });
+    // props.updateProducts(data);
+    console.log("filterData:", filterData);
+  };
+  return (
+    <Card
+      style={{
+        width: 600,
+      }}
+    >
+      <div class="flex flex-row">
+        <p>Select Category:</p>
+        <Select
+          mode="multiple"
+          placeholder="Inserted are removed"
+          value={selectedItems}
+          onChange={setSelectedItems}
+          style={{
+            width: "100%",
+          }}
+          options={filteredOptions.map((item) => ({
+            value: item,
+            label: item,
+          }))}
+        />
+      </div>
 
-            <div className='flex'>
-                <div className='box'>
-                    <span class="material-symbols-outlined">cake</span>
-                    <p className='item'>cake<nbsp /><nbsp /><nbsp /><nbsp /></p>
-                </div>
-                <div className='box'>
-                    <span class="material-symbols-outlined">restaurant</span>
-                    <p className='item'>food </p>
-                </div>
-                <div className='box'>
-                    <span class="material-symbols-outlined">local_bar</span>
-                    <p className='item'>drinks </p>
-                </div>
-                <div className='box'>
-                    <span class="material-symbols-outlined">local_pizza</span>
-                    <p className='item'>snack </p>
-                </div>
-                <div className='box'>
-                    <span class="material-symbols-outlined">grocery</span>
-                    <p className='item'>beverage </p>
-                </div>
-            </div>
-            <Button>Apply</Button>
+      <div class="">
+        <div>
+          Price:{sliderOption[0]} to {sliderOption[1]}
+        </div>
+        <Slider
+          range
+          step={10}
+          min={0}
+          max={200}
+          defaultValue={[0, 200]}
+          //   onChange={onChange}
+          onChangeComplete={onChangeComplete}
+        />
+      </div>
 
-            </div>
-        </>
-    )
-}
+      <div class="flex justify-center">
+        <Button onClick={applyFilter}>Apply</Button>
+      </div>
+    </Card>
+  );
+};
 
 export default Filter;
