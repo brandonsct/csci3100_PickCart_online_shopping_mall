@@ -200,6 +200,7 @@ const Home2 = ({ test }) => {
                     // src={`${item.cardDetail}`}
                     src={ricePhoto}
                   />
+                  <Button>Add to Cart</Button>
                 </Card>
               </List.Item>
             )}

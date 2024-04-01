@@ -11,8 +11,8 @@ const LoginSchema = require("./schemas.js").LoginSchema;
 const LoginModel = mongoose.model("login", LoginSchema);
 const TokenSchema = require("./schemas.js").TokenSchema;
 const TokenModel = mongoose.model("token", TokenSchema);
-const sendemail = require("./tokenSender.js")
-require('dotenv').config();
+const sendemail = require("./tokenSender.js");
+require("dotenv").config();
 
 const port = process.env.PORT || 3000;
 const api_port = process.env.API_PORT || 8000;
@@ -47,19 +47,18 @@ db.once("open", function () {
   console.log("Connection is open... success");
 });
 
-
 app.get("/register", (req, res) => {
   res.send("Authenticated");
 });
 
 app.post("/sendemail", async (req, res) => {
   try {
-    console.log("reqqq>>", req.body)
+    console.log("reqqq>>", req.body);
     const { formData: values } = req?.body;
-    const token = sendemail(values.email)
+    const token = sendemail(values.email);
     TokenModel.create({
       email: values.email,
-      token: token
+      token: token,
     })
       .then((user) => res.json(user))
       .catch((err) => res.json(err));
@@ -67,17 +66,17 @@ app.post("/sendemail", async (req, res) => {
     console.log("error>>", error);
     res.json(error);
   }
-})
+});
 
 app.post("/checkotp", async (req, res) => {
   try {
-    console.log("req>>", req.body)
+    console.log("req>>", req.body);
     const { formData: values } = req?.body;
-    const userotp = parseInt(values.otp)
-    console.log(typeof (userotp))
+    const userotp = parseInt(values.otp);
+    console.log(typeof userotp);
     TokenModel.find({ token: userotp })
       .then((result) => {
-        console.log("resultofot[]>>", result)
+        console.log("resultofot[]>>", result);
         if (result.length === 0) res.status(200).send(false);
         else res.status(200).send(true);
       })
@@ -86,7 +85,7 @@ app.post("/checkotp", async (req, res) => {
     console.log("error>>", error);
     res.json(error);
   }
-})
+});
 
 app.get("/login", (req, res) => {
   res.status(403).send("login");
@@ -153,13 +152,15 @@ app.post("/register", async (req, res) => {
     const username = values.username ? values.username : "";
     const email = values.email ? values.email : "";
     const birthday = values.birthday ? new Date(values.birthday) : new Date();
-    const password = values.password ? await bcrypt.hash(values.password, 10) : "";
+    const password = values.password
+      ? await bcrypt.hash(values.password, 10)
+      : "";
     const role = values.role ? values.role : "user";
     console.log("username>> ", username);
     console.log("email>> ", email);
     console.log("password>> ", password);
-    console.log("birthday>>", birthday)
-   
+    console.log("birthday>>", birthday);
+
     if (!username || !email || !password || !role) {
       return res.status(406).send("Field missing");
     }
@@ -171,7 +172,7 @@ app.post("/register", async (req, res) => {
       password: password,
       role: role,
       birthday: birthday,
-      cTime: currentTime
+      cTime: currentTime,
     })
       .then((user) => res.json(user))
       .catch((err) => res.json(err));
@@ -216,12 +217,12 @@ app.get("/home", checkAuth, (req, res) => {
 });
 
 app.post("/checkemail", (req, res) => {
-  console.log("req.body>>", req.body)
+  console.log("req.body>>", req.body);
   const { formData: values } = req?.body;
-  console.log("email>>", values.email)
+  console.log("email>>", values.email);
   LoginModel.find({ email: values.email })
     .then((result) => {
-      console.log("resultEmail>>", result)
+      console.log("resultEmail>>", result);
       if (result.length === 0) res.status(200).send(false);
       else res.status(200).send(true);
     })
@@ -230,27 +231,28 @@ app.post("/checkemail", (req, res) => {
 
 app.post("/checkusername", (req, res) => {
   const { formData: values } = req?.body;
-  console.log("valeu.s", values.username)
+  console.log("valeu.s", values.username);
   LoginModel.find({ username: values.username })
     .then((result) => {
-      console.log("resultUser>>", result)
+      console.log("resultUser>>", result);
       if (result.length === 0) res.status(200).send(false);
       else res.status(200).send(true);
     })
     .catch(() => res.status(500).send("Internal Server error"));
 });
 
-
-
-
-
-
 // get users data
 app.get("/admin/user", (req, res) => {
   LoginModel.find()
     .then((data) => {
       let users = data.map((item, idx) => {
-        return { id: item._id, name: item.username, email: item.email, pw: item.password, birthday: item.birthday };
+        return {
+          id: item._id,
+          name: item.username,
+          email: item.email,
+          pw: item.password,
+          birthday: item.birthday,
+        };
       });
       res.status(200);
       res.send(users);
@@ -286,14 +288,18 @@ app.put("/updateuser/:id", async (req, res) => {
 
   if (!updatedData.username || !updatedData.password) {
     res.setHeader("Content-Type", "text/plain");
-    res.status(400).send("Request body must include both username and password.");
+    res
+      .status(400)
+      .send("Request body must include both username and password.");
     return;
   }
   //hash password
   const hashedPw = await bcrypt.hash(updatedData.password, 10);
   updatedData.password = hashedPw;
 
-  LoginModel.findOneAndUpdate({ _id: req.params.id }, updatedData, { new: true })
+  LoginModel.findOneAndUpdate({ _id: req.params.id }, updatedData, {
+    new: true,
+  })
     .then((data) => {
       if (data) {
         res.json(data);
@@ -309,6 +315,47 @@ app.put("/updateuser/:id", async (req, res) => {
     });
 });
 
+// ProductApi //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// ////////////
 
+const { ProductSchema } = require("./schemas.js"); // Assuming you have a Product model
+
+app.post("/getProduct", async (req, res) => {
+  // Extract the product ID from the request body
+  const productId = req.body.id;
+
+  // Use the product ID to retrieve the product from the database
+  const product = await ProductSchema.findOne({
+    productId: { productId },
+  });
+
+  // Check if the product was found
+  if (product) {
+    // If the product was found, send it back in the response
+    res.json(product);
+  } else {
+    // If the product was not found, send a 404 status code and an error message
+    res.status(404).json({ message: "Product not found" });
+  }
+});
+
+app.listen(3000, () => console.log("Server started on port 3000"));
+app.post("/getAllProduct", (req, res) => {
+  // Log the entire request for debugging purposes
+  console.log("req", req);
+
+  // Extract the product ID from the request body
+  const productId = req.body.id;
+
+  const product = database.getProductById(productId);
+
+  // Check if the product was found
+  if (product) {
+    // If the product was found, send it back in the response
+    res.json(product);
+  } else {
+    // If the product was not found, send a 404 status code and an error message
+    res.status(404).json({ message: "Product not found" });
+  }
+});
 // listen to port 8000
 const server = app.listen(api_port);
