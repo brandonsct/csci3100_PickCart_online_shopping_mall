@@ -1,7 +1,6 @@
 const { ObjectId } = require("bson");
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const { v4 as uuidv4 } = require("uuid");
 
 const LoginSchema = new Schema({
   username: { type: String, required: true },
@@ -30,7 +29,7 @@ const ProductSchema = new Schema({
   category: String,
   stock: Number,
   productName: String,
-  productId: { type: String, default: uuidv4 },
+  productId: String,
 });
 
 exports.LoginSchema = LoginSchema;

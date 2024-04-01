@@ -31,6 +31,7 @@
     "react-router-dom": "^6.20.1",
     "react-scripts": "5.0.1",
     "rn-numeric-input": "^0.0.1",
+    "uuid": "^9.0.1",
     "web-vitals": "^2.1.4",
     "xml2js": "^0.6.2"
   },

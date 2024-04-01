@@ -322,11 +322,10 @@ const { ProductSchema } = require("./schemas.js"); // Assuming you have a Produc
 app.post("/getProduct", async (req, res) => {
   // Extract the product ID from the request body
   const productId = req.body.id;
+  const Product = mongoose.model("Product", ProductSchema);
 
   // Use the product ID to retrieve the product from the database
-  const product = await ProductSchema.findOne({
-    productId: { productId },
-  });
+  const product = await Product.findOne({ productId: productId });
 
   // Check if the product was found
   if (product) {
@@ -337,25 +336,18 @@ app.post("/getProduct", async (req, res) => {
     res.status(404).json({ message: "Product not found" });
   }
 });
-
-app.listen(3000, () => console.log("Server started on port 3000"));
-app.post("/getAllProduct", (req, res) => {
-  // Log the entire request for debugging purposes
-  console.log("req", req);
-
-  // Extract the product ID from the request body
-  const productId = req.body.id;
-
-  const product = database.getProductById(productId);
-
-  // Check if the product was found
-  if (product) {
-    // If the product was found, send it back in the response
-    res.json(product);
-  } else {
-    // If the product was not found, send a 404 status code and an error message
-    res.status(404).json({ message: "Product not found" });
-  }
+app.get("/testRun", (req, res) => {
+  res.status(200).json({ message: "Here i am " });
 });
-// listen to port 8000
+
+app.get("/getAllProducts", async (req, res) => {
+  const Product = mongoose.model("Product", ProductSchema);
+
+  // Retrieve all products from the database
+  const products = await Product.find({});
+
+  // Send the products back in the response
+  res.json(products);
+});
+// listen to port 8000a
 const server = app.listen(api_port);
