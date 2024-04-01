@@ -38,9 +38,9 @@ const Main = ({ Page_component }) => {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showLogOutSideBar, setShowLogOutSideBar] = useState(false);
   const [logIn, setLogin] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState([]);
+  const [userRole, setUserRole] = useState("user")
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -63,7 +63,9 @@ const Main = ({ Page_component }) => {
         role === undefined
       ) {
         setLogin(false);
+        setUserRole("")
       } else {
+        setUserRole(role)
         setLogin(true);
       }
     } catch (error) {
@@ -89,6 +91,8 @@ const Main = ({ Page_component }) => {
           console.log("Logged out");
           sessionStorage.clear();
           setLogin(false);
+          setUserRole("")
+          navigate("/home")
         }
       })
 
@@ -165,7 +169,7 @@ const Main = ({ Page_component }) => {
                 label: "Cart",
                 onClick: () => handleCompClick("/cart"),
               },
-              logIn && {
+              userRole === "admin" && {
                 key: "6",
                 icon: <ExpandOutlined />,
                 label: "Admin Actions",
