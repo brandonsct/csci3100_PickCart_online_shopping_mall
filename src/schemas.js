@@ -12,6 +12,9 @@ const LoginSchema = new Schema({
     required: true,
     default: "user",
   },
+  firstname: {type: String, required: false, default: ""},
+  lastname: {type: String, required: false, default: ""},
+  avatar: {type: String, required: false, default: ""},
   birthday: { type: Date, default: Date.now },
   cTime: { type: Date, default: Date.now },
 });

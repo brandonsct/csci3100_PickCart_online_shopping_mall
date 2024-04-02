@@ -231,7 +231,6 @@ app.post("/checkemail", (req, res) => {
 
 app.post("/checkusername", (req, res) => {
   const { formData: values } = req?.body;
-  console.log("valeu.s", values.username);
   LoginModel.find({ username: values.username })
     .then((result) => {
       console.log("resultUser>>", result);
@@ -241,17 +240,47 @@ app.post("/checkusername", (req, res) => {
     .catch(() => res.status(500).send("Internal Server error"));
 });
 
-// get users data
+app.post("/getuser", (req, res) => {
+  const username = req?.body?.username
+  let user =""
+  LoginModel.findOne({username: username})
+    .then((item) => {
+      if (item) {
+        console.log("item>>", item)
+        user =  {
+          id: item._id,
+          username: item.username,
+          email: item.email,
+          pw: item.password,
+          birthday: item.birthday,
+          firstname: item.firstname,
+          lastname: item.lastname,
+          avatar: item.avatar,
+        };
+      }
+      res.status(200);
+      res.send(user);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(406);
+      res.send(err);
+    });
+});
+
+// get users data from admin
 app.get("/admin/user", (req, res) => {
   LoginModel.find()
     .then((data) => {
       let users = data.map((item, idx) => {
         return {
           id: item._id,
-          name: item.username,
+          username: item.username,
           email: item.email,
           pw: item.password,
           birthday: item.birthday,
+          firstname: item.firstname,
+          lastname: item.lastname,
         };
       });
       res.status(200);
@@ -263,6 +292,31 @@ app.get("/admin/user", (req, res) => {
       res.send(err);
     });
 });
+
+app.put("/admin/user", (req, res)=>{
+  try {
+    const { formData: values } = req.body;
+    console.log("update>>user>>values>>", values);
+    LoginModel.findOneAndUpdate({_id:values.id}, values ,{
+      new: true,
+    })
+    .then((data) => {
+      if (data) {
+        res.status(200).json(data);
+      } else {
+        res.setHeader("Content-Type", "text/plain");
+        res.status(404).send("User not found.");
+      }
+    })
+    .catch((error) => {
+      res.setHeader("Content-Type", "text/plain");
+      res.status(500).send("Internal Server Error");
+      console.log(error);
+    });
+  } catch (error) {
+    console.log("error>>", error)
+  }
+})
 
 // Delete User data
 app.delete("/deleteuser/:username", (req, res) => {
@@ -283,37 +337,7 @@ app.delete("/deleteuser/:username", (req, res) => {
 });
 
 // Update User Data
-app.put("/updateuser/:id", async (req, res) => {
-  let updatedData = req.body;
 
-  if (!updatedData.username || !updatedData.password) {
-    res.setHeader("Content-Type", "text/plain");
-    res
-      .status(400)
-      .send("Request body must include both username and password.");
-    return;
-  }
-  //hash password
-  const hashedPw = await bcrypt.hash(updatedData.password, 10);
-  updatedData.password = hashedPw;
-
-  LoginModel.findOneAndUpdate({ _id: req.params.id }, updatedData, {
-    new: true,
-  })
-    .then((data) => {
-      if (data) {
-        res.json(data);
-      } else {
-        res.setHeader("Content-Type", "text/plain");
-        res.status(404).send("User not found.");
-      }
-    })
-    .catch((error) => {
-      res.setHeader("Content-Type", "text/plain");
-      res.status(500).send("Internal Server Error");
-      console.log(error);
-    });
-});
 
 // ProductApi //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// ////////////
 

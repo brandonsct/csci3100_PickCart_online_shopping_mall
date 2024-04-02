@@ -32,25 +32,20 @@ const { Title } = Typography;
 const { Meta } = Card;
 
 const Profile = () => {
-  // const [username, setUsername] = useState("")
+  const [userDetails, setUserDetails] = useState([])
 
   const username = JSON.parse(sessionStorage.getItem("username"))?.value;
-  // setUsername(value)
-  const storedData = Object.keys(sessionStorage).reduce((data, key) => {
-    try {
-      if (key === "username") {
-        data["name"] = JSON.parse(sessionStorage.getItem("username"))?.value;
-      } else {
-        data[key] = JSON.parse(sessionStorage.getItem(key));
-      }
-    } catch (error) {
-      console.log(`Error retrieving ${key} from session storage:`, error);
-      data[key] = null;
-    }
-    return data;
-  }, {});
-  console.log("storedData>>", storedData);
-
+  const getUserDetails = ()=>{
+    axios.post(`${API_URL}/getuser`, {username})
+    .then((resp)=>{
+        if (resp.status ===200) return setUserDetails(resp.data)
+        else return console.log("resp>>>fail>>", resp)
+    })
+    .catch((error)=>{
+        console.log("err>>", error)
+    })
+  }
+  console.log("userDetails>>", userDetails)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
@@ -77,6 +72,10 @@ const Profile = () => {
   const handlePaymentCancel = () => {
     setIsPaymentModalOpen(false);
   };
+
+  useEffect(()=>{
+    getUserDetails()
+  }, [isModalOpen]) 
 
   return (
     <Layout>
@@ -111,10 +110,10 @@ const Profile = () => {
         >
           <Meta
             avatar={
-              <Avatar src="https://gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50" />
+              <Avatar src={`${userDetails.avatar}`} />
             }
             title={username}
-            description=" John Doe"
+            description={`${userDetails.firstname} ${userDetails.lastname}`}
           />
           <Modal
             title="Edit Profile"
@@ -122,8 +121,9 @@ const Profile = () => {
             onOk={handleOk}
             onCancel={handleCancel}
             width={300}
+            footer={null}
           >
-            <UserDetails user={{ storedData }} />
+            <UserDetails user={userDetails} onSuccess={handleCancel}/>
           </Modal>
           <Modal
             title="Add Payment Method"
