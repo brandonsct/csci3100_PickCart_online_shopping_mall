@@ -51,7 +51,10 @@ const Cart = () => {
             }}
           />
         </Card>
-        <Button danger> Check Out</Button>
+        <Button danger style={{ "margin-top": "15px" }}>
+          {" "}
+          Check Out
+        </Button>
       </Card>
     </div>
   );

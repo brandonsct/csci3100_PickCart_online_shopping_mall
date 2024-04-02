@@ -194,6 +194,10 @@ const Home2 = ({ test }) => {
     setProducts(newProducts.data);
   };
 
+  const addToCart = (item) => {
+    console.log("ID:", item.productId);
+  };
+
   return (
     <>
       {isLoading ? (
@@ -258,8 +262,14 @@ const Home2 = ({ test }) => {
               </div>
             </div>
 
+            {/* {!openFilter && <Filter updateProducts={updateProducts} />}
+            <div
+              class={`transition-transform duration-500 ease-in-out transform ${
+                openFilter ? "translate-y-full" : "translate-y-0"
+              } `}
+            > */}
             {!openFilter && <Filter updateProducts={updateProducts} />}
-
+            {/* </div> */}
             <List
               grid={{
                 gutter: 16,
@@ -281,7 +291,11 @@ const Home2 = ({ test }) => {
                     />
                     <p>$ {item.price}</p>
                     <p>Description: {item.productName}</p>
-                    <Button onClick={() => console.log(item.productName)}>
+                    <Button
+                      onClick={() => {
+                        addToCart(item);
+                      }}
+                    >
                       Add to Cart
                     </Button>
                     <p class="text-stone-500 text-xs">

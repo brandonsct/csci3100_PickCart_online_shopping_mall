@@ -381,10 +381,6 @@ app.post("/filterProducts", async (req, res) => {
       res.status(400).json({ message: "server error" });
     });
 });
-app.get("/testRun", (req, res) => {
-  res.status(200).json({ message: "Here i am " });
-});
-
 app.get("/getAllProducts", async (req, res) => {
   const Product = mongoose.model("Product", ProductSchema);
 
@@ -394,6 +390,8 @@ app.get("/getAllProducts", async (req, res) => {
   // Send the products back in the response
   res.json(products);
 });
+
+// CartApi //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// ////////////
 
 // listen to port 8000a
 const server = app.listen(api_port);
