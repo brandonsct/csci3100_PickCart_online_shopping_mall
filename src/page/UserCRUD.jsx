@@ -9,12 +9,14 @@ const API_URL = process.env.REACT_APP_API_URL;
 const UserCRUD = () => {
   const [userList, setUserList] = useState([]);
   const [singleUser, setSingleUser] = useState({});
+  const [loading, setLoading] =useState(true)
 
   const loadUserList = () => {
     axios
       .get(`${API_URL}/admin/user`)
       .then((response) => {
         setUserList(response.data);
+        setLoading(false)
         // console.log("userList>>", userList)
       })
       .catch((error) => {
@@ -57,27 +59,42 @@ const UserCRUD = () => {
       key: "username",
       fixed: 'left',
       width: "100px",
+      sorter: {
+        compare: (a, b) => a.username.localeCompare(b.username),
+      },
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
       width: "250px",
+      sorter: {
+        compare: (a, b) => a.email.localeCompare(b.email),
+      },
     },
     {
       title: "FirstName",
       dataIndex: "firstname",
       key: "firstname",
+      sorter: {
+        compare: (a, b) => a.firstname.localeCompare(b.firstname),
+      },
     },
     {
       title: "LastName",
       dataIndex: "lastname",
       key: "lastname",
+      sorter: {
+        compare: (a, b) => a.lastname.localeCompare(b.lastname),
+      },
     },
     {
       title: "Birthday",
       dataIndex: "birthday",
       key: "birthday",
+      sorter: {
+        compare: (a, b) => a.birthday.localeCompare(b.birthday),
+      },
       render: (birthday) => moment(birthday).format('YYYY-MM-DD'),
     },
     {
@@ -117,10 +134,11 @@ const UserCRUD = () => {
         <UserDetails onSuccess={handleCancel} user={singleUser} />
       </Modal>
       <Table columns={columns} dataSource={userList}
+        loading={loading}
         size="middle"
-        style={{ 
-          backgroundColor: "black",
-        }}
+        // style={{ 
+        //   backgroundColor: "black",
+        // }}
         scroll={{
           x: 1000,
         }}
