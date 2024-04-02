@@ -59,27 +59,42 @@ const UserCRUD = () => {
       key: "username",
       fixed: 'left',
       width: "100px",
+      sorter: {
+        compare: (a, b) => a.username.localeCompare(b.username),
+      },
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
       width: "250px",
+      sorter: {
+        compare: (a, b) => a.email.localeCompare(b.email),
+      },
     },
     {
       title: "FirstName",
       dataIndex: "firstname",
       key: "firstname",
+      sorter: {
+        compare: (a, b) => a.firstname.localeCompare(b.firstname),
+      },
     },
     {
       title: "LastName",
       dataIndex: "lastname",
       key: "lastname",
+      sorter: {
+        compare: (a, b) => a.lastname.localeCompare(b.lastname),
+      },
     },
     {
       title: "Birthday",
       dataIndex: "birthday",
       key: "birthday",
+      sorter: {
+        compare: (a, b) => a.birthday.localeCompare(b.birthday),
+      },
       render: (birthday) => moment(birthday).format('YYYY-MM-DD'),
     },
     {
