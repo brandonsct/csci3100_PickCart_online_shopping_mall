@@ -241,13 +241,13 @@ app.post("/checkusername", (req, res) => {
 });
 
 app.post("/getuser", (req, res) => {
-  const username = req?.body?.username
-  let user =""
-  LoginModel.findOne({username: username})
+  const username = req?.body?.username;
+  let user = "";
+  LoginModel.findOne({ username: username })
     .then((item) => {
       if (item) {
-        console.log("item>>", item)
-        user =  {
+        // console.log("item>>", item);
+        user = {
           id: item._id,
           username: item.username,
           email: item.email,
@@ -293,30 +293,30 @@ app.get("/admin/user", (req, res) => {
     });
 });
 
-app.put("/admin/user", (req, res)=>{
+app.put("/admin/user", (req, res) => {
   try {
     const { formData: values } = req.body;
     console.log("update>>user>>values>>", values);
-    LoginModel.findOneAndUpdate({_id:values.id}, values ,{
+    LoginModel.findOneAndUpdate({ _id: values.id }, values, {
       new: true,
     })
-    .then((data) => {
-      if (data) {
-        res.status(200).json(data);
-      } else {
+      .then((data) => {
+        if (data) {
+          res.status(200).json(data);
+        } else {
+          res.setHeader("Content-Type", "text/plain");
+          res.status(404).send("User not found.");
+        }
+      })
+      .catch((error) => {
         res.setHeader("Content-Type", "text/plain");
-        res.status(404).send("User not found.");
-      }
-    })
-    .catch((error) => {
-      res.setHeader("Content-Type", "text/plain");
-      res.status(500).send("Internal Server Error");
-      console.log(error);
-    });
+        res.status(500).send("Internal Server Error");
+        console.log(error);
+      });
   } catch (error) {
-    console.log("error>>", error)
+    console.log("error>>", error);
   }
-})
+});
 
 // Delete User data
 app.delete("/deleteuser/:username", (req, res) => {
@@ -337,7 +337,6 @@ app.delete("/deleteuser/:username", (req, res) => {
 });
 
 // Update User Data
-
 
 // ProductApi //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// ////////////
 
@@ -386,13 +385,24 @@ app.post("/getProducts", async (req, res) => {
   }
 });
 app.post("/filterProducts", async (req, res) => {
-  const filterByCat = req.body.category;
-  const filterByPrice = req.body.priceRange;
+  let filterByCat = req.body.category;
+  let filterByPrice = req.body.priceRange;
   const Product = mongoose.model("Product", ProductSchema);
   console.log("filterByCat", filterByCat);
+  console.log("filterByCat", filterByCat.length);
+
   console.log("filterByPrice", filterByPrice[0]);
   console.log("filterByPrice", typeof filterByPrice[1]);
-
+  let allCategory = [
+    "HouseHoldSupply",
+    "MeatNSeafood",
+    "DairyChilledEggs",
+    "BreakfastNBakery",
+  ];
+  if (filterByCat.length == 0) {
+    filterByCat = allCategory;
+    console.log("filterByCat", filterByCat);
+  }
   await Product.find({
     category: { $in: filterByCat },
     price: { $gte: filterByPrice[0], $lte: filterByPrice[1] },

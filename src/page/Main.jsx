@@ -40,7 +40,7 @@ const Main = ({ Page_component }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [logIn, setLogin] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState([]);
-  const [userRole, setUserRole] = useState("user")
+  const [userRole, setUserRole] = useState("user");
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -50,19 +50,20 @@ const Main = ({ Page_component }) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const [userDetails, setUserDetails] = useState([])
+  const [userDetails, setUserDetails] = useState([]);
 
-  const getUserDetails = (username)=>{
-    axios.post(`${API_URL}/getuser`, {username})
-    .then((resp)=>{
-        if (resp.status ===200) return setUserDetails(resp.data)
-        else return console.log("resp>>>fail>>", resp)
-    })
-    .catch((error)=>{
-        console.log("err>>", error)
-    })
-  }
-  console.log("userDetails>>", userDetails)
+  const getUserDetails = (username) => {
+    axios
+      .post(`${API_URL}/getuser`, { username })
+      .then((resp) => {
+        if (resp.status === 200) return setUserDetails(resp.data);
+        else return console.log("resp>>>fail>>", resp);
+      })
+      .catch((error) => {
+        console.log("err>>", error);
+      });
+  };
+  // console.log("userDetails>>", userDetails)
 
   const isLogin = () => {
     let role, username;
@@ -76,11 +77,11 @@ const Main = ({ Page_component }) => {
         role === undefined
       ) {
         setLogin(false);
-        setUserRole("")
+        setUserRole("");
       } else {
-        setUserRole(role)
+        setUserRole(role);
         setLogin(true);
-        getUserDetails(username)
+        getUserDetails(username);
       }
     } catch (error) {
       console.log("error>>", error);
@@ -105,8 +106,8 @@ const Main = ({ Page_component }) => {
           console.log("Logged out");
           sessionStorage.clear();
           setLogin(false);
-          setUserRole("")
-          navigate("/home")
+          setUserRole("");
+          navigate("/home");
         }
       })
 
@@ -226,10 +227,7 @@ const Main = ({ Page_component }) => {
                 onClick={() => handleCompClick("/profile")}
                 style={{ backgroundColor: "transparent", border: "none" }}
               >
-                <Avatar
-                  size="small"
-                  src={userDetails.avatar}
-                />
+                <Avatar size="small" src={userDetails.avatar} />
               </Button>
             ) : (
               <Button

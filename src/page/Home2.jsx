@@ -114,7 +114,7 @@ const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 
 const Home2 = ({ test }) => {
-  console.log("test>>", test);
+  // console.log("test>>", test);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();

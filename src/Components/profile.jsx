@@ -32,20 +32,21 @@ const { Title } = Typography;
 const { Meta } = Card;
 
 const Profile = () => {
-  const [userDetails, setUserDetails] = useState([])
+  const [userDetails, setUserDetails] = useState([]);
 
   const username = JSON.parse(sessionStorage.getItem("username"))?.value;
-  const getUserDetails = ()=>{
-    axios.post(`${API_URL}/getuser`, {username})
-    .then((resp)=>{
-        if (resp.status ===200) return setUserDetails(resp.data)
-        else return console.log("resp>>>fail>>", resp)
-    })
-    .catch((error)=>{
-        console.log("err>>", error)
-    })
-  }
-  console.log("userDetails>>", userDetails)
+  const getUserDetails = () => {
+    axios
+      .post(`${API_URL}/getuser`, { username })
+      .then((resp) => {
+        if (resp.status === 200) return setUserDetails(resp.data);
+        else return console.log("resp>>>fail>>", resp);
+      })
+      .catch((error) => {
+        console.log("err>>", error);
+      });
+  };
+  // console.log("userDetails>>", userDetails)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
@@ -73,9 +74,9 @@ const Profile = () => {
     setIsPaymentModalOpen(false);
   };
 
-  useEffect(()=>{
-    getUserDetails()
-  }, [isModalOpen]) 
+  useEffect(() => {
+    getUserDetails();
+  }, [isModalOpen]);
 
   return (
     <Layout>
@@ -109,9 +110,7 @@ const Profile = () => {
           ]}
         >
           <Meta
-            avatar={
-              <Avatar src={`${userDetails.avatar}`} />
-            }
+            avatar={<Avatar src={`${userDetails.avatar}`} />}
             title={username}
             description={`${userDetails.firstname} ${userDetails.lastname}`}
           />
@@ -123,7 +122,7 @@ const Profile = () => {
             width={300}
             footer={null}
           >
-            <UserDetails user={userDetails} onSuccess={handleCancel}/>
+            <UserDetails user={userDetails} onSuccess={handleCancel} />
           </Modal>
           <Modal
             title="Add Payment Method"
