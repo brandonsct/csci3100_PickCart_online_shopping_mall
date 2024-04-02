@@ -355,6 +355,7 @@ app.post("/getProducts", async (req, res) => {
   }
   const products = await Product.find({ $or: conditions });
   if (products.length > 0) {
+    console.log("products:", products);
     res.json(products);
   } else {
     res.status(404).json({ message: "No products found" });
@@ -366,10 +367,11 @@ app.post("/filterProducts", async (req, res) => {
   const Product = mongoose.model("Product", ProductSchema);
   console.log("filterByCat", filterByCat);
   console.log("filterByPrice", filterByPrice[0]);
+  console.log("filterByPrice", typeof filterByPrice[1]);
 
   await Product.find({
     category: { $in: filterByCat },
-    // price: { $gte: filterByPrice[0], $lte: filterByPrice[1] },
+    price: { $gte: filterByPrice[0], $lte: filterByPrice[1] },
   })
     .then((products) => {
       console.log("products:", products);

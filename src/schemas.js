@@ -24,7 +24,7 @@ const TokenSchema = new Schema({
 
 const ProductSchema = new Schema({
   description: String,
-  price: String,
+  price: Number,
   imgSrc: String,
   category: String,
   stock: Number,

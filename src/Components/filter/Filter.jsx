@@ -20,7 +20,7 @@ const Filter = (props) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [sliderOption, setSliderOption] = useState([0, 200]);
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
-
+  const [productNum, setProductNum] = useState();
   const onChangeComplete = (value) => {
     console.log("onChangeComplete: ", value);
 
@@ -45,8 +45,8 @@ const Filter = (props) => {
     })
       .then((response) => {
         props.updateProducts(response);
-
-        console.log("response:::::", response);
+        setProductNum(response.data.length);
+        // console.log("response:::::", response);
         // setProducts(response.data);
         // setIsLoading(false);
       })
@@ -98,6 +98,12 @@ const Filter = (props) => {
       <div class="flex justify-center">
         <Button onClick={applyFilter}>Apply</Button>
       </div>
+
+      {productNum > 0 ? (
+        <div className="text-cyan-500">{productNum} result is searched</div>
+      ) : (
+        <div className="text-red-500">No results are found</div>
+      )}
     </Card>
   );
 };

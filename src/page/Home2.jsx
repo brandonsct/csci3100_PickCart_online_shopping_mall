@@ -252,7 +252,7 @@ const Home2 = ({ test }) => {
                 >
                   <div class="flex flex-row ">
                     <AppstoreOutlined style={{ fontSize: "30px" }} />
-                    <div class=" align-bottom text-lg">Search box</div>
+                    <div class=" align-bottom text-lg ml-2">Search box</div>
                   </div>
                 </Button>
               </div>
@@ -279,8 +279,8 @@ const Home2 = ({ test }) => {
                       src={item.imgSrc}
                       alt={item.productName}
                     />
-                    <p>{item.price}</p>
-                    <p>Description: {item.description}</p>
+                    <p>$ {item.price}</p>
+                    <p>Description: {item.productName}</p>
                     <Button onClick={() => console.log(item.productName)}>
                       Add to Cart
                     </Button>
