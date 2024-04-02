@@ -41,29 +41,29 @@ class User extends Component {
   };
 
   // Update a user
-  updateUser = (key) => {
-    const { editingValues } = this.state;
+  // updateUser = (key) => {
+  //   const { editingValues } = this.state;
 
-    key = key.id;
-    axios({
-      url: `http://localhost:8000/updateuser/${key}`,
-      method: "PUT",
-      data: editingValues,
-    })
-      .then((r) => {
-        console.log(r.data);
-        this.LoadUserList();
-        // Update the user list with the updated user data
-        this.setState((prevState) => ({
-          //userList: prevState.userList.map((user) => (user._id === r.data.id ? r.data : user)),
-          editingKey: "",
-          editingValues: {},
-        }));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  //   key = key.id;
+  //   axios({
+  //     url: `http://localhost:8000/updateuser/${key}`,
+  //     method: "PUT",
+  //     data: editingValues,
+  //   })
+  //     .then((r) => {
+  //       console.log(r.data);
+  //       this.LoadUserList();
+  //       // Update the user list with the updated user data
+  //       this.setState((prevState) => ({
+  //         //userList: prevState.userList.map((user) => (user._id === r.data.id ? r.data : user)),
+  //         editingKey: "",
+  //         editingValues: {},
+  //       }));
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
   // Delete a user
   deleteUser = (e) => {
     const payload = {
