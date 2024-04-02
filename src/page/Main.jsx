@@ -50,6 +50,19 @@ const Main = ({ Page_component }) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  const [userDetails, setUserDetails] = useState([])
+
+  const getUserDetails = (username)=>{
+    axios.post(`${API_URL}/getuser`, {username})
+    .then((resp)=>{
+        if (resp.status ===200) return setUserDetails(resp.data)
+        else return console.log("resp>>>fail>>", resp)
+    })
+    .catch((error)=>{
+        console.log("err>>", error)
+    })
+  }
+  console.log("userDetails>>", userDetails)
 
   const isLogin = () => {
     let role, username;
@@ -67,6 +80,7 @@ const Main = ({ Page_component }) => {
       } else {
         setUserRole(role)
         setLogin(true);
+        getUserDetails(username)
       }
     } catch (error) {
       console.log("error>>", error);
@@ -214,7 +228,7 @@ const Main = ({ Page_component }) => {
               >
                 <Avatar
                   size="small"
-                  src="https://gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
+                  src={userDetails.avatar}
                 />
               </Button>
             ) : (
