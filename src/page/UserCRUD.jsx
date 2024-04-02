@@ -9,12 +9,14 @@ const API_URL = process.env.REACT_APP_API_URL;
 const UserCRUD = () => {
   const [userList, setUserList] = useState([]);
   const [singleUser, setSingleUser] = useState({});
+  const [loading, setLoading] =useState(true)
 
   const loadUserList = () => {
     axios
       .get(`${API_URL}/admin/user`)
       .then((response) => {
         setUserList(response.data);
+        setLoading(false)
         // console.log("userList>>", userList)
       })
       .catch((error) => {
@@ -117,10 +119,11 @@ const UserCRUD = () => {
         <UserDetails onSuccess={handleCancel} user={singleUser} />
       </Modal>
       <Table columns={columns} dataSource={userList}
+        loading={loading}
         size="middle"
-        style={{ 
-          backgroundColor: "black",
-        }}
+        // style={{ 
+        //   backgroundColor: "black",
+        // }}
         scroll={{
           x: 1000,
         }}
