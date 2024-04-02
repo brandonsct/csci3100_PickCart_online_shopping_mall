@@ -1,6 +1,7 @@
 const { ObjectId } = require("bson");
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const { v4: uuidv4 } = require("uuid");
 
 const LoginSchema = new Schema({
   username: { type: String, required: true },
@@ -12,9 +13,9 @@ const LoginSchema = new Schema({
     required: true,
     default: "user",
   },
-  firstname: {type: String, required: false, default: ""},
-  lastname: {type: String, required: false, default: ""},
-  avatar: {type: String, required: false, default: ""},
+  firstname: { type: String, required: false, default: "" },
+  lastname: { type: String, required: false, default: "" },
+  avatar: { type: String, required: false, default: "" },
   birthday: { type: Date, default: Date.now },
   cTime: { type: Date, default: Date.now },
 });
@@ -35,6 +36,11 @@ const ProductSchema = new Schema({
   productId: String,
 });
 
+const CartSchema = new Schema({
+  userID: String,
+  cart: [ProductSchema],
+});
 exports.LoginSchema = LoginSchema;
 exports.TokenSchema = TokenSchema;
 exports.ProductSchema = ProductSchema;
+exports.CartSchema = CartSchema;

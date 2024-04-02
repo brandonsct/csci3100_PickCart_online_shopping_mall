@@ -1,116 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Spin, Pagination } from "antd";
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  Input,
-  Layout,
-  Collapse,
-  Menu,
-  Image,
-  Button,
-  theme,
-  Card,
-  List,
-  Row,
-  Col,
-} from "antd";
+import { Input, Layout, Image, Button, theme, Card, List } from "antd";
 
 import { AppstoreOutlined } from "@ant-design/icons";
 
 import Filter from "../Components/filter/Filter";
 
 import appIconPhoto from "../asset/icon.png";
-import { ReactComponent as LogoSidebar } from "../asset/icon/login_logo.svg";
 
-const { Panel } = Collapse;
 const API_URL = process.env.REACT_APP_API_URL;
 
-// const productPhotoPath = "../asset/productInfo";
-// const data = [
-//   {
-//     title: "Title 1",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 2",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 3",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 4",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 5",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 6",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 1",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 2",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 3",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 4",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 5",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 6",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 1",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 2",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 3",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 4",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 5",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-//   {
-//     title: "Title 6",
-//     // cardDetail: `${productPhotoPath}/rice.jpeg`,
-//   },
-// ];
-
-const { Header, Sider, Content } = Layout;
+const { Content } = Layout;
 const { Search } = Input;
 
 const Home2 = ({ test }) => {
@@ -145,6 +48,7 @@ const Home2 = ({ test }) => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [userDetails, setUserDetails] = useState();
 
   useEffect(() => {
     axios
@@ -194,8 +98,35 @@ const Home2 = ({ test }) => {
     setProducts(newProducts.data);
   };
 
-  const addToCart = (item) => {
+  const addToCart = async (item) => {
     console.log("ID:", item.productId);
+    const username = JSON.parse(sessionStorage.getItem("username"))?.value;
+    console.log("username:", username);
+
+    const getUserDetails = async () => {
+      let response;
+      await axios
+        .post(`${API_URL}/getuser`, { username })
+        .then((resp) => {
+          // setUserDetails(resp.data);
+          response = resp.data;
+        })
+        .catch((error) => {
+          console.log("err>>", error);
+        });
+      return response;
+    };
+    let userDetailFromServer = await getUserDetails();
+    console.log("getUserDetails:", userDetailFromServer);
+    axios
+      .post(`${API_URL}/addToCart`, {
+        userDetail: userDetailFromServer,
+        product: item,
+      })
+      .then((resp) => {})
+      .catch((error) => {
+        console.log("err>>", error);
+      });
   };
 
   return (

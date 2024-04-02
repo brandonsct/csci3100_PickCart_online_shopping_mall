@@ -242,6 +242,7 @@ app.post("/checkusername", (req, res) => {
 
 app.post("/getuser", (req, res) => {
   const username = req?.body?.username;
+  // console.log("inside getUser", username);
   let user = "";
   LoginModel.findOne({ username: username })
     .then((item) => {
@@ -258,6 +259,7 @@ app.post("/getuser", (req, res) => {
           avatar: item.avatar,
         };
       }
+
       res.status(200);
       res.send(user);
     })
@@ -426,6 +428,34 @@ app.get("/getAllProducts", async (req, res) => {
 });
 
 // CartApi //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// ////////////
+const { CartSchema } = require("./schemas.js");
+const Cart = mongoose.model("Cart", CartSchema);
+
+app.post("/addToCart", async (req, res) => {
+  let product = req.body.product; // get the product ID from the request body
+  let userDetail = req.body.userDetail;
+
+  // const Product = mongoose.model("Product", ProductSchema);
+  // const product = await Product.findOne({ productId: productId }); // find the product by its ID
+
+  if (product) {
+    if (product.stock > 0) {
+      console.log("product:", product);
+      const cart = await Cart.findOneAndUpdate(
+        { userID: userDetail.id }, // condition
+        { $push: { cart: product } }, // update
+        { new: true, upsert: true } // options
+      );
+
+      res.status(200).json(cart);
+    } else {
+      console.log("out of stock");
+      res.status(200).json({ message: "out of stock" });
+    }
+  } else {
+    res.status(404).json({ message: "No product found" });
+  }
+});
 
 // listen to port 8000a
 const server = app.listen(api_port);
