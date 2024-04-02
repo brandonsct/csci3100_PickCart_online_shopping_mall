@@ -36,9 +36,14 @@ const ProductSchema = new Schema({
   productId: String,
 });
 
+const CartItemSchema = new Schema({
+  product: ProductSchema,
+  quantity: Number,
+});
+
 const CartSchema = new Schema({
   userID: String,
-  cart: [ProductSchema],
+  cart: [CartItemSchema],
 });
 exports.LoginSchema = LoginSchema;
 exports.TokenSchema = TokenSchema;

@@ -366,11 +366,11 @@ const { ProductSchema } = require("./schemas.js"); // Assuming you have a Produc
 //     res.status(404).json({ message: "No products found" });
 //   }
 // });
-
+const Product = mongoose.model("Product", ProductSchema);
 app.post("/getProducts", async (req, res) => {
   const productId = req.body.id;
   const productName = req.body.name;
-  const Product = mongoose.model("Product", ProductSchema);
+
   const conditions = [];
   if (productId) {
     conditions.push({ productId: productId });
@@ -441,19 +441,102 @@ app.post("/addToCart", async (req, res) => {
   if (product) {
     if (product.stock > 0) {
       console.log("product:", product);
-      const cart = await Cart.findOneAndUpdate(
-        { userID: userDetail.id }, // condition
-        { $push: { cart: product } }, // update
-        { new: true, upsert: true } // options
-      );
 
+      const cart = await Cart.findOne({
+        userID: userDetail.id,
+        "cart.product.productId": product.productId,
+      });
+
+      if (cart) {
+        // If the product already exists in the cart, increment the quantity
+        await Cart.updateOne(
+          {
+            userID: userDetail.id,
+            "cart.product.productId": product.productId,
+          },
+          { $inc: { "cart.$.quantity": 1 } }
+        );
+      } else {
+        // If the product does not exist in the cart, add it
+        const cartItem = {
+          product: product,
+          quantity: 1,
+        };
+
+        await Cart.findOneAndUpdate(
+          { userID: userDetail.id }, // condition
+          { $push: { cart: cartItem } }, // update
+          { new: true, upsert: true } // options
+        );
+      }
       res.status(200).json(cart);
     } else {
       console.log("out of stock");
-      res.status(200).json({ message: "out of stock" });
+      res.status(204).json({ message: "out of stock" });
     }
   } else {
     res.status(404).json({ message: "No product found" });
+  }
+});
+
+app.post("/getCart", async (req, res) => {
+  const userDetail = req.body.id;
+  const cart = await Cart.find({
+    userID: userDetail,
+  });
+  console.log("cart:", userDetail);
+
+  console.log("cart:", cart);
+  res.status(200).json(cart[0]);
+});
+
+app.post("/saveCart", async (req, res) => {
+  const cart = req.body.cartUpdate;
+  const userId = req.body.userId;
+
+  console.log("cartUpdate:", cart);
+  console.log("userId:", userId);
+  // Iterate over the cart items
+  for (let item of cart) {
+    // Find the product in the database
+    const product = await Product.findById(item.product._id);
+    // Check if the stock is sufficient
+    if (product.stock < item.quantity) {
+      return res.status(400).json({
+        message: `Insufficient stock for product ${product.productName}`,
+      });
+    }
+  }
+  if (cart && userId) {
+    const newCart = await Cart.findOneAndUpdate(
+      { userID: userId },
+      { $set: { cart: cart } },
+      { new: true } // This option returns the updated document
+    );
+    console.log("newCart:", newCart);
+    res.status(200).json(newCart);
+  } else {
+    res.status(500).json({ message: "internal server error" });
+  }
+});
+
+app.post("/deleteFromCart", async (req, res) => {
+  const userId = req.body.userId;
+  const productId = req.body.productId;
+
+  console.log("productId:", productId);
+  console.log("userId:", userId);
+
+  if (userId && productId) {
+    const newCart = await Cart.findOneAndUpdate(
+      { userID: userId },
+      { $pull: { cart: { "product.productId": productId } } },
+      { new: true } // This option returns the updated document
+    );
+    console.log("newCart:", newCart);
+    res.status(200).json(newCart);
+  } else {
+    res.status(500).json({ message: "internal server error" });
   }
 });
 

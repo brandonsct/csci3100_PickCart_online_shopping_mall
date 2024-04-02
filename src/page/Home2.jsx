@@ -3,7 +3,17 @@ import axios from "axios";
 import { Spin, Pagination } from "antd";
 
 import { useNavigate, useLocation } from "react-router-dom";
-import { Input, Layout, Image, Button, theme, Card, List } from "antd";
+import {
+  Input,
+  Layout,
+  Image,
+  Button,
+  theme,
+  Card,
+  List,
+  message,
+  Space,
+} from "antd";
 
 import { AppstoreOutlined } from "@ant-design/icons";
 
@@ -48,7 +58,7 @@ const Home2 = ({ test }) => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [userDetails, setUserDetails] = useState();
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     axios
@@ -118,14 +128,39 @@ const Home2 = ({ test }) => {
     };
     let userDetailFromServer = await getUserDetails();
     console.log("getUserDetails:", userDetailFromServer);
+    const success = () => {
+      messageApi.open({
+        type: "success",
+        content: "Product added to cart",
+      });
+    };
+    const error = () => {
+      messageApi.open({
+        type: "error",
+        content: "This is an error message",
+      });
+    };
+    const warning = () => {
+      messageApi.open({
+        type: "warning",
+        content: "out of stock",
+      });
+    };
     axios
       .post(`${API_URL}/addToCart`, {
         userDetail: userDetailFromServer,
         product: item,
       })
-      .then((resp) => {})
+      .then((resp) => {
+        if (resp.status == 200) {
+          success();
+        } else if (resp.status == 204) {
+          warning();
+        }
+      })
       .catch((error) => {
         console.log("err>>", error);
+        error();
       });
   };
 
@@ -160,6 +195,7 @@ const Home2 = ({ test }) => {
               borderRadius: borderRadiusLG,
             }}
           >
+            {contextHolder}
             <div class="flex flex-row w-screen text-center items-center justify-around">
               <div
                 // class="flex items-center"

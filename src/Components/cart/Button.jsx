@@ -1,20 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./button.css";
 
-const ButtonNum = () => {
-  const [value, setValue] = useState(0);
+const ButtonNum = ({ quantity, updateQuantity, productId }) => {
+  const [value, setValue] = useState(quantity);
 
   function decrement() {
-    if (value != 0) {
-      setValue(value - 1);
+    if (value > 0) {
+      let newValue = value - 1;
+      setValue(newValue);
+      updateQuantity(productId, newValue);
     } else {
       console.log("item canceled");
     }
   }
 
   function increment() {
-    setValue(value + 1);
+    const newValue = value + 1;
+    setValue(newValue);
+    updateQuantity(productId, newValue);
   }
+
+  useEffect(() => {
+    console.log("quantity in num", quantity);
+    console.log("productId in num", productId);
+
+    setValue(quantity);
+  }, [quantity]);
 
   return (
     <div class="custom-number-input h-10 w-32">
