@@ -62,7 +62,6 @@ const Main = ({ Page_component }) => {
         console.log("err>>", error)
     })
   }
-  console.log("userDetails>>", userDetails)
 
   const isLogin = () => {
     let role, username;

@@ -45,7 +45,6 @@ const Profile = () => {
         console.log("err>>", error)
     })
   }
-  console.log("userDetails>>", userDetails)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
