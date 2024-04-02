@@ -112,56 +112,67 @@ const Home2 = ({ test }) => {
     console.log("ID:", item.productId);
     const username = JSON.parse(sessionStorage.getItem("username"))?.value;
     console.log("username:", username);
+    console.log("condition:", username !== undefined);
 
-    const getUserDetails = async () => {
-      let response;
-      await axios
-        .post(`${API_URL}/getuser`, { username })
+    if (username !== undefined && username !== "") {
+      const getUserDetails = async () => {
+        let response;
+        await axios
+          .post(`${API_URL}/getuser`, { username })
+          .then((resp) => {
+            // setUserDetails(resp.data);
+            response = resp.data;
+          })
+          .catch((error) => {
+            console.log("err>>", error);
+          });
+        return response;
+      };
+      let userDetailFromServer = await getUserDetails();
+      console.log("getUserDetails:", userDetailFromServer);
+      const success = () => {
+        messageApi.open({
+          type: "success",
+          content: "Product added to cart",
+        });
+      };
+      const error = () => {
+        messageApi.open({
+          type: "error",
+          content: "This is an error message",
+        });
+      };
+      const warning = () => {
+        messageApi.open({
+          type: "warning",
+          content: "out of stock",
+        });
+      };
+      axios
+        .post(`${API_URL}/addToCart`, {
+          userDetail: userDetailFromServer,
+          product: item,
+        })
         .then((resp) => {
-          // setUserDetails(resp.data);
-          response = resp.data;
+          if (resp.status == 200) {
+            success();
+          } else if (resp.status == 204) {
+            warning();
+          }
         })
         .catch((error) => {
           console.log("err>>", error);
+          error();
         });
-      return response;
-    };
-    let userDetailFromServer = await getUserDetails();
-    console.log("getUserDetails:", userDetailFromServer);
-    const success = () => {
-      messageApi.open({
-        type: "success",
-        content: "Product added to cart",
-      });
-    };
-    const error = () => {
-      messageApi.open({
-        type: "error",
-        content: "This is an error message",
-      });
-    };
-    const warning = () => {
-      messageApi.open({
-        type: "warning",
-        content: "out of stock",
-      });
-    };
-    axios
-      .post(`${API_URL}/addToCart`, {
-        userDetail: userDetailFromServer,
-        product: item,
-      })
-      .then((resp) => {
-        if (resp.status == 200) {
-          success();
-        } else if (resp.status == 204) {
-          warning();
-        }
-      })
-      .catch((error) => {
-        console.log("err>>", error);
-        error();
-      });
+    } else {
+      const warning = () => {
+        messageApi.open({
+          type: "warning",
+          content: " please login",
+        });
+      };
+      warning();
+    }
   };
 
   return (

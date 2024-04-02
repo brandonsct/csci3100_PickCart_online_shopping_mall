@@ -7,7 +7,8 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 const Cart = () => {
   // return <Checkbox>Checkbox</Checkbox>;
-  const [cartItems, setCartItems] = useState();
+  const [cartItems, setCartItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState();
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -33,6 +34,8 @@ const Cart = () => {
       console.log("userDetailFromServer:", userDetailFromServer.id);
       let userID = userDetailFromServer.id;
       setUserId(userID);
+      setIsLoading(true);
+
       axios
         .post(`${API_URL}/getCart`, { id: userID })
         .then((resp) => {
@@ -40,15 +43,13 @@ const Cart = () => {
           let cart = data.cart;
           console.log("cart:", cart);
           setCartItems(cart);
+          setIsLoading(false);
         })
         .catch((error) => {
           console.log("err>>", error);
         });
       console.log("cartItems:", cartItems);
       console.log(typeof cartItems);
-      // } else {
-      //   console.log("userID is undefined");
-      // }
     };
 
     fetchData();
@@ -108,7 +109,7 @@ const Cart = () => {
   };
   return (
     <>
-      {!cartItems ? (
+      {isLoading ? (
         <div
           style={{
             display: "flex",
@@ -135,7 +136,7 @@ const Cart = () => {
               type="inner"
               title="ordered items"
             >
-              {!cartItems ? (
+              {cartItems.length == 0 ? (
                 <>Your cart is empty</>
               ) : (
                 cartItems.map((item, index) => (
