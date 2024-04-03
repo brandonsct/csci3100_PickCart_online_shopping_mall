@@ -93,6 +93,7 @@ const Cart = () => {
   };
 
   const updateQuantity = (productId, newQuantity) => {
+    console.log(`${productId}:${newQuantity}`);
     setCartItems((prevCartItems) =>
       prevCartItems.map((item) =>
         item.product.productId === productId

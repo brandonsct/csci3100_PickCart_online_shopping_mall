@@ -67,7 +67,7 @@ const ProductItem = ({
   return (
     <div class="flex flex-row justify-between">
       <div class="flex flex-row">
-        <Checkbox />
+        {/* <Checkbox /> */}
         <img src={product.image} class="w-36"></img>
         <div class="flex flex-col ">
           <div class="">

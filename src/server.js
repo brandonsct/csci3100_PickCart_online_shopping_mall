@@ -540,5 +540,23 @@ app.post("/deleteFromCart", async (req, res) => {
   }
 });
 
+app.post("/checkStock", async (req, res) => {
+  const productId = req.body.productId;
+  const quantity = req.body.quantity;
+  try {
+    await Product.find({ productId: productId }).then((resp) => {
+      if (quantity > resp[0].stock) {
+        console.log("out of stock");
+        res.status(200).json({ success: false, message: "out of stock" });
+      } else {
+        console.log("in stock");
+        res.status(200).json({ success: true, message: "ok" });
+      }
+    });
+  } catch {
+    res.status(500).json({ success: false, message: "server error" });
+  }
+});
+
 // listen to port 8000a
 const server = app.listen(api_port);
