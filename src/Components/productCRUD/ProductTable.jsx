@@ -73,6 +73,7 @@ const ProductTable = () => {
   }
   const getProducts = () => {
     console.log("fetching>>")
+    setIsLoading(true)
     axios
       .get(`${API_URL}/getAllProducts`)
       .then((response) => {
