@@ -18,6 +18,7 @@ const LoginSchema = new Schema({
   avatar: { type: String, required: false, default: "" },
   birthday: { type: Date, default: Date.now },
   cTime: { type: Date, default: Date.now },
+  deleted: { type: String, default: "false" },
 });
 
 const TokenSchema = new Schema({
@@ -34,6 +35,7 @@ const ProductSchema = new Schema({
   stock: Number,
   productName: String,
   productId: String,
+  deleted: { type: String, default: "false" },
 });
 
 const CartItemSchema = new Schema({

@@ -1,158 +1,214 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Form,
+  Row,
+  Col,
   Input,
-  InputNumber,
-  Popconfirm,
+  AutoComplete,
+  Layout,
   Table,
-  Typography,
+  Modal,
   Button,
+  Tooltip,
+  Tag,
 } from "antd";
-const originData = [
-  {
-    productID: "123",
-    productName: "Meadows Home 3摺式抹手紙 250PC",
-    price: "$123",
-    stockNum: "123",
-    saleNumber: "123",
-    productImage:
-      "https://img1.rtacdn-os.com/20240301/76d845f3-04c4-3775-a0d1-2e3dd2c3bfdc_360x360H.webp",
-    category: "houseHold",
-  },
-  {
-    productID: "223",
-    productName: "Meadows Home 3摺式抹手紙 250PC",
-    price: "$223",
-    stockNum: "223",
-    saleNumber: "223",
-    productImage:
-      "https://img1.rtacdn-os.com/20240301/76d845f3-04c4-3775-a0d1-2e3dd2c3bfdc_360x360H.webp",
-    category: "houseHold",
-  },
-  {
-    productID: "122",
-    productName: "Meadows Home 3摺式抹手紙 250PC",
-    price: "$223",
-    stockNum: "223",
-    saleNumber: "1333",
-    productImage:
-      "https://img1.rtacdn-os.com/20240301/76d845f3-04c4-3775-a0d1-2e3dd2c3bfdc_360x360H.webp",
-    category: "houseHold",
-  },
-];
-// for (let i = 0; i < 100; i++) {
-//   originData.push({
-//     key: i.toString(),
-//     name: `Edward ${i}`,
-//     age: 32,
-//     address: `London Park no. ${i}`,
-//   });
-// }
+import axios from "axios";
+import { EditOutlined, DeleteOutlined, AppstoreAddOutlined } from "@ant-design/icons";
+import ProductDetails from "./ProductDetails";
+import "../../../src/App.css"
 
-// originData.push({
-//   productID: "123",
-//   productName: "James",
-//   price: "123",
-//   stockNum: "123",
-//   saleNumber: "123",
-// });
-const EditableCell = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{
-            margin: 0,
-          }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
+const { Header, Content, Footer } = Layout;
+const { Search } = Input
+const moment = require('moment');
+const API_URL = process.env.REACT_APP_API_URL;
+
+const categories = {
+  HouseHoldSupply: 'volcano', // Yellow
+  MeatNSeafood: 'geekblue', // Blue
+  DairyChilledEggs: '#52c41a', // Green
+  BreakfastNBakery: '#eb2f96', // Pink
 };
+
 const ProductTable = () => {
-  const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
-  const [editingKey, setEditingKey] = useState("");
-  const isEditing = (record) => record.key === editingKey;
-  const edit = (record) => {
-    form.setFieldsValue({
-      name: "",
-      age: "",
-      address: "",
-      ...record,
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [singleProduct, setSingleProduct] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [options, setOptions] = useState([]);
+  const [productNameOptions, setProductNameOptions] = useState([]);
+  const [createProd, setCreateProd] = useState(false)
+  const generateToken = () => {
+    const timestamp = moment().format('YYYYMMDDHHmmss');
+    const randomString = Math.random().toString(36).substring(2, 8);
+    const token = timestamp + randomString;
+    return token;
+  }
+  const emptyProductData = {
+    productId: generateToken(),
+    productName: "",
+    category: "",
+    imgSrc: "",
+    price: "",
+    stock: "",
+  };
+  const handleChange = (value) => {
+    setOptions(() => {
+      return products
+        .filter((product) => product.productId.startsWith(value))
+        .map((product) => ({
+          label: product.productId,
+          value: product.productId,
+        }));
     });
-    setEditingKey(record.key);
+    console.log("trigger>>productid>>change")
   };
-  const cancel = () => {
-    setEditingKey("");
+  const handleProductNameChange = (value) => {
+    setProductNameOptions(() => {
+      return products
+        .filter((product) => product.productName.toLowerCase().startsWith(value.toLowerCase()))
+        .map((product) => ({
+          label: product.productName,
+          value: product.productName,
+        }));
+    });
+  }
+  const getProducts = () => {
+    console.log("fetching>>")
+    axios
+      .get(`${API_URL}/getAllProducts`)
+      .then((response) => {
+        setProducts(response.data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data: ", error);
+        setIsLoading(false);
+      });
+  }
+  const deleteProducts = (productId ) => {
+    setIsLoading(true);
+    axios({
+      method: "PUT",
+      url: `${API_URL}/admin/delete/product`,
+      data: { productId: productId }
+    })
+      .then((response) => {
+        if ((response.status) === 200) {
+          console.log("del>>response.data>>", response.data)
+          getProducts()
+          setIsLoading(false);
+        }
+        else {
+          console.log("response>>", response)
+          return getProducts()
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data: ", error);
+        getProducts()
+        setIsLoading(false);
+      });
+  }
+  const handleSearch = (value) => {
+    if (value === "" || value === null || value === undefined) return getProducts()
+    setProducts([...products.filter((product) => product.productId.toLowerCase().startsWith(value.toLowerCase()))]);
+    console.log("val>>", value)
+    console.log("filterID>", products.filter((product) => product.productId.startsWith(value)))
   };
-  const save = async (key) => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...data];
-      const index = newData.findIndex((item) => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        setData(newData);
-        setEditingKey("");
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey("");
-      }
-    } catch (errInfo) {
-      console.log("Validate Failed:", errInfo);
-    }
+  const handleProductSearch = (value) => {
+    if (value === "" || value === null || value === undefined) return getProducts()
+    setProducts([...products.filter((product) => product.productName.toLowerCase().startsWith(value.toLowerCase()))]);
+    console.log("val>>", value)
+    console.log("filterNAME>", products.filter((product) => product.productName.toLowerCase().startsWith(value.toLowerCase())))
+  };
+
+
+  const showModal = (record) => {
+    setSingleProduct(record);
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
   const columns = [
     {
       title: "Product ID",
-      dataIndex: "productID",
-      width: "5%",
-      editable: true,
+      dataIndex: "productId",
+      width: "15%",
+      textWrap: 'word-break',
+      ellipsis: true,
+      fixed: 'left',
+      render: (id) => (
+        <Tooltip placement="topLeft" title={id}>
+          {id}
+        </Tooltip>
+      ),
+      sorter: {
+        compare: (a, b) => a.productId.localeCompare(b.productId),
+      },
     },
 
     {
       title: "Product Name",
       dataIndex: "productName",
-      width: "20%",
-      editable: true,
+      width: "18%",
+      ellipsis: true,
+      fixed: 'left',
+      render: (name) => (
+        <Tooltip placement="topLeft" title={name}>
+          {name}
+        </Tooltip>
+      ),
+      sorter: {
+        compare: (a, b) => a.productName.localeCompare(b.productName),
+      },
     },
-
+    {
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+      width: "18%",
+      fixed: 'left',
+      filters: [
+        {
+          text: 'HouseHoldSupply',
+          value: 'HouseHoldSupply',
+        },
+        {
+          text: 'MeatNSeafood',
+          value: 'MeatNSeafood',
+        },
+        {
+          text: 'DairyChilledEggs',
+          value: 'DairyChilledEggs',
+        },
+        {
+          text: 'BreakfastNBakery',
+          value: 'BreakfastNBakery',
+        },
+      ],
+      onFilter: (value, record) => record.category.startsWith(value),
+      filterSearch: true,
+      render: (_, { category }) => (
+        <>
+        <Tag color={categories[category]} key={category}>
+          {category}
+        </Tag>
+      </>
+      ),
+    },
     {
       title: "Image",
-      dataIndex: "productImage",
-      width: "10%",
-      editable: true,
-      render: (text, record) => (
+      dataIndex: "imgSrc",
+      width: "20%",
+      render: (Image) => (
         <img
-          src={record.productImage}
-          alt={record.productName}
+          src={Image}
+          // alt={record.productName}
           style={{ width: "100px", height: "100px" }}
         />
       ),
@@ -161,111 +217,139 @@ const ProductTable = () => {
       title: "Price",
       dataIndex: "price",
       width: "15%",
-      editable: true,
+      render: (p) => (`$ ${p}`),
+      sorter: {
+        compare: (a, b) => a.price - b.price,
+      },
     },
     {
       title: "Stock Number",
-      dataIndex: "stockNum",
-      width: "5%",
-      editable: true,
+      dataIndex: "stock",
+      width: "18%",
+      sorter: {
+        compare: (a, b) => a.stock - b.stock,
+      },
     },
-    {
-      title: "Sales",
-      dataIndex: "saleNumber",
-      width: "5%",
-      editable: true,
-    },
-    {
-      title: "Category",
-      dataIndex: "category",
-      width: "20%",
-      editable: true,
-    },
+    // {
+    //   title: "Sales",
+    //   dataIndex: "saleNumber",
+    //   width: "5%",
+    // },
+
     {
       title: "Operation",
       dataIndex: "operation",
-      render: (_, record) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <Typography.Link
-              onClick={() => save(record.key)}
-              style={{
-                marginRight: 8,
-              }}
-            >
-              Save
-            </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-              <a>Cancel</a>
-            </Popconfirm>
-          </span>
-        ) : (
-          <Typography.Link
-            disabled={editingKey !== ""}
-            onClick={() => edit(record)}
-          >
-            Edit
-          </Typography.Link>
-        );
-      },
+      width: "10%",
+      fixed: 'right',
+      render: (_, record) => (
+        <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }}>
+          <Button
+            onClick={() => {
+              setCreateProd(false)
+              showModal(record)
+            }}
+            style={{ color: "blue" }}
+            icon={<EditOutlined />}
+          />
+
+          <Button style={{ color: "red" }} icon={<DeleteOutlined />} onClick={()=>deleteProducts(record.productId)}/>
+        </div>
+      ),
     },
   ];
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record) => ({
-        record,
-        inputType: col.dataIndex === "age" ? "number" : "text",
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
-
-  const handleAdd = () => {
-    const newData = {
-      productID: "123",
-      productName: "Meadows Home 3摺式抹手紙 250PC",
-      price: "$123",
-      stockNum: "123",
-      saleNumber: "123",
-      productImage:
-        "https://img1.rtacdn-os.com/20240301/76d845f3-04c4-3775-a0d1-2e3dd2c3bfdc_360x360H.webp",
-      category: "houseHold",
-    };
-    setData([...data, newData]);
-  };
+  useEffect(() => {
+    getProducts()
+    console.log("tiggger>>")
+  }, []);
   return (
-    <Form form={form} component={false}>
-      <Button
-        onClick={handleAdd}
-        type="primary"
+    <Content
+      style={{
+        padding: '0 0px',
+      }}
+    >
+      Admin backend magnagment system
+      <div
         style={{
-          marginBottom: 16,
+          padding: 24,
+          minHeight: 380,
         }}
       >
-        Add a row
-      </Button>
-      <Table
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        bordered
-        dataSource={data}
-        columns={mergedColumns}
-        rowClassName="editable-row"
-        pagination={{
-          onChange: cancel,
-        }}
-      />
-    </Form>
-  );
+        <Modal
+          destroyOnClose={true}
+          title={createProd ? "Add Product" : "Edit Product"}
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          width={300}
+          footer={null}
+          afterClose={getProducts}
+        >
+          {createProd ?
+            <ProductDetails onSuccess={handleCancel} product={singleProduct} create={true}/> :
+            <ProductDetails onSuccess={handleCancel} product={singleProduct} create={false}/>
+            }
+        </Modal>
+        <Row gutter={8} justify={"start"} style={{
+          backgroundColor: "lightgrey",
+          flex: "row", justifyContent: "center", alignItems: "center"
+        }}>
+          <Col span={8}>
+            <AutoComplete
+              options={options}
+              onChange={handleChange}
+              style={{
+                width: 200,
+                margin: 15
+              }}
+            >
+              <Input.Search allowClear size="large" placeholder="input productId" onSearch={handleSearch} />
+            </AutoComplete>
+          </Col>
+          <Col span={8}>
+            <AutoComplete
+              options={productNameOptions}
+              onChange={handleProductNameChange}
+              style={{
+                width: 200,
+                margin: 15,
+              }}
+
+            >
+              <Input.Search allowClear size="large" placeholder="input productName" onSearch={handleProductSearch} />
+            </AutoComplete>
+          </Col>
+          <Col span={8}>
+            <Button size={"large"} icon={<AppstoreAddOutlined />} type={"primary"}
+              onClick={() => {
+                setCreateProd(true)
+                showModal(emptyProductData
+                )
+              }}
+              style={{
+                width: 200,
+                margin: 15,
+                marginTop: 22
+              }}>
+              Add product
+            </Button>
+          </Col>
+        </Row>
+
+        <Table columns={columns} dataSource={[...products]}
+          loading={isLoading}
+          size="middle"
+          pagination={{ pageSize: 5 }}
+          scroll={{
+            x: 1000,
+          }}
+        />
+      </div>
+    </Content>
+
+
+  )
+}
+const dropDownStyles = {
+  marginTop: '10px' // Adjust the marginTop value as per your requirements
 };
 export default ProductTable;

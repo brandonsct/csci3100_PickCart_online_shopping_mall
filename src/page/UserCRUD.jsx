@@ -52,6 +52,9 @@ const UserCRUD = () => {
           {id}
         </Tooltip>
       ),
+      sorter: {
+        compare: (a, b) => a.id.localeCompare(b.id),
+      },
     },
     {
       title: "Username",

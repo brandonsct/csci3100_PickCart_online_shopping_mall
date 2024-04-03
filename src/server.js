@@ -367,9 +367,34 @@ const { ProductSchema } = require("./schemas.js"); // Assuming you have a Produc
 //   }
 // });
 const Product = mongoose.model("Product", ProductSchema);
+app.get("/getproductbbyid/:id", async (req, res) => {
+  const productId = req?.params?.id
+
+  console.log("productId>>", productId)
+  const products = await Product.find({ productId: productId });
+  if (products.length > 0) {
+    console.log("products:", products);
+    res.status(200).json(products);
+  } else {
+    res.status(404).json({ message: "No products found" });
+  }
+});
+app.get("/getproductbbyname/:name", async (req, res) => {
+  const productName = req?.query?.id
+
+  console.log("productName>>", productName)
+
+  const products = await Product.find({ productName: productName });
+  if (products.length > 0) {
+    console.log("products:", products);
+    res.json(products);
+  } else {
+    res.status(404).json({ message: "No products found" });
+  }
+});
 app.post("/getProducts", async (req, res) => {
-  const productId = req.body.id;
-  const productName = req.body.name;
+  const productId = req?.body?.id ? req?.body?.id : ""
+  const productName = req?.body?.name ? req?.body?.name : ""
 
   const conditions = [];
   if (productId) {
@@ -421,12 +446,65 @@ app.get("/getAllProducts", async (req, res) => {
   const Product = mongoose.model("Product", ProductSchema);
 
   // Retrieve all products from the database
-  const products = await Product.find({});
+  const products = await Product.find({deleted: "false"});
 
   // Send the products back in the response
   res.json(products);
 });
-
+app.put("/admin/products", async (req, res) => {
+  try {
+    const { formData: product } = req?.body;
+    const Product = mongoose.model("Product", ProductSchema);
+    console.log("update>>product>>", product);
+    Product.findOneAndUpdate({ productId: product.productId }, product, {
+      new: true,
+    })
+      .then((data) => {
+        if (data) {
+          res.status(200).json(data);
+        } else {
+          res.setHeader("Content-Type", "text/plain");
+          res.status(404).send("Product not found.");
+        }
+      })
+      .catch((error) => {
+        res.setHeader("Content-Type", "text/plain");
+        res.status(500).send("Internal Server Error");
+        console.log(error);
+      });
+  } catch (error) {
+    console.log("error>>", error);
+  }
+})
+//create product
+app.post("/admin/products", (req, res) => {
+  try {
+    const { formData: values } = req?.body;
+    console.log("product>>", values);
+    Product.create(values)
+      .then((product) => res.status(200).json(product))
+      .catch((err) => res.status(404).json(err));
+  } catch (error) {
+    console.log("error>>", error);
+    res.json(error);
+  }
+});
+//flagged for delete 
+app.put("/admin/delete/product", (req, res)=>{
+  try {
+    const productId = req?.body?.productId
+    console.log("del>>", productId)
+    Product.findOneAndUpdate(
+      { productId},
+      { $set: { deleted: "true" } },
+      { new: true }
+    )
+    .then((resp)=>res.status(200).json(resp))
+    .catch(err=>res.status(404).json(err))
+  } catch (error) {
+    res.status(500).json("internal server err")
+  }
+})
 // CartApi //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// ////////////
 const { CartSchema } = require("./schemas.js");
 const Cart = mongoose.model("Cart", CartSchema);
