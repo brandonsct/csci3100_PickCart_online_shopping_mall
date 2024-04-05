@@ -126,6 +126,7 @@ const Cart = () => {
           console.log("resp", resp.data);
           if (resp.status == 200) {
             success();
+            setCartItems([]);
           } else if (resp.status == 201) {
             warning(`out of stock: ${resp.data.outOfStock}`);
           }
