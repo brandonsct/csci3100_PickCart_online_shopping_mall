@@ -200,7 +200,9 @@ const Cart = () => {
               {cartItems.length == 0 ? (
                 <>Your cart is empty</>
               ) : (
-                cartItems.map((item, index) => (
+              
+                cartItems.filter(item => item.product.deleted === "false")
+                .map((item, index) => (
                   <React.Fragment key={index}>
                     <ProductItem
                       product={{
