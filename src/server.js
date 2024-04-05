@@ -726,5 +726,24 @@ app.post("/orderSubmit", async (req, res) => {
   }
 });
 
+app.post("/retrieveOrder", async (req, res) => {
+  const userid = req.body.userID;
+  let orderProfile = await Order.findOne({
+    userID: userid,
+  });
+  let processingOrderList = [];
+  let orderList = orderProfile.orders;
+  console.log("orderList", orderList.length);
+  for (i in orderList) {
+    if (orderList[i].status != "finished") {
+      processingOrderList.push(orderList[i].items);
+    }
+  }
+  console.log("processingOrderList", processingOrderList);
+  return res.status(200).json({
+    orderList: processingOrderList,
+  });
+});
+
 // listen to port 8000a
 const server = app.listen(api_port);
