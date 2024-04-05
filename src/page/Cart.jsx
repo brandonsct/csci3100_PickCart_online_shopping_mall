@@ -98,6 +98,52 @@ const Cart = () => {
       });
   };
 
+  const submitOrder = () => {
+    console.log("item saved", cartItems);
+    console.log("userId", userId);
+    const success = () => {
+      messageApi.open({
+        type: "success",
+        content: "Order submited",
+      });
+    };
+    const error = () => {
+      messageApi.open({
+        type: "error",
+        content: "order cannot be sent",
+      });
+    };
+    const warning = (message) => {
+      messageApi.open({
+        type: "warning",
+        content: message,
+      });
+    };
+    if (cartItems != undefined && cartItems.length != 0 && userId) {
+      axios
+        .post(`${API_URL}/orderSubmit`, { order: cartItems, userId: userId })
+        .then((resp) => {
+          console.log("resp", resp.data);
+          if (resp.status == 200) {
+            success();
+          } else if (resp.status == 201) {
+            warning(`out of stock: ${resp.data.outOfStock}`);
+          }
+        })
+        .catch((error) => {
+          console.log("err>>", error);
+          error();
+        });
+    } else {
+      if (cartItems == undefined) {
+        warning("empty cart");
+      } else if (cartItems.length == 0) {
+        warning("empty cart cannot check out");
+      } else {
+        warning("cannot identify user");
+      }
+    }
+  };
   const updateQuantity = (productId, newQuantity) => {
     console.log(`${productId}:${newQuantity}`);
     setCartItems((prevCartItems) =>
@@ -176,6 +222,7 @@ const Cart = () => {
             <Button
               danger
               style={{ "margin-top": "15px", "margin-left": "10px" }}
+              onClick={submitOrder}
             >
               Check Out
             </Button>

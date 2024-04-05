@@ -47,7 +47,18 @@ const CartSchema = new Schema({
   userID: String,
   cart: [CartItemSchema],
 });
+
+const OrderSchema = new Schema({
+  userID: String,
+  orders: {
+    type: Map,
+    of: [CartItemSchema],
+    default: {},
+  },
+});
+
 exports.LoginSchema = LoginSchema;
 exports.TokenSchema = TokenSchema;
 exports.ProductSchema = ProductSchema;
 exports.CartSchema = CartSchema;
+exports.OrderSchema = OrderSchema;

@@ -11,6 +11,7 @@ const LoginSchema = require("./schemas.js").LoginSchema;
 const LoginModel = mongoose.model("login", LoginSchema);
 const TokenSchema = require("./schemas.js").TokenSchema;
 const TokenModel = mongoose.model("token", TokenSchema);
+const OrderSchema = require("./schemas.js").OrderSchema;
 const sendemail = require("./tokenSender.js");
 require("dotenv").config();
 
@@ -643,6 +644,66 @@ app.post("/checkStock", async (req, res) => {
     });
   } catch {
     res.status(500).json({ success: false, message: "server error" });
+  }
+});
+
+// Order Api //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// ////////////
+const Order = mongoose.model("Order", OrderSchema);
+app.post("/orderSubmit", async (req, res) => {
+  const order = req.body.order;
+  const userId = req.body.userId;
+  let checkEnoughStock = {
+    true: [],
+    false: [],
+  };
+  console.log("cartUpdate:", order);
+  console.log("userId:", userId);
+  // Iterate over the order items
+  for (let item of order) {
+    // Find the product in the database
+    console.log("item:::", item);
+    console.log("product:::", item.product);
+    console.log("stock:::", item.product.stock);
+    console.log("id:::", item.product.productId);
+
+    const product = await Product.findOne({
+      productId: item.product.productId,
+    });
+    console.log("product:::", product);
+    // Check if the stock is sufficient
+    if (product.stock < item.quantity) {
+      checkEnoughStock["false"].push(product.productName);
+      console.log("checkEnoughStock:", checkEnoughStock["false"]);
+    } else {
+      checkEnoughStock["true"].push(product.productId);
+    }
+  }
+  if (checkEnoughStock["false"].length > 0) {
+    console.log(`Insufficient stock for product ${checkEnoughStock["false"]}`);
+    return res.status(201).json({
+      outOfStock: `${checkEnoughStock["false"]}`,
+    });
+  }
+
+  const date = new Date()
+    .toLocaleString("en-US", { timeZone: "Asia/Hong_Kong" })
+    .replace(/\./g, "-");
+  const newOrder = {};
+  newOrder[date] = order;
+
+  try {
+    await Order.findOneAndUpdate(
+      { userID: userId }, // find a document with this filter
+      { $push: { orders: newOrder } }, // document to insert when nothing was found
+      { upsert: true, new: true, runValidators: true } // options
+    );
+    console.log("Order updated successfully");
+    return res.status(200).json({
+      message: `${checkEnoughStock["true"]}`,
+    });
+  } catch (error) {
+    console.error("Error saving order:", error);
+    return res.status(500).json({ error: "Error saving order" });
   }
 });
 
