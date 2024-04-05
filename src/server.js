@@ -174,6 +174,8 @@ app.post("/register", async (req, res) => {
       role: role,
       birthday: birthday,
       cTime: currentTime,
+      deleted: "false",
+      avatar: "https://api.dicebear.com/7.x/miniavs/svg?seed=1",
     })
       .then((user) => res.json(user))
       .catch((err) => res.json(err));
