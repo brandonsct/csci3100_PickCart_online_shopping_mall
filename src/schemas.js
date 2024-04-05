@@ -15,7 +15,7 @@ const LoginSchema = new Schema({
   },
   firstname: { type: String, required: false, default: "" },
   lastname: { type: String, required: false, default: "" },
-  avatar: { type: String, required: false, default: "" },
+  avatar: { type: String, required: false, default: "https://api.dicebear.com/7.x/miniavs/svg?seed=1" },
   birthday: { type: Date, default: Date.now },
   cTime: { type: Date, default: Date.now },
   deleted: { type: String, default: "false" },
