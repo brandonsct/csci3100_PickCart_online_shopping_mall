@@ -493,19 +493,27 @@ app.post("/admin/products", (req, res) => {
   }
 });
 //flagged for delete
-app.put("/admin/delete/product", (req, res) => {
+app.put("/admin/delete/product", async (req, res) => {
   try {
+    const Cart = mongoose.model("Cart", CartSchema);
     const productId = req?.body?.productId;
     console.log("del>>", productId);
-    Product.findOneAndUpdate(
+
+    const resp = await Product.findOneAndUpdate(
       { productId },
       { $set: { deleted: "true" } },
       { new: true }
-    )
-      .then((resp) => res.status(200).json(resp))
-      .catch((err) => res.status(404).json(err));
+    );
+
+    const cart = await Cart.updateMany(
+      { 'cart.product.productId': productId },
+      { $set: { 'cart.$.product.deleted': 'true' } },
+      { new: true }
+    );
+
+    res.status(200).json([resp, cart]);
   } catch (error) {
-    res.status(500).json("internal server err");
+    res.status(500).json("internal server error");
   }
 });
 // CartApi //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// ////////////
@@ -564,6 +572,7 @@ app.post("/getCart", async (req, res) => {
   const userDetail = req.body.id;
   const cart = await Cart.find({
     userID: userDetail,
+    "cart.product.deleted": false
   });
   console.log("cart:", userDetail);
 
