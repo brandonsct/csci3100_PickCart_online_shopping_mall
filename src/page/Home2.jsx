@@ -60,17 +60,34 @@ const Home2 = ({ test }) => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [messageApi, contextHolder] = message.useMessage();
 
+  // useEffect(() => {
+  //   axios
+  //     .get(`${API_URL}/getAllProducts`)
+  //     .then((response) => {
+  //       console.log("loading products");
+  //       setProducts(response.data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data: ", error);
+  //       setIsLoading(false);
+  //     });
+  // }, []);
   useEffect(() => {
-    axios
-      .get(`${API_URL}/getAllProducts`)
-      .then((response) => {
+    const fetchData = async () => {
+      try {
+        console.log("loading products");
+        const response = await axios.get(`${API_URL}/getAllProducts`);
+        console.log("resp", response);
         setProducts(response.data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching data: ", error);
+      } finally {
         setIsLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   const onSearch = (value, _e, info) => {
