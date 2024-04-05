@@ -41,10 +41,12 @@ const Cart = () => {
         .then((resp) => {
           let data = resp.data;
           let cart = data.cart;
-          if (cartItems) {
+          console.log("cart", typeof cart);
+          // console.log("cart", cart.length);
+          if (cart == undefined) {
             setIsLoading(false);
           } else {
-            console.log("cart:", cart);
+            console.log("cart in else:", cart);
             setCartItems(cart);
             setIsLoading(false);
           }
