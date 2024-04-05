@@ -41,9 +41,13 @@ const Cart = () => {
         .then((resp) => {
           let data = resp.data;
           let cart = data.cart;
-          console.log("cart:", cart);
-          setCartItems(cart);
-          setIsLoading(false);
+          if (cartItems) {
+            setIsLoading(false);
+          } else {
+            console.log("cart:", cart);
+            setCartItems(cart);
+            setIsLoading(false);
+          }
         })
         .catch((error) => {
           console.log("err>>", error);

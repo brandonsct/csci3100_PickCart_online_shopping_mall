@@ -517,7 +517,7 @@ app.post("/addToCart", async (req, res) => {
 
   // const Product = mongoose.model("Product", ProductSchema);
   // const product = await Product.findOne({ productId: productId }); // find the product by its ID
-
+  // console.log("product:::", product);
   if (product) {
     if (product.stock > 0) {
       console.log("product:", product);
@@ -579,7 +579,15 @@ app.post("/saveCart", async (req, res) => {
   // Iterate over the cart items
   for (let item of cart) {
     // Find the product in the database
-    const product = await Product.findById(item.product._id);
+    console.log("item:::", item);
+    console.log("product:::", item.product);
+    console.log("stock:::", item.product.stock);
+    console.log("id:::", item.product.productId);
+
+    const product = await Product.findOne({
+      productId: item.product.productId,
+    });
+    console.log("product:::", product);
     // Check if the stock is sufficient
     if (product.stock < item.quantity) {
       return res.status(400).json({
