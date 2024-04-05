@@ -574,7 +574,6 @@ app.post("/getCart", async (req, res) => {
   const userDetail = req.body.id;
   const cart = await Cart.find({
     userID: userDetail,
-    "cart.product.deleted": false
   });
   console.log("cart:", userDetail);
 
