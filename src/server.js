@@ -508,8 +508,8 @@ app.put("/admin/delete/product", async (req, res) => {
     );
 
     const cart = await Cart.updateMany(
-      { 'cart.product.productId': productId },
-      { $set: { 'cart.$.product.deleted': 'true' } },
+      { "cart.product.productId": productId },
+      { $set: { "cart.$.product.deleted": "true" } },
       { new: true }
     );
 
@@ -532,7 +532,6 @@ app.post("/addToCart", async (req, res) => {
   if (product) {
     if (product.stock > 0) {
       console.log("product:", product);
-
       const cart = await Cart.findOne({
         userID: userDetail.id,
         "cart.product.productId": product.productId,
@@ -574,7 +573,7 @@ app.post("/getCart", async (req, res) => {
   const userDetail = req.body.id;
   const cart = await Cart.find({
     userID: userDetail,
-    "cart.product.deleted": false
+    "cart.product.deleted": false,
   });
   console.log("cart:", userDetail);
 
@@ -699,19 +698,28 @@ app.post("/orderSubmit", async (req, res) => {
   const date = new Date()
     .toLocaleString("en-US", { timeZone: "Asia/Hong_Kong" })
     .replace(/\./g, "-");
-  const newOrder = {};
-  newOrder[date] = order;
 
   try {
     await Order.findOneAndUpdate(
       { userID: userId }, // find a document with this filter
-      { $push: { orders: newOrder } }, // document to insert when nothing was found
+      {
+        $push: {
+          orders: { date: date, items: order, status: "Pending" },
+        },
+      }, // document to insert when nothing was found
       { upsert: true, new: true, runValidators: true } // options
     );
     console.log("Order updated successfully");
-    return res.status(200).json({
-      message: `${checkEnoughStock["true"]}`,
-    });
+
+    try {
+      await Cart.findOneAndDelete({ userID: userId });
+      console.log("Cart deleted successfully");
+      return res.status(200).json({
+        message: `${checkEnoughStock["true"]}`,
+      });
+    } catch (error) {
+      console.error("Error deleting cart:", error);
+    }
   } catch (error) {
     console.error("Error saving order:", error);
     return res.status(500).json({ error: "Error saving order" });

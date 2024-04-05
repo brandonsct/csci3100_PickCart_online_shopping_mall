@@ -4,7 +4,12 @@ import { message } from "antd";
 import axios from "axios";
 
 const API_URL = process.env.REACT_APP_API_URL;
-const ButtonNum = ({ quantity, updateQuantity, productId }) => {
+const ButtonNum = ({
+  quantity,
+  updateQuantity,
+  productId,
+  seeCurrentQuantity,
+}) => {
   const [value, setValue] = useState(quantity);
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -12,6 +17,7 @@ const ButtonNum = ({ quantity, updateQuantity, productId }) => {
     if (value > 0) {
       let newValue = value - 1;
       setValue(newValue);
+      seeCurrentQuantity(newValue);
       updateQuantity(productId, newValue);
     } else {
       console.log("item canceled");
@@ -51,6 +57,7 @@ const ButtonNum = ({ quantity, updateQuantity, productId }) => {
     if (await checkStock(productId, newValue)) {
       console.log("correct path");
       setValue(newValue);
+      seeCurrentQuantity(newValue);
       updateQuantity(productId, newValue);
     } else {
       console.log("wrong path");
@@ -62,7 +69,7 @@ const ButtonNum = ({ quantity, updateQuantity, productId }) => {
   useEffect(() => {
     console.log("quantity in num", quantity);
     console.log("productId in num", productId);
-
+    seeCurrentQuantity(quantity);
     setValue(quantity);
   }, [quantity]);
 

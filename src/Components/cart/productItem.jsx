@@ -15,6 +15,8 @@ const ProductItem = ({
 }) => {
   const [loadings, setLoadings] = useState([]);
   const [itemDetail, setItemDetail] = useState();
+  const [currentQuantity, setCurrentQuantity] = useState();
+
   const enterLoading = (index) => {
     setLoadings((prevLoadings) => {
       const newLoadings = [...prevLoadings];
@@ -57,6 +59,10 @@ const ProductItem = ({
       });
   };
 
+  const seeCurrentQuantity = (quantity) => {
+    console.log(quantity);
+    setCurrentQuantity(quantity);
+  };
   useEffect(() => {
     console.log("product in item", product.productId);
     console.log("product in item", typeof product.productId);
@@ -99,8 +105,9 @@ const ProductItem = ({
           quantity={product.numbers}
           updateQuantity={updateQuantity}
           productId={product.productId}
+          seeCurrentQuantity={seeCurrentQuantity}
         />
-        <div class="mx-6">$246</div>
+        <div class="mx-6">${currentQuantity * product.price}</div>
       </div>
     </div>
   );

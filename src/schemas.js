@@ -15,7 +15,11 @@ const LoginSchema = new Schema({
   },
   firstname: { type: String, required: false, default: "" },
   lastname: { type: String, required: false, default: "" },
-  avatar: { type: String, required: false, default: "https://api.dicebear.com/7.x/miniavs/svg?seed=1" },
+  avatar: {
+    type: String,
+    required: false,
+    default: "https://api.dicebear.com/7.x/miniavs/svg?seed=1",
+  },
   birthday: { type: Date, default: Date.now },
   cTime: { type: Date, default: Date.now },
   deleted: { type: String, default: "false" },
@@ -50,11 +54,13 @@ const CartSchema = new Schema({
 
 const OrderSchema = new Schema({
   userID: String,
-  orders: {
-    type: Map,
-    of: [CartItemSchema],
-    default: {},
-  },
+  orders: [
+    {
+      date: String,
+      items: [CartItemSchema],
+      status: { type: String, default: "Pending" },
+    },
+  ],
 });
 
 exports.LoginSchema = LoginSchema;

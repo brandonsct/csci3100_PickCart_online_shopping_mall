@@ -161,6 +161,13 @@ const Cart = () => {
     setCartItems(newCart);
     console.log("updateCartAfterDeleting: cartItems ", cartItems);
   };
+
+  const calculatingSum = () => {
+    const total = cartItems.reduce((sum, item) => {
+      return sum + item.product.price * item.quantity;
+    }, 0);
+    return total;
+  };
   return (
     <>
       {isLoading ? (
@@ -212,7 +219,7 @@ const Cart = () => {
                 ))
               )}
             </Card>
-
+            <div>Total: ${calculatingSum()}</div>
             <Button
               type="primary"
               style={{ marginTop: "15px" }}
