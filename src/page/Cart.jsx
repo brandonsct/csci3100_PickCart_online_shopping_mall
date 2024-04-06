@@ -47,7 +47,7 @@ const Cart = () => {
             setIsLoading(false);
           } else {
             console.log("cart in else:", cart);
-            setCartItems(cart);
+            setCartItems(cart.filter(item => item.product.deleted === "false"));
             setIsLoading(false);
           }
         })
@@ -201,8 +201,7 @@ const Cart = () => {
                 <>Your cart is empty</>
               ) : (
               
-                cartItems.filter(item => item.product.deleted === "false")
-                .map((item, index) => (
+                cartItems.map((item, index) => (
                   <React.Fragment key={index}>
                     <ProductItem
                       product={{
