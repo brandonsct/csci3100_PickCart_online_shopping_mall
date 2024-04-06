@@ -1,15 +1,37 @@
 import React, { Component, useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Button, Tooltip, Collapse, Space, Modal } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Table, Button, Tooltip, Collapse, Space, Modal, notification  } from "antd";
+import { EditOutlined, StopOutlined, UndoOutlined } from "@ant-design/icons";
 import UserDetails from "../Components/profiledetails";
 const moment = require('moment');
 const API_URL = process.env.REACT_APP_API_URL;
 
 const UserCRUD = () => {
+  const [api, contextHolder] = notification.useNotification();
   const [userList, setUserList] = useState([]);
   const [singleUser, setSingleUser] = useState({});
   const [loading, setLoading] =useState(true)
+
+  const openNotification = (user_data) => {
+    console.log("user_data.deleted>>", user_data.deleted)
+    if (user_data.deleted === "true") {
+      return api.open({
+      message: 'User Suspended',
+      description:
+        `You have successfully suspended user with user id ${user_data._id}
+        username: ${user_data.username}`,
+      duration: 2,
+    })
+  } else {
+    return api.open({
+      message: 'User Reverted',
+      description:
+        `You have successfully reverted user with user id ${user_data._id}
+        username: ${user_data.username}`,
+      duration: 4,
+    })
+  }
+  };
 
   const loadUserList = () => {
     axios
@@ -38,6 +60,26 @@ const UserCRUD = () => {
     setIsModalOpen(false);
   };
 
+  const deleteUser = async (record) =>{
+    try {
+      setLoading(true)
+      const delete_user = await axios.put(`${API_URL}/admin/deleteuser`, {record})
+      if (delete_user?.status === 200) {
+        console.log("delete_user>>", delete_user)
+        setLoading(false)
+        loadUserList()
+        openNotification(delete_user?.data)
+
+      }
+      else {
+        console.log("err in deleting user>>", delete_user)
+        setLoading(false)
+      }
+    } catch (error) {
+      console.log("err in deleting user>>" ,error)
+      setLoading(false)
+    }
+  }
   const columns = [
     {
       title: "ID",
@@ -104,7 +146,8 @@ const UserCRUD = () => {
       title: "Action",
       key: "action",
       fixed: 'right',
-      render: (_, record) => (
+      render: (_, record) => {
+        return (
         <div style={{justifyContent: "center", alignItems: "center", display: "flex"}}>
           <Button
             onClick={() => showModal(record)}
@@ -112,9 +155,11 @@ const UserCRUD = () => {
             icon={<EditOutlined />}
           />
 
-          <Button style={{ color: "red" }} icon={<DeleteOutlined />} />
+          {record.deleted === "false" ? <Button style={{ color: "red" }} icon={<StopOutlined />} onClick={()=>deleteUser(record)}/> : 
+          <Button style={{ color: "red" }} icon={<UndoOutlined />} onClick={()=>deleteUser(record)}/>
+          }
         </div>
-      ),
+      )},
     },
   ];
   useEffect(() => {
@@ -125,6 +170,7 @@ const UserCRUD = () => {
     <div
       className="overflow-x-auto w-full m-6"
     >
+      {contextHolder}
       <Modal
         destroyOnClose={true}
         title="Edit User"
