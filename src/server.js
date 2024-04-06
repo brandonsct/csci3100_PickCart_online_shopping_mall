@@ -695,7 +695,20 @@ app.post("/orderSubmit", async (req, res) => {
       outOfStock: `${checkEnoughStock["false"]}`,
     });
   }
-
+  for (let item of order) {
+    // Find the product in the database
+    const product = await Product.findOne({
+      productId: item.product.productId,
+    });
+    console.log("item quantity:::::", item.quantity);
+    console.log("stock:::", product.stock);
+    console.log("id:::", item.product.productId);
+    let newQuantity = product.stock - item.quantity;
+    await Product.updateOne(
+      { productId: item.product.productId },
+      { $set: { stock: newQuantity } }
+    );
+  }
   const date = new Date()
     .toLocaleString("en-US", { timeZone: "Asia/Hong_Kong" })
     .replace(/\./g, "-");
