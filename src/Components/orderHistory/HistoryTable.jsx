@@ -83,7 +83,7 @@ const data = [
   {
     OrderID: "1124",
     NumProduct: "3",
-    Price: "$234",
+    Price: "$702",
     DelieveryMethod: "delivery",
     OrderDate: "1-2-2023",
     CompleteDate: "10-2-2023",
@@ -106,7 +106,7 @@ const data = [
     ],
   },
   {
-    OrderID: "1124",
+    OrderID: "1125",
     NumProduct: "1",
     Price: "$234",
     DelieveryMethod: "delivery",
@@ -121,7 +121,7 @@ const data = [
     ],
   },
   {
-    OrderID: "1124",
+    OrderID: "1126",
     NumProduct: "1",
     Price: "$234",
     DelieveryMethod: "delivery",
