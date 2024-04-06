@@ -571,14 +571,13 @@ app.post("/addToCart", async (req, res) => {
 
 app.post("/getCart", async (req, res) => {
   const userDetail = req.body.id;
-  const cart = await Cart.find({
+  const cart = await Cart.findOne({
     userID: userDetail,
-    "cart.product.deleted": false,
   });
   console.log("cart:", userDetail);
 
   console.log("cart:", cart);
-  res.status(200).json(cart[0]);
+  res.status(200).json(cart);
 });
 
 app.post("/saveCart", async (req, res) => {
