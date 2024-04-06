@@ -45,11 +45,14 @@ const ProductSchema = new Schema({
 const CartItemSchema = new Schema({
   product: ProductSchema,
   quantity: Number,
+  // subTotalPrice: Number,
 });
 
 const CartSchema = new Schema({
   userID: String,
   cart: [CartItemSchema],
+  // totalQuantity: Number,
+  // totalPrice: Number,
 });
 
 const OrderSchema = new Schema({
@@ -59,6 +62,7 @@ const OrderSchema = new Schema({
       date: String,
       items: [CartItemSchema],
       status: { type: String, default: "Pending" },
+      totalPrice: Number,
     },
   ],
 });

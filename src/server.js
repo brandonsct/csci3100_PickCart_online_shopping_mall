@@ -666,6 +666,7 @@ app.post("/orderSubmit", async (req, res) => {
     true: [],
     false: [],
   };
+  let totalPrice = 0;
   console.log("cartUpdate:", order);
   console.log("userId:", userId);
   // Iterate over the order items
@@ -686,6 +687,7 @@ app.post("/orderSubmit", async (req, res) => {
       console.log("checkEnoughStock:", checkEnoughStock["false"]);
     } else {
       checkEnoughStock["true"].push(product.productId);
+      totalPrice = totalPrice + product.price * item.quantity;
     }
   }
   if (checkEnoughStock["false"].length > 0) {
@@ -704,7 +706,12 @@ app.post("/orderSubmit", async (req, res) => {
       { userID: userId }, // find a document with this filter
       {
         $push: {
-          orders: { date: date, items: order, status: "Pending" },
+          orders: {
+            date: date,
+            items: order,
+            status: "Pending",
+            totalPrice: totalPrice,
+          },
         },
       }, // document to insert when nothing was found
       { upsert: true, new: true, runValidators: true } // options

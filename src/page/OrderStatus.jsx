@@ -108,12 +108,14 @@ const OrderStatus = () => {
                         src={productInfo.product.imgSrc}
                       ></img>
                       <div class="ml-3">
-                        <p>count: {productInfo.quantity}</p>
                         <p>product id : {productInfo.product.productId}</p>
+                        <p>price: ${productInfo.product.price}</p>
+                        <p>count: {productInfo.quantity}</p>
                       </div>
                     </div>
                   </Card>
                 ))}
+                <div>Total: ${orderInfo.totalPrice}</div>
               </Card>
             </div>
           ))}
