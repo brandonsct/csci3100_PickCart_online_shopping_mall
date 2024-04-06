@@ -125,26 +125,6 @@ app.get("/user", (req, res) => {
   });
 });
 
-app.post("/userbyusername", (req, res) => {
-  const user = req.body?.username || "";
-  if (!user) {
-    return req.status(500).send("User missing");
-  }
-  LoginModel.findOne({ username: user })
-    .then((user) => {
-      if (user) {
-        const favValueArr = user.fav;
-        console.log("Favorite value:", favValueArr);
-        res.status(200).send(favValueArr);
-      } else {
-        console.log("User not found");
-        return res.status(404).send("User missing");
-      }
-    })
-    .catch((error) => {
-      res.status(404).send("Error finding user:", error);
-    });
-});
 
 app.post("/register", async (req, res) => {
   try {
@@ -260,6 +240,7 @@ app.post("/getuser", (req, res) => {
           firstname: item.firstname,
           lastname: item.lastname,
           avatar: item.avatar,
+          deleted: item.deleted,
         };
       }
 
@@ -286,6 +267,8 @@ app.get("/admin/user", (req, res) => {
           birthday: item.birthday,
           firstname: item.firstname,
           lastname: item.lastname,
+          avatar: item.avatar,
+          deleted: item.deleted,
         };
       });
       res.status(200);
@@ -324,11 +307,18 @@ app.put("/admin/user", (req, res) => {
 });
 
 // Delete User data
-app.delete("/deleteuser/:username", (req, res) => {
-  LoginModel.findOneAndDelete({ username: req.params["username"] })
+app.put("/admin/deleteuser", (req, res) => {
+  const { record: values } = req?.body;
+  const isDeleted = values.deleted === 'true' ? "false" : "true";
+  console.log("values>>", values)
+  LoginModel.findOneAndUpdate(
+      { _id: values.id },
+      { $set: { deleted: isDeleted} },
+      { new: true }
+  )
     .then((data) => {
       if (data) {
-        res.sendStatus(204);
+        res.status(200).json(data);
       } else {
         res.setHeader("Content-Type", "text/plain");
         res.status(404).send("User was not found, no user was deleted.");

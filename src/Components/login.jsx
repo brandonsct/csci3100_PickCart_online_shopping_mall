@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Typography, Col, Row, Space, Tabs } from "antd";
+import { Button, Form, Input, Typography, Col, Row, Space, Tabs, notification } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -26,6 +26,15 @@ function setSessionStorageWithExpiration(key, value, expirationTimeInMinutes) {
   sessionStorage.setItem(key, JSON.stringify(item));
 }
 const Login = ({onSuccess}) => {
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = () => {
+    api.open({
+      message: 'Account Suspended',
+      description:
+        'You account is being suspended right now',
+      duration: 0,
+    });
+  };
   const [form] = useForm();
   const [formData, setFormData] = useState({
     username: "",
@@ -52,6 +61,9 @@ const Login = ({onSuccess}) => {
           console.log("res>>", res);
           if (res.status == 200) {
             console.log("res.data>>", res.data);
+            if (res?.data?.user?.deleted === "true") {
+              return openNotification()
+            }
             setSessionStorageWithExpiration(
               "username",
               res.data.user.username,
@@ -80,6 +92,7 @@ const Login = ({onSuccess}) => {
   return (
     <>
       <div style={{ display: "flex", justifyContent: "center" }}>
+      {contextHolder}
         <Form
           name="basic"
           labelCol={{
