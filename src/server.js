@@ -736,7 +736,7 @@ app.post("/retrieveOrder", async (req, res) => {
   console.log("orderList", orderList.length);
   for (i in orderList) {
     if (orderList[i].status != "finished") {
-      processingOrderList.push(orderList[i].items);
+      processingOrderList.push(orderList[i]);
     }
   }
   console.log("processingOrderList", processingOrderList);

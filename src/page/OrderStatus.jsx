@@ -9,14 +9,16 @@ const OrderStatus = () => {
   const [orderList, setOrderList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 1; // Show one order per page
 
   const progress = {
-    recieved: "0",
-    progress: "1",
-    delievery: "2",
-    waiting: "3",
-    complete: "4",
-    finished: "5",
+    Pending: 0,
+    progress: 1,
+    delievery: 2,
+    waiting: 3,
+    complete: 4,
+    finished: 5,
   };
   useEffect(() => {
     const username = JSON.parse(sessionStorage.getItem("username"))?.value;
@@ -46,8 +48,8 @@ const OrderStatus = () => {
         .post(`${API_URL}/retrieveOrder`, { userID: userID })
         .then((response) => {
           console.log("loading products", response.data.orderList);
-          const flattenedOrderList = response.data.orderList.flat();
-          setOrderList(flattenedOrderList);
+
+          setOrderList(response.data.orderList);
         })
         .catch((error) => {
           console.error("Error fetching data: ", error);
@@ -58,55 +60,71 @@ const OrderStatus = () => {
 
     fetchData();
   }, []);
+  //inside a orderList there are many tickets, one ticket means one order submition.
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const orderTicket = orderList.slice(indexOfFirstItem, indexOfLastItem);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return (
     <div class="overflow-y-auto w-full h-full">
       <Card style={{ margin: "30px", width: "100%" }}>
         <div class="flex flex-col justify-between h-full ">
-          <div class="grid grid-cols-2 gap-4 w-full m-6 ">
-            <Steps
-              direction="vertical"
-              size="small"
-              current={5}
-              items={[
-                {
-                  title: "Order recieved",
-                  description: "order is recevieved",
-                },
-                {
-                  title: "In Progress",
-                  description: "order is in progress",
-                },
-                {
-                  title: "In deliver",
-                  description: "order is in delivery",
-                },
-                {
-                  title: "Waiting",
-                  description: "order is waiting for pick up",
-                },
-                {
-                  title: "Complete",
-                  description: "order is picked up and complete",
-                },
-              ]}
-            />
+          {orderTicket.map((orderInfo, index) => (
+            <div class="grid grid-cols-2 gap-4 w-full m-6 ">
+              <Steps
+                direction="vertical"
+                size="small"
+                current={progress[orderInfo.status]}
+                items={[
+                  {
+                    title: "Order recieved",
+                    description: "order is recevieved",
+                  },
+                  {
+                    title: "In Progress",
+                    description: "order is in progress",
+                  },
+                  {
+                    title: "In deliver",
+                    description: "order is in delivery",
+                  },
+                  {
+                    title: "Waiting",
+                    description: "order is waiting for pick up",
+                  },
+                  {
+                    title: "Complete",
+                    description: "order is picked up and complete",
+                  },
+                ]}
+              />
 
-            <Card title="Products" style={{ "overflow-y": "auto" }}>
-              {orderList.map((item, index) => (
-                <Card key={index} type="inner">
-                  <div class="flex flex-row">
-                    <img class="w-40 h-40" src={item.product.imgSrc}></img>
-                    <div class="ml-3">
-                      <p>count: {item.count}</p>
-                      <p>product id : {item.productId}</p>
+              <Card title="Products" style={{ "overflow-y": "auto" }}>
+                {orderInfo.items.map((productInfo, index) => (
+                  <Card key={index} type="inner">
+                    <div class="flex flex-row">
+                      <img
+                        class="w-40 h-40"
+                        src={productInfo.product.imgSrc}
+                      ></img>
+                      <div class="ml-3">
+                        <p>count: {productInfo.quantity}</p>
+                        <p>product id : {productInfo.product.productId}</p>
+                      </div>
                     </div>
-                  </div>
-                </Card>
-              ))}
-            </Card>
-          </div>
+                  </Card>
+                ))}
+              </Card>
+            </div>
+          ))}
+
           <div class=" flex justify-center mt-10">
-            <Pagination defaultCurrent={1} total={50} />
+            <Pagination
+              defaultCurrent={1}
+              total={orderList.length}
+              pageSize={itemsPerPage}
+              onChange={paginate}
+            />
           </div>
         </div>
       </Card>
