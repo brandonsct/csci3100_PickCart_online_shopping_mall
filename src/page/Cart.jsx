@@ -35,25 +35,37 @@ const Cart = () => {
       let userID = userDetailFromServer.id;
       setUserId(userID);
       setIsLoading(true);
+      try {
+        axios
+          .post(`${API_URL}/getCart`, { id: userID })
+          .then((resp) => {
+            let data = resp.data;
+            console.log("data", data);
+            if (data) {
+              let cart = data.cart;
+              console.log("cart", typeof cart);
+              // console.log("cart", cart.length);
+              if ((cart == undefined) | (cart == null)) {
+                setIsLoading(false);
+              } else {
+                console.log("cart in else:", cart);
+                setCartItems(
+                  cart.filter((item) => item.product.deleted === "false")
+                );
+                setIsLoading(false);
+              }
+            } else {
+              setIsLoading(false);
+            }
+          })
+          .catch((error) => {
+            console.log("err>>", error);
+          });
+      } catch {
+        console.log("this is catch");
+        setIsLoading(false);
+      }
 
-      axios
-        .post(`${API_URL}/getCart`, { id: userID })
-        .then((resp) => {
-          let data = resp.data;
-          let cart = data.cart;
-          console.log("cart", typeof cart);
-          // console.log("cart", cart.length);
-          if (cart == undefined) {
-            setIsLoading(false);
-          } else {
-            console.log("cart in else:", cart);
-            setCartItems(cart.filter(item => item.product.deleted === "false"));
-            setIsLoading(false);
-          }
-        })
-        .catch((error) => {
-          console.log("err>>", error);
-        });
       console.log("cartItems:", cartItems);
       console.log(typeof cartItems);
     };
@@ -136,7 +148,7 @@ const Cart = () => {
           error();
         });
     } else {
-      if (cartItems == undefined) {
+      if ((cartItems == undefined) | (cartItems == null)) {
         warning("empty cart");
       } else if (cartItems.length == 0) {
         warning("empty cart cannot check out");
@@ -200,7 +212,6 @@ const Cart = () => {
               {cartItems.length == 0 ? (
                 <>Your cart is empty</>
               ) : (
-              
                 cartItems.map((item, index) => (
                   <React.Fragment key={index}>
                     <ProductItem
