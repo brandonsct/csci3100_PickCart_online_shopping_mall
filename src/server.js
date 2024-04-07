@@ -12,6 +12,9 @@ const LoginModel = mongoose.model("login", LoginSchema);
 const TokenSchema = require("./schemas.js").TokenSchema;
 const TokenModel = mongoose.model("token", TokenSchema);
 const OrderSchema = require("./schemas.js").OrderSchema;
+const Order = mongoose.model("Order", OrderSchema);
+
+
 const sendemail = require("./tokenSender.js");
 require("dotenv").config();
 
@@ -647,7 +650,6 @@ app.post("/checkStock", async (req, res) => {
 });
 
 // Order Api //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// //////////// ////////////
-const Order = mongoose.model("Order", OrderSchema);
 app.post("/orderSubmit", async (req, res) => {
   const order = req.body.order;
   const userId = req.body.userId;
@@ -741,7 +743,13 @@ app.post("/retrieveOrder", async (req, res) => {
     userID: userid,
   });
   let processingOrderList = [];
-  let orderList = orderProfile.orders;
+  let orderList;
+  if (orderProfile) {
+    orderList = orderProfile.orders;
+  } else {
+    orderList = [];
+  }
+  
   console.log("orderList", orderList.length);
   for (i in orderList) {
     if (orderList[i].status != "finished") {
@@ -753,6 +761,32 @@ app.post("/retrieveOrder", async (req, res) => {
     orderList: processingOrderList,
   });
 });
+
+app.post("/retriveOrderHistory", async (req, res) => {
+  const userid = req.body.userID;
+  let orderHistoryProfile = await Order.findOne({
+    userID: userid,
+  });
+
+  let orderHistoryList = [];
+  let orderList;
+  if (orderProfile) {
+    orderList = orderProfile.orders;
+  } else {
+    orderList = [];
+  }
+  
+  console.log("orderList", orderList.length);
+  for (i in orderList) {
+    if (orderList[i].status = "finished") {
+      orderHistoryList.push(orderList[i]);
+    }
+  }
+  console.log("orderHistoryList", orderHistoryList);
+  return res.status(200).json({
+    orderHistoryList: orderHistoryList,
+  });
+})
 
 // listen to port 8000a
 const server = app.listen(api_port);
