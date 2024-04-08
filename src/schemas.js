@@ -61,7 +61,7 @@ const OrderSchema = new Schema({
     {
       date: String,
       items: [CartItemSchema],
-      status: { type: String, default: "Pending" },
+      status: { type: String, default: "Processing" },
       totalPrice: Number,
     },
   ],

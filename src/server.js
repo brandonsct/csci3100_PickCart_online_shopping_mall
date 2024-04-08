@@ -713,7 +713,7 @@ app.post("/orderSubmit", async (req, res) => {
           orders: {
             date: date,
             items: order,
-            status: "Pending",
+            status: "Processing",
             totalPrice: totalPrice,
           },
         },
@@ -738,28 +738,10 @@ app.post("/orderSubmit", async (req, res) => {
 });
 
 app.post("/retrieveOrder", async (req, res) => {
-  const userid = req.body.userID;
-  let orderProfile = await Order.findOne({
-    userID: userid,
-  });
-  let processingOrderList = [];
-  let orderList;
-  if (orderProfile) {
-    orderList = orderProfile.orders;
-  } else {
-    orderList = [];
-  }
-  
-  console.log("orderList", orderList.length);
-  for (i in orderList) {
-    if (orderList[i].status != "finished") {
-      processingOrderList.push(orderList[i]);
-    }
-  }
-  console.log("processingOrderList", processingOrderList);
-  return res.status(200).json({
-    orderList: processingOrderList,
-  });
+  const userId = req.body.userId;
+  const orderProfile = await Order.findOne({ userID: userId });
+  const orderList = orderProfile ? orderProfile.orders : [];
+  res.status(200).json({ orderList });
 });
 
 app.post("/retriveOrderHistory", async (req, res) => {
