@@ -14,7 +14,6 @@ const TokenModel = mongoose.model("token", TokenSchema);
 const OrderSchema = require("./schemas.js").OrderSchema;
 const Order = mongoose.model("Order", OrderSchema);
 
-
 const sendemail = require("./tokenSender.js");
 require("dotenv").config();
 
@@ -127,7 +126,6 @@ app.get("/user", (req, res) => {
     res.json(result);
   });
 });
-
 
 app.post("/register", async (req, res) => {
   try {
@@ -312,12 +310,12 @@ app.put("/admin/user", (req, res) => {
 // Delete User data
 app.put("/admin/deleteuser", (req, res) => {
   const { record: values } = req?.body;
-  const isDeleted = values.deleted === 'true' ? "false" : "true";
-  console.log("values>>", values)
+  const isDeleted = values.deleted === "true" ? "false" : "true";
+  console.log("values>>", values);
   LoginModel.findOneAndUpdate(
-      { _id: values.id },
-      { $set: { deleted: isDeleted} },
-      { new: true }
+    { _id: values.id },
+    { $set: { deleted: isDeleted } },
+    { new: true }
   )
     .then((data) => {
       if (data) {
@@ -739,8 +737,13 @@ app.post("/orderSubmit", async (req, res) => {
 
 app.post("/retrieveOrder", async (req, res) => {
   const userId = req.body.userId;
+  console.log("userId", userId);
+
   const orderProfile = await Order.findOne({ userID: userId });
+
   const orderList = orderProfile ? orderProfile.orders : [];
+  console.log("orderList", orderList);
+
   res.status(200).json({ orderList });
 });
 
@@ -766,10 +769,10 @@ app.post("/retriveOrderHistory", async (req, res) => {
   } else {
     orderList = [];
   }
-  
+
   console.log("orderList", orderList.length);
   for (i in orderList) {
-    if (orderList[i].status = "finished") {
+    if ((orderList[i].status = "finished")) {
       orderHistoryList.push(orderList[i]);
     }
   }
@@ -777,7 +780,7 @@ app.post("/retriveOrderHistory", async (req, res) => {
   return res.status(200).json({
     orderHistoryList: orderHistoryList,
   });
-})
+});
 
 // listen to port 8000a
 const server = app.listen(api_port);

@@ -45,7 +45,7 @@ const OrderStatus = () => {
       setIsLoading(true);
 
       await axios
-        .post(`${API_URL}/retrieveOrder`, { userID: userID })
+        .post(`${API_URL}/retrieveOrder`, { userId: userID })
         .then((response) => {
           console.log("loading products", response.data.orderList);
 
