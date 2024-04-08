@@ -1,142 +1,171 @@
-import React from "react";
-import { Space, Table, Tag, Card } from "antd";
-const columns = [
-  {
-    title: "OrderID",
-    dataIndex: "OrderID",
-    key: "OrderID",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Number Of Product",
-    dataIndex: "NumProduct",
-    key: "NumProduct",
-  },
-  {
-    title: "Delievery Method",
-    dataIndex: "DelieveryMethod",
-    key: "DelieveryMethod",
-  },
-  {
-    title: "Price",
-    key: "Price",
-    dataIndex: "Price",
-
-    // render: (_, { tags }) => (
-    //   <>
-    //     {tags.map((tag) => {
-    //       let color = tag.length > 5 ? "geekblue" : "green";
-    //       if (tag === "loser") {
-    //         color = "volcano";
-    //       }
-    //       return (
-    //         <Tag color={color} key={tag}>
-    //           {tag.toUpperCase()}
-    //         </Tag>
-    //       );
-    //     })}
-    //   </>
-    // ),
-  },
-  {
-    title: "Order Date",
-    dataIndex: "OrderDate",
-    key: "OrderDate",
-  },
-  {
-    title: "Complete Date",
-    dataIndex: "CompleteDate",
-    key: "CompleteDate",
-  },
-  {
-    title: "Product Detail",
-    dataIndex: "product",
-    key: "ProductDetail",
-    render: (products) =>
-      products.map((product) => (
-        <Card
-          // title="Card title"
-          bordered={false}
-          style={{
-            width: 300,
-          }}
-        >
-          <div className="flex flex-row justify-around w-full">
-            <img src={product.image} className="w-10 h-10"></img>
-            <p>{product.name}</p>
-          </div>
-        </Card>
-      )),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Refund </a>
-        <a>Reorder</a>
-      </Space>
-    ),
-  },
-];
-const data = [
-  {
-    OrderID: "1124",
-    NumProduct: "3",
-    Price: "$702",
-    DelieveryMethod: "delivery",
-    OrderDate: "1-2-2023",
-    CompleteDate: "10-2-2023",
-    product: [
-      {
-        image:
-          "https://img.rtacdn-os.com/20230906/6f6cb414-b5e0-3004-b7af-d03222bb948f_360x360H.webp",
-        name: "Meadows Home軟抽面紙(大) 4PK",
-      },
-      {
-        image:
-          "https://img.rtacdn-os.com/20230906/6f6cb414-b5e0-3004-b7af-d03222bb948f_360x360H.webp",
-        name: "Meadows Home軟抽面紙(大) 4PK",
-      },
-      {
-        image:
-          "https://img.rtacdn-os.com/20230906/6f6cb414-b5e0-3004-b7af-d03222bb948f_360x360H.webp",
-        name: "Meadows Home軟抽面紙(大) 4PK",
-      },
-    ],
-  },
-  {
-    OrderID: "1125",
-    NumProduct: "1",
-    Price: "$234",
-    DelieveryMethod: "delivery",
-    OrderDate: "1-2-2023",
-    CompleteDate: "10-2-2023",
-    product: [
-      {
-        image:
-          "https://img.rtacdn-os.com/20230906/6f6cb414-b5e0-3004-b7af-d03222bb948f_360x360H.webp",
-        name: "Meadows Home軟抽面紙(大) 4PK",
-      },
-    ],
-  },
-  {
-    OrderID: "1126",
-    NumProduct: "1",
-    Price: "$234",
-    DelieveryMethod: "delivery",
-    OrderDate: "1-2-2023",
-    CompleteDate: "10-2-2023",
-    product: [
-      {
-        image:
-          "https://img.rtacdn-os.com/20230906/6f6cb414-b5e0-3004-b7af-d03222bb948f_360x360H.webp",
-        name: "Meadows Home軟抽面紙(大) 4PK",
-      },
-    ],
-  },
-];
-const App = () => {
-  return <Table columns={columns} dataSource={data} />;
+import React, { useState, useEffect } from "react";
+import {
+  Row,
+  Col,
+  Input,
+  AutoComplete,
+  Layout,
+  Table,
+  Modal,
+  Button,
+  Tooltip,
+  Tag,
+  Card,
+  Space
+} from "antd";
+import axios from "axios";
+import ProductDetails from "./ProductDetails";
+import { ProductOutlined } from "@ant-design/icons";
+const API_URL = process.env.REACT_APP_API_URL;
+const orderStatusColor = {
+  Pending: 'volcano', // Yellow
+  Progressing: 'geekblue', // Blue
+  Delivering: '#52c41a', // Green
+  Completed: '#eb2f96', // Pink
 };
-export default App;
+
+const HistoryTable = () => {
+  const [orders, setOrders] = useState([])
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productDetails, setProductDetails] = useState([])
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  const showDetails = (record) => {
+    console.log("record>>", record)
+    setProductDetails(record.items[0].product)
+    showModal()
+  }
+  const columns = [
+    {
+      title: "Image",
+      dataIndex: "items",
+      width: "18%",
+      render: (item) => (
+        <img
+          src={item[0]?.product?.imgSrc}
+          // alt={record.productName}
+          style={{ width: "100px", height: "100px" }}
+        />
+      ),
+    },
+    {
+      title: "Product Name",
+      dataIndex: "items",
+      width: "20%",
+      ellipsis: true,
+      fixed: 'left',
+      render: (item) => (
+        <Tooltip placement="topLeft" title={item[0]?.product?.productName}>
+          {item[0]?.product?.productName}
+        </Tooltip>
+      ),
+      sorter: {
+        compare: (a, b) => a.productName.localeCompare(b.productName),
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      ellipsis: true,
+      width: "13%",
+      filters: [
+        {
+          text: 'Pending',
+          value: 'Pending',
+        },
+        {
+          text: 'Progressing',
+          value: 'Progressing',
+        },
+        {
+          text: 'Delivering',
+          value: 'Delivering',
+        },
+        {
+          text: 'Completed',
+          value: 'Completed',
+        },
+      ],
+      render: (_, { status }) => (
+        <>
+        <Tag color={orderStatusColor[status]} key={status}>
+          {status}
+        </Tag>
+      </>
+      ),
+    },
+    {
+      title: "Price",
+      key: "totalPrice",
+      dataIndex: "totalPrice",
+      textWrap: 'word-break',
+      ellipsis: true,
+      width: "10%",
+      render: (totalPrice) => (
+        `$ ${totalPrice} `
+      )
+    },
+    {
+      title: "Quantity",
+      key: "quantity",
+      dataIndex: "items",
+      width: "10%",
+      render: (items) => items[0].quantity.toString()
+    },
+    {
+      title: "Operation",
+      dataIndex: "operation",
+      width: "10%",
+      fixed: 'right',
+      render: (_, record) => (
+        <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }}>
+          <Button style={{ color: "red" }} icon={<ProductOutlined />} onClick={() => showDetails(record)} />
+        </div>
+      ),
+    },
+  ];
+
+
+  const getUserDetails = async () => {
+    const username = JSON.parse(sessionStorage.getItem("username"))?.value;
+    console.log("username:", username);
+    let response;
+    await axios
+      .post(`${API_URL}/getuser`, { username })
+      .then((resp) => {
+        response = resp?.data?.id;
+      })
+      .catch((error) => {
+        console.log("err>>", error);
+      });
+    return response;
+  };
+
+  const getOrders = async () => {
+    const userId = await getUserDetails()
+    const userorders = await axios.post(`${API_URL}/retrieveOrder`, { userId: userId })
+    console.log("orders>>", userorders)
+    setOrders(userorders.data.orderList)
+  }
+
+  useEffect(() => {
+    getOrders()
+  }, [])
+  return (
+    <>
+      <Modal title="Order Details" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <ProductDetails product={productDetails}/>
+      </Modal>
+      <Table columns={columns} dataSource={orders} />
+    </>
+  );
+};
+export default HistoryTable;

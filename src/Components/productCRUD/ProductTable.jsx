@@ -14,7 +14,7 @@ import {
 import axios from "axios";
 import { EditOutlined, DeleteOutlined, AppstoreAddOutlined } from "@ant-design/icons";
 import ProductDetails from "./ProductDetails";
-import "../../../src/App.css"
+
 
 const { Header, Content, Footer } = Layout;
 const { Search } = Input
