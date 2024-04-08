@@ -10,10 +10,13 @@ import {
   Button,
   Tooltip,
   Tag,
+  Tabs,
+  Card
 } from "antd";
 import axios from "axios";
-import { EditOutlined, DeleteOutlined, AppstoreAddOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, AppstoreAddOutlined, ProductOutlined, HistoryOutlined } from "@ant-design/icons";
 import ProductDetails from "./ProductDetails";
+import HistoryTableForAdmin from "../orderHistory/HistoryTableForAdmin";
 
 
 const { Header, Content, Footer } = Layout;
@@ -28,7 +31,7 @@ const categories = {
   BreakfastNBakery: '#eb2f96', // Pink
 };
 
-const ProductTable = () => {
+const ProductCRUDTable = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [singleProduct, setSingleProduct] = useState({});
@@ -268,7 +271,6 @@ const ProductTable = () => {
         padding: '0 0px',
       }}
     >
-      Admin backend magnagment system
       <div
         style={{
           padding: 24,
@@ -350,7 +352,36 @@ const ProductTable = () => {
 
   )
 }
-const dropDownStyles = {
-  marginTop: '10px' // Adjust the marginTop value as per your requirements
-};
+
+const itemsTab = [
+  {
+      key: '1',
+      label: 'Proucts',
+      children: <ProductCRUDTable/>,
+      icon: <ProductOutlined />
+  },
+  {
+      key: '2',
+      label: 'Orders',
+      children: <HistoryTableForAdmin/>,
+      icon: <HistoryOutlined />
+  },
+]
+
+
+
+const ProductTable = () =>{
+  return (
+    <>
+      <Card
+        style={{
+          width: '100%',
+        }}
+        title="Admin Backend management system"
+        tabList={itemsTab}
+      />
+    </>
+  );
+}
+
 export default ProductTable;

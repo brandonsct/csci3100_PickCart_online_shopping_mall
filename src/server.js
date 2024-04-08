@@ -744,6 +744,15 @@ app.post("/retrieveOrder", async (req, res) => {
   res.status(200).json({ orderList });
 });
 
+app.get("/admin/retrieveAllOrders", async (req, res) => {
+  try {
+    const allOrders = await Order.find();
+    res.status(200).json({ allOrders });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve orders." });
+  }
+});
+
 app.post("/retriveOrderHistory", async (req, res) => {
   const userid = req.body.userID;
   let orderHistoryProfile = await Order.findOne({
