@@ -61,7 +61,7 @@ const Home2 = ({ test }) => {
   const [productNameOptions, setProductNameOptions] = useState([]);
   const [masterProduct, setMasterProduct] = useState([])
   const [lowerPrice, setLowerPrice] = useState(0)
-  const [upperPrice, setUpperPrice] = useState(200)
+  const [upperPrice, setUpperPrice] = useState(1000)
 
   const fetchData = async () => {
     try {
@@ -117,20 +117,20 @@ const Home2 = ({ test }) => {
     setProducts([...masterProduct.filter((product) => product.category.toLowerCase().startsWith(categories.toLowerCase()))]);
     setIsLoading(false)
   }
-  const handleSelectChange = (value) =>{
-    if (value === "asc"){
+  const handleSelectChange = (value) => {
+    if (value === "asc") {
       const sortedProducts = products.sort(
         (a, b) => a.price - b.price
       );
       setProducts([...sortedProducts]);
     }
-    else if  (value === "desc"){
+    else if (value === "desc") {
       const sortedProducts = products.sort(
         (a, b) => b.price - a.price
       );
       setProducts([...sortedProducts]);
     }
-    else if  (value === "ascStock"){
+    else if (value === "ascStock") {
       const sortedProducts = products.sort(
         (a, b) => a.stock - b.stock
       );
@@ -142,7 +142,7 @@ const Home2 = ({ test }) => {
       );
       setProducts([...sortedProducts]);
     }
-    
+
   }
   useEffect(() => {
     const fetchData = async () => {
@@ -190,7 +190,7 @@ const Home2 = ({ test }) => {
       setProducts([...filteredProducts]);
     }
   }
-  
+
   const handleUpperChange = (price) => {
     if (price === null || price === "" || typeof price !== 'number') {
       setUpperPrice(1000);
@@ -358,42 +358,45 @@ const Home2 = ({ test }) => {
           >
             <Space style={{ height: 'auto' }} split={<Divider type="vertical" />}>
               <div style={{ flex: "col" }}>
-                <Button shape="circle" style={{ margin: 5, backgroundColor: "transparent", border: "None" }}
-                  onClick={() => handdleCategoryClick("HouseHoldSupply")}
-                >
-                  <Avatar src="https://img.rtacdn-os.com/dshop/202403/78e98de8-7103-48f0-98fb-55cac8638051_.webp" style={{ width: '100%', height: '100%' }} />
-                </Button>
-                HouseHold Supplies
+                <a href="#" onClick={() => handdleCategoryClick("HouseHoldSupply")} style={{ textDecoration: "none" }}>
+                  <Button shape="circle" style={{ margin: 5, backgroundColor: "transparent", border: "none" }}>
+                    <Avatar src="https://img.rtacdn-os.com/dshop/202403/78e98de8-7103-48f0-98fb-55cac8638051_.webp" style={{ width: '100%', height: '100%' }} />
+                  </Button>
+                  <span style={{ cursor: "pointer" }}>HouseHold Supplies</span>
+                </a>
               </div>
               <div style={{ flex: "col" }}>
-                <Button shape="circle" style={{ margin: 5, backgroundColor: "transparent", border: "None" }}
-                  onClick={() => handdleCategoryClick("MeatNSeafood")}
-                >
-                  <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIa1gGa7EAjXfBUDwHkglH4UjxcLHv4JYDvhuvmUYWqA&s" style={{ width: '100%', height: '100%' }} />
-                </Button>
-                MeatNSeafood
+                <a href="#" onClick={() => handdleCategoryClick("MeatNSeafood")} style={{ textDecoration: "none" }}>
+                  <Button shape="circle" style={{ margin: 5, backgroundColor: "transparent", border: "none" }}>
+                    <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIa1gGa7EAjXfBUDwHkglH4UjxcLHv4JYDvhuvmUYWqA&s" style={{ width: '100%', height: '100%' }} />
+                  </Button>
+                  <span style={{ cursor: "pointer" }}>MeatNSeafood</span>
+                </a>
               </div>
+
               <div style={{ flex: "col" }}>
-                <Button shape="circle" style={{ margin: 5, backgroundColor: "transparent", border: "None" }}
-                  onClick={() => handdleCategoryClick("DairyChilledEggs")}
-                >
-                  <Avatar src="https://img2.rtacdn-os.com/dshop/202403/f6732131-1244-4f31-9334-3cd3a55b6eb9_.webp" style={{ width: '100%', height: '100%' }} />
-                </Button>
-                DairyChilledEggs
+                <a href="#" onClick={() => handdleCategoryClick("DairyChilledEggs")} style={{ textDecoration: "none" }}>
+                  <Button shape="circle" style={{ margin: 5, backgroundColor: "transparent", border: "none" }}>
+                    <Avatar src="https://img2.rtacdn-os.com/dshop/202403/f6732131-1244-4f31-9334-3cd3a55b6eb9_.webp" style={{ width: '100%', height: '100%' }} />
+                  </Button>
+                  <span style={{ cursor: "pointer" }}>DairyChilledEggs</span>
+                </a>
               </div>
+
               <div style={{ flex: "col" }}>
-                <Button shape="circle" style={{ margin: 5, backgroundColor: "transparent", border: "None" }}
-                  onClick={() => handdleCategoryClick("BreakfastNBakery")}
-                >
-                  <Avatar src="https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-bakery-icon-for-your-project-png-image_1541423.jpg" style={{ width: '100%', height: '100%' }} />
-                </Button>
-                BreakfastNBakery
+                <a href="#" onClick={() => handdleCategoryClick("BreakfastNBakery")} style={{ textDecoration: "none" }}>
+                  <Button shape="circle" style={{ margin: 5, backgroundColor: "transparent", border: "none" }}>
+                    <Avatar src="https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-bakery-icon-for-your-project-png-image_1541423.jpg" style={{ width: '100%', height: '100%' }} />
+                  </Button>
+                  <span style={{ cursor: "pointer" }}>BreakfastNBakery</span>
+                </a>
               </div>
+
               <div style={{ flex: "col" }}>
-                <Button shape="circle" icon={<UndoOutlined />} style={{ margin: 5, backgroundColor: "transparent", border: "None" }}
-                  onClick={fetchData}
-                />
-                Undo
+              <a href="#" onClick={fetchData} style={{ textDecoration: "none" }}>
+                <Button shape="circle" icon={<UndoOutlined />} style={{ margin: 5, backgroundColor: "transparent", border: "none" }}                />
+                <span style={{ cursor: "pointer" }}>Undo</span>
+                </a>
               </div>
 
             </Space>
@@ -420,19 +423,19 @@ const Home2 = ({ test }) => {
               <Space>
                 <Space.Compact block>
                   <InputNumber style={{
-                      width: 200,
-                    }}
-                    defaultValue={0}
-                    placeholder="lower price range" addonAfter="$" 
-                    onChange={(value)=>handleLowerChange(value)}
-                    />
+                    width: 200,
+                  }}
+                    // defaultValue={0}
+                    placeholder="lower price range" addonAfter="$"
+                    onChange={(value) => handleLowerChange(value)}
+                  />
                   <InputNumber style={{
-                      width: 200,
-                    }}
-                    defaultValue={1000}
-                    placeholder="upper price range" addonAfter="$" 
-                    onChange={(value)=>handleUpperChange(value)}
-                    />
+                    width: 200,
+                  }}
+                    // defaultValue={1000}
+                    placeholder="upper price range" addonAfter="$"
+                    onChange={(value) => handleUpperChange(value)}
+                  />
                   <Select
                     placeholder={"Smart Sort"}
                     style={{
