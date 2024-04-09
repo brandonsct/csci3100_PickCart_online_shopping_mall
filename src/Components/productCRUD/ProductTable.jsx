@@ -356,7 +356,7 @@ const ProductCRUDTable = () => {
 const itemsTab = [
   {
       key: '1',
-      label: 'Proucts',
+      label: 'Products',
       children: <ProductCRUDTable/>,
       icon: <ProductOutlined />
   },
