@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createElement } from "react";
 import {
   Row,
   Col,
@@ -49,17 +49,9 @@ const orderStatusIcons = {
   DairyChilledEggs: 'https://img2.rtacdn-os.com/dshop/202403/f6732131-1244-4f31-9334-3cd3a55b6eb9_.webp', // Green
   BreakfastNBakery: 'https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-bakery-icon-for-your-project-png-image_1541423.jpg', // Pink
 };
-const IconText = ({ icon, text }) => {
-  return (
-    <Space>
-      {React.createElement(icon)}
-      {text}
-    </Space>
-  )
-}
-
 
 const HistoryTable = () => {
+  
   const [orders, setOrders] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productDetails, setProductDetails] = useState([])
@@ -74,8 +66,16 @@ const HistoryTable = () => {
   };
   const showDetails = (record) => {
     console.log("record>>", record)
-    setProductDetails(record.items[0].product)
+    setProductDetails(record?.items?.product)
     showModal()
+  }
+  const IconText = ({ icon, text, params }) => {
+    return (
+      <Space>
+        {params ? <span onClick={() => showDetails(params)}>{React.createElement(icon)}</span> : React.createElement(icon)}
+        {text}
+      </Space>
+    )
   }
   const columns = [
     {
@@ -233,7 +233,6 @@ const HistoryTable = () => {
             </div>
           }
           renderItem={(item) => {
-            // console.log("item>>", item)
             return (
               <List.Item
                 key={item._id}
@@ -241,7 +240,6 @@ const HistoryTable = () => {
                   <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
                   <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
                   <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
-                  <IconText icon={ProductOutlined} text="Product Details"/>
                 ]}
                 extra={
                   <div>
@@ -253,12 +251,15 @@ const HistoryTable = () => {
                     <div style={{ textAlign: "center" }}>
                       <Space direction="vertical">
                         <Space>
-                          <Tag icon={<MoneyCollectOutlined />} ccolor="success">
+                          <Tag icon={<MoneyCollectOutlined />} color="success">
                             {`$ ${item?.items?.product?.price}`}
                           </Tag>
                         </Space>
                         <Space>
                           <span>{`x ${item?.items?.quantity} =  $ ${item.items?.product?.price * item.items?.quantity}`}</span>
+                        </Space>
+                        <Space>
+                          <ProductOutlined onClick={()=>showDetails(item)} />
                         </Space>
                       </Space>
                     </div>
@@ -269,9 +270,14 @@ const HistoryTable = () => {
                   avatar={<Avatar src={orderStatusIcons[item.items?.product?.category]} />}
                   title={item?.items?.product?.productName}
                   description={
+                    <>
+                    <span style={{margin: 2}}>Categories:</span>
+                    <span>
                     <Tag color={categories[item?.items?.product?.category]}>
-                    {item?.items?.product?.category}
+                       {item?.items?.product?.category}
                     </Tag>
+                    </span>
+                    </>
                   }
                 />
                 <Tag color={orderStatusColor[item?.status]} icon={orderStatusIcon[item?.status]} key={item?.status}>

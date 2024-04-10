@@ -105,7 +105,7 @@ const HistoryTableForAdmin = () => {
         </Tooltip>
       ),
       sorter: {
-        compare: (a, b) => a.productName.localeCompare(b.productName),
+        compare: (a, b) => a.items[0]?.product?.productName.localeCompare(b.items[0]?.product?.productName),
       },
     },
     {
@@ -132,6 +132,8 @@ const HistoryTableForAdmin = () => {
           value: 'Completed',
         },
       ],
+      onFilter: (value, record) => record.status.startsWith(value),
+      filterSearch: true,
       render: (_, { status }) => (
         <>
         <Tag color={orderStatusColor[status]} icon={orderStatusIcon[status]} key={status}>
