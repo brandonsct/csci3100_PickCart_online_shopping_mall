@@ -28,6 +28,8 @@ const HistoryTableForAdmin = () => {
 
   const showModal = (order) => {
     setSingleOrder(order);
+    console.log("Single order");
+    console.log(order);
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -36,11 +38,6 @@ const HistoryTableForAdmin = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const showDetails = (record) => {
-    console.log("record>>", record)
-    setOrderDetails(record.items[0].product)
-    showModal()
-  }
 /*
   const deleteOrder = (productId ) => {
     setIsLoading(true);
@@ -186,7 +183,15 @@ const HistoryTableForAdmin = () => {
 
     for (let i = 0; i < raw.length; i++)
     {
-      allOrders = allOrders.concat(raw[i].orders);
+      let userorder = raw[i].orders;
+      const userId = raw[i].userID;
+
+      for (let j = 0; j < userorder.length; j++)
+      {
+        userorder[j].userId = userId;
+      }
+
+      allOrders = allOrders.concat(userorder);
     }
 
     setOrders(allOrders)

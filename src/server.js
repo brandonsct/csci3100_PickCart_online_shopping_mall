@@ -760,23 +760,24 @@ app.get("/admin/retrieveAllOrders", async (req, res) => {
 app.put("/admin/retrieveAllOrders", async (req, res) => {
   try {
     const { formData: product } = req?.body;
-    console.log("update>>order>>", product);
-    Order.findOneAndUpdate({ orderId: product.productId }, product, {
-      new: true,
-    })
-      .then((data) => {
-        if (data) {
-          res.status(200).json(data);
-        } else {
-          res.setHeader("Content-Type", "text/plain");
-          res.status(404).send("Product not found.");
-        }
-      })
-      .catch((error) => {
+    console.log("updating>>order>>", product);
+    const data = await Order.findOneAndUpdate({ userID: product.userId, "orders._id": product._id }, 
+    { $set: { 'orders.$.status': product.status } },
+    { returnOriginal: false });
+    try {
+      if (data) {
+        res.status(200).json(data);
+        console.log("success")
+      } else {
+        res.setHeader("Content-Type", "text/plain");
+        res.status(404).send("Order not found.");
+      }
+      }
+      catch (error) {
         res.setHeader("Content-Type", "text/plain");
         res.status(500).send("Internal Server Error");
         console.log(error);
-      });
+      };
   } catch (error) {
     console.log("error>>", error);
   }

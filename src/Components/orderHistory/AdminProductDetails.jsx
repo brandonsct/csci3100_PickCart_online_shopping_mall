@@ -35,17 +35,16 @@ const ProductDetails = ({ order, onSuccess, create }) => {
         productName: order.items[0].product.productName,
         category: order.items[0].product.category,
         imgSrc: order.items[0].product.imgSrc,
-        status: order.status
+        status: order.status,
+        userId: order.userId,
     });
 
     const [formData, setFormData] = useState(product);
-    const handleChange = (event) => {
-        setFormData({ ...formData, [event.target.name]: event.target.value });
-    };
     const handleSelectChange = (value) => {
         setFormData({ ...formData, ["status"]: value })
     }
     const updateProducts = () => {
+        /*
         if (create) {
             axios
                 .post(`${API_URL}/admin/retrieveAllOrders`, { formData })
@@ -59,21 +58,21 @@ const ProductDetails = ({ order, onSuccess, create }) => {
                 .catch((error) => {
                     console.log(error);
                 });
-        } else {
-            console.log("Formdata>>", formData)
-            axios
-                .put(`${API_URL}/admin/retrieveAllOrders`, { formData })
-                .then((response) => {
-                    if (response.status === 200) {
-                        console.log("response>>", response)
-                        return onSuccess()
-                    }
+        } else { */
+        console.log("Formdata>>", formData)
+        axios
+            .put(`${API_URL}/admin/retrieveAllOrders`, { formData })
+            .then((response) => {
+                if (response.status === 200) {
                     console.log("response>>", response)
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
+                    return onSuccess()
+                }
+                console.log("response>>", response)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        //}
     };
     const onFinishFailed = (errorInfo) => {
         console.log("Failed:", errorInfo);
@@ -172,9 +171,20 @@ const ProductDetails = ({ order, onSuccess, create }) => {
                     >
                         <Input disabled />
                     </Form.Item>
-                        <Form.Item>
-
-                        </Form.Item>
+                    <Form.Item
+                        labelCol={{
+                            span: 24,
+                        }}
+                        wrapperCol={{
+                            span: 24,
+                        }}
+                        label="User ID"
+                        name="userId"
+                    >
+                        <Input
+                            disabled
+                        />
+                    </Form.Item>
 
                     <Form.Item>
                         <Button htmlType="submit" type="primary">
