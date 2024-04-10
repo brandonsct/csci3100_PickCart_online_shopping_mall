@@ -24,6 +24,12 @@ import { ProductOutlined, StarOutlined, LikeOutlined, MessageOutlined, HistoryOu
   SyncOutlined, } from "@ant-design/icons";
 const API_URL = process.env.REACT_APP_API_URL;
 
+const categories = {
+  HouseHoldSupply: 'volcano', // Yellow
+  MeatNSeafood: 'geekblue', // Blue
+  DairyChilledEggs: '#52c41a', // Green
+  BreakfastNBakery: '#eb2f96', // Pink
+};
 
 const orderStatusIcon = {
   Pending: <ClockCircleOutlined/>, // Yellow
@@ -223,7 +229,7 @@ const HistoryTable = () => {
           dataSource={orders}
           footer={
             <div>
-              <b>ant design</b> footer part
+              <a>Have questions? Chat with our AI chat bot</a>
             </div>
           }
           renderItem={(item) => {
@@ -241,18 +247,18 @@ const HistoryTable = () => {
                   <div>
                     <img
                       alt="logo"
-                      src={item.items?.product?.imgSrc}
+                      src={item?.items?.product?.imgSrc}
                       style={{ width: "100px", height: "100px", borderRadius: "25%" }}
                     />
                     <div style={{ textAlign: "center" }}>
                       <Space direction="vertical">
                         <Space>
                           <Tag icon={<MoneyCollectOutlined />} ccolor="success">
-                            {`$ ${item.items?.product?.price}`}
+                            {`$ ${item?.items?.product?.price}`}
                           </Tag>
                         </Space>
                         <Space>
-                          <span>{`x ${item.items?.quantity} =  $ ${item.items?.product?.price * item.items?.quantity}`}</span>
+                          <span>{`x ${item?.items?.quantity} =  $ ${item.items?.product?.price * item.items?.quantity}`}</span>
                         </Space>
                       </Space>
                     </div>
@@ -261,11 +267,15 @@ const HistoryTable = () => {
               >
                 <List.Item.Meta
                   avatar={<Avatar src={orderStatusIcons[item.items?.product?.category]} />}
-                  title={item.items?.product?.productName}
-                  description={item.items?.product?.category}
+                  title={item?.items?.product?.productName}
+                  description={
+                    <Tag color={categories[item?.items?.product?.category]}>
+                    {item?.items?.product?.category}
+                    </Tag>
+                  }
                 />
-                <Tag color={orderStatusColor[item.status]} icon={orderStatusIcon[item.status]} key={item.status}>
-                  {item.status}
+                <Tag color={orderStatusColor[item?.status]} icon={orderStatusIcon[item?.status]} key={item?.status}>
+                  {item?.status}
                 </Tag>
               </List.Item>
             )

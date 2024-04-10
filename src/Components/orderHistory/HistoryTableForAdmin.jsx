@@ -134,7 +134,7 @@ const HistoryTableForAdmin = () => {
       ],
       render: (_, { status }) => (
         <>
-        <Tag color={orderStatusColor[status]} key={status}>
+        <Tag color={orderStatusColor[status]} icon={orderStatusIcon[status]} key={status}>
           {status}
         </Tag>
       </>
@@ -174,7 +174,7 @@ const HistoryTableForAdmin = () => {
             icon={<EditOutlined />}
           />
 
-          <Button style={{ color: "red" }} icon={<DeleteOutlined />} onClick={()=>{/* deleteOrder(record._id) */}}/>
+          {/* <Button style={{ color: "red" }} icon={<DeleteOutlined />} onClick={()=>deleteOrder(record._id)}/> */}
         </div>
       ),
     },
@@ -208,7 +208,7 @@ const HistoryTableForAdmin = () => {
 
   useEffect(() => {
     getOrders()
-  }, [])
+  }, [handleCancel, showModal])
   console.log("orders>>", orders)
 
   return (
