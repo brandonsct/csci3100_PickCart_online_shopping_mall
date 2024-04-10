@@ -14,8 +14,8 @@ import { useNavigate } from "react-router-dom";
 
 import { UserOutlined, ClockCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { useForm } from "antd/lib/form/Form";
+import dayjs from 'dayjs';
 
-const moment = require('moment');
 const API_URL = process.env.REACT_APP_API_URL;
 
 const onFinishFailed = (errorInfo) => {
@@ -29,7 +29,7 @@ const UserDetails = ({ user, onSuccess }) => {
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
-        birthday: moment(user.birthday)
+        birthday: dayjs(user.birthday)
     })
     const [formData, setFormData] = useState({
         id: userInit.id,
