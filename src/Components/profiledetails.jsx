@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { UserOutlined, ClockCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { useForm } from "antd/lib/form/Form";
 import dayjs from 'dayjs';
+import { FormProvider } from "antd/es/form/context";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -76,6 +77,7 @@ const UserDetails = ({ user, onSuccess }) => {
     const updateUser = async () => {
         let used = await getUserNames()
         if (used) return
+        if (formData.avatar === "") formData.avatar = "https://api.dicebear.com/7.x/miniavs/svg?seed=1"
         else {
             console.log("Formdata>>", formData)
             axios
