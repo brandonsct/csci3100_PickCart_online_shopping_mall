@@ -143,6 +143,12 @@ const UserCRUD = () => {
       render: (birthday) => moment(birthday).format('YYYY-MM-DD'),
     },
     {
+      title: 'Avatar',
+      dataIndex: 'avatar',
+      key: 'avatar',
+      hidden: true
+    },
+    {
       title: "Action",
       key: "action",
       fixed: 'right',
@@ -159,9 +165,11 @@ const UserCRUD = () => {
           <Button style={{ color: "red" }} icon={<UndoOutlined />} onClick={()=>deleteUser(record)}/>
           }
         </div>
-      )},
+      )
     },
-  ];
+    },
+    
+  ].filter(item => !item.hidden);;
   useEffect(() => {
     loadUserList();
   }, [handleCancel, isModalOpen, showModal]);

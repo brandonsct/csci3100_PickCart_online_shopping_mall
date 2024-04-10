@@ -36,6 +36,7 @@ function setSessionStorageWithExpiration(key, value, expirationTimeInMinutes) {
   }
 const UserDetails = ({ user, onSuccess }) => {
     const [form] = useForm();
+    // console.log("user>>", user)
     const [userInit, setUserInit] = useState({
         id: user.id,
         username: user.username,
@@ -49,14 +50,14 @@ const UserDetails = ({ user, onSuccess }) => {
         id: userInit.id,
         username: userInit.username,
         email: userInit.email,
-        avatar: "",
+        avatar: userInit.avatar,
         firstname: userInit.firstname,
         lastname: userInit.lastname,
         birthday: userInit.birthday
     });
     const [userNameUsed, setUserNameUsed] = useState(false);
 
-    console.log("userInit>>", userInit)
+    // console.log("userInit>>", userInit)
     const [showErr, setShowErr] = useState(false);
     const navigate = useNavigate();
     const getUserNames = async () => {
