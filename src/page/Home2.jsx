@@ -509,7 +509,7 @@ const Home2 = ({ test }) => {
                     />
                     <p>$ {item.price}</p>
                     <p> Stock: {item.stock}</p>
-                    <p>Description: {item.productName}</p>
+                    <p>Description: {item.description}</p>
                     <Button
                       onClick={() => {
                         addToCart(item);
