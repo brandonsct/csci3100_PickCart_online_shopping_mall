@@ -22,6 +22,18 @@ const API_URL = process.env.REACT_APP_API_URL;
 const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
 };
+function setSessionStorageWithExpiration(key, value, expirationTimeInMinutes) {
+    const expirationMs = expirationTimeInMinutes * 60 * 1000; // Convert minutes to milliseconds
+    const now = new Date().getTime();
+    const expirationTime = now + expirationMs;
+  
+    const item = {
+      value: value,
+      expirationTime: expirationTime,
+    };
+  
+    sessionStorage.setItem(key, JSON.stringify(item));
+  }
 const UserDetails = ({ user, onSuccess }) => {
     const [form] = useForm();
     const [userInit, setUserInit] = useState({
@@ -31,7 +43,7 @@ const UserDetails = ({ user, onSuccess }) => {
         firstname: user.firstname,
         lastname: user.lastname,
         birthday: dayjs(user.birthday),
-        avatar: user.avatar,
+        // avatar: user.avatar,
     })
     const [formData, setFormData] = useState({
         id: userInit.id,
@@ -88,6 +100,18 @@ const UserDetails = ({ user, onSuccess }) => {
                 .then((response) => {
                     if (response.status === 200) {
                         console.log("response>>", response)
+                        setSessionStorageWithExpiration(
+                            "username",
+                            response.data.username,
+                            120
+                          );
+                          setSessionStorageWithExpiration("role", response.data.role, 120);
+                          setSessionStorageWithExpiration(
+                            "lastUpdatedTime",
+                            response.data.timestamp,
+                            120
+                          );
+                          //expire after 2 hrs
                         return onSuccess()
                     }
                 })
