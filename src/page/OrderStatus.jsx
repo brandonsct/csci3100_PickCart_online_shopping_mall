@@ -14,10 +14,10 @@ const OrderStatus = () => {
 
   const progress = {
     Pending: 0,
-    progress: 1,
-    delievery: 2,
+    Processing: 1,
+    Delivering: 2,
     waiting: 3,
-    complete: 4,
+    Completed: 4,
     finished: 5,
   };
   useEffect(() => {

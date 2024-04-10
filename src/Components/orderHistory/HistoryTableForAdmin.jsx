@@ -84,7 +84,7 @@ const HistoryTableForAdmin = () => {
     {
       title: "Image",
       dataIndex: "items",
-      width: "18%",
+      width: "16%",
       render: (item) => (
         <img
           src={item[0]?.product?.imgSrc}
@@ -113,7 +113,7 @@ const HistoryTableForAdmin = () => {
       dataIndex: "status",
       key: "status",
       ellipsis: true,
-      width: "13%",
+      width: "15%",
       filters: [
         {
           text: 'Pending',
