@@ -30,7 +30,8 @@ const UserDetails = ({ user, onSuccess }) => {
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
-        birthday: dayjs(user.birthday)
+        birthday: dayjs(user.birthday),
+        avatar: user.avatar,
     })
     const [formData, setFormData] = useState({
         id: userInit.id,
@@ -77,7 +78,9 @@ const UserDetails = ({ user, onSuccess }) => {
     const updateUser = async () => {
         let used = await getUserNames()
         if (used) return
-        if (formData.avatar === "") formData.avatar = "https://api.dicebear.com/7.x/miniavs/svg?seed=1"
+        if (formData.avatar === "" ||  formData.avatar === undefined || formData.avatar === null) {
+            formData.avatar = "https://api.dicebear.com/7.x/miniavs/svg?seed=1"
+        }
         else {
             console.log("Formdata>>", formData)
             axios

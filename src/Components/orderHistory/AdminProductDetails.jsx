@@ -138,11 +138,9 @@ const ProductDetails = ({ order, onSuccess, create }) => {
                             onChange={handleSelectChange}
                         >
                             <Option value="Pending">Pending</Option>
-                            <Option value="progress">progress</Option>
-                            <Option value="delievery">delievery</Option>
-                            <Option value="waiting">waiting</Option>
-                            <Option value="complete">complete</Option>
-                            <Option value="finished">finished</Option>
+                            <Option value="Processing">Processing</Option>
+                            <Option value="Delivering">Delivering</Option>
+                            <Option value="Completed">Completed</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item

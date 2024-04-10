@@ -9,14 +9,23 @@ import {
 } from "antd";
 import axios, { all } from "axios";
 import ProductDetails from "./AdminProductDetails";
-import { EditOutlined, DeleteOutlined, AppstoreAddOutlined, ProductOutlined, HistoryOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, 
+  AppstoreAddOutlined, ProductOutlined, HistoryOutlined, ClockCircleOutlined,
+  SyncOutlined, CheckCircleOutlined
+ } from "@ant-design/icons";
 
 const API_URL = process.env.REACT_APP_API_URL;
+const orderStatusIcon = {
+  Pending: <ClockCircleOutlined/>, // Yellow
+  Processing: <ClockCircleOutlined/>, // Blue
+  Delivering: <SyncOutlined/>, // Green
+  Completed: <CheckCircleOutlined/>, // Pink
+};
 const orderStatusColor = {
-  Pending: 'volcano', // Yellow
-  Progressing: 'geekblue', // Blue
-  Delivering: '#52c41a', // Green
-  Completed: '#eb2f96', // Pink
+  Pending: 'default', // Yellow
+  Processing: 'processing', // Blue
+  Delivering: 'processing', // Green
+  Completed: 'success', // Pink
 };
 
 const HistoryTableForAdmin = () => {
@@ -111,8 +120,8 @@ const HistoryTableForAdmin = () => {
           value: 'Pending',
         },
         {
-          text: 'Progressing',
-          value: 'Progressing',
+          text: 'Processing',
+          value: 'Processing',
         },
         {
           text: 'Delivering',
@@ -204,8 +213,8 @@ const HistoryTableForAdmin = () => {
 
   return (
     <>
-      <Modal title="Order Details" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <ProductDetails order={singleOrder}/>
+      <Modal destroyOnClose={true} title="Order Details" open={isModalOpen} onCancel={handleCancel} onClose={getOrders} footer={null}>
+        <ProductDetails onSuccess={handleCancel} order={singleOrder}/>
       </Modal>
       <Table columns={columns} dataSource={orders} />
     </>

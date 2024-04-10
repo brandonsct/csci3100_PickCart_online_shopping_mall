@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Card, Divider, Button, message, Spin } from "antd";
+import { Card, Divider, Button, message, Spin, Space } from "antd";
 import axios from "axios";
 import ProductItem from "../Components/cart/productItem";
+import { ShoppingCartOutlined } from '@ant-design/icons'
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -197,7 +198,13 @@ const Cart = () => {
       ) : (
         <div class="w-full h-screen overflow-y-auto">
           {contextHolder}
-          <Card title="Cart">
+          <Card title={
+            <Space>
+              <ShoppingCartOutlined />
+              Cart
+            </Space>
+          }>
+
             {/* <Card type="inner" title="Inner Card title">
           Inner Card content
         </Card> */}
