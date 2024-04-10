@@ -21,6 +21,7 @@ import {
   Avatar,
   Select,
   InputNumber,
+  Tag,
 } from "antd";
 
 import { AppstoreOutlined, ShoppingCartOutlined, UndoOutlined } from "@ant-design/icons";
@@ -41,6 +42,13 @@ const contentStyle = {
   lineHeight: '160px',
   background: '#364d79',
   margin: "0 auto",
+};
+
+const categories = {
+  HouseHoldSupply: 'volcano', // Yellow
+  MeatNSeafood: 'geekblue', // Blue
+  DairyChilledEggs: '#52c41a', // Green
+  BreakfastNBakery: '#eb2f96', // Pink
 };
 
 const Home2 = ({ test }) => {
@@ -509,7 +517,10 @@ const Home2 = ({ test }) => {
                     />
                     <p>$ {item.price}</p>
                     <p> Stock: {item.stock}</p>
-                    <p>Description: {item.description}</p>
+                    <Tag color={categories[item?.category]}>
+                       {item?.category}
+                    </Tag>
+                    <p>Description: {`This is ${item.productName}`}</p>
                     <Button
                       onClick={() => {
                         addToCart(item);
