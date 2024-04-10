@@ -8,8 +8,9 @@ import {
   Tag
 } from "antd";
 import axios, { all } from "axios";
-import ProductDetails from "./ProductDetails";
-import { ProductOutlined } from "@ant-design/icons";
+import ProductDetails from "./AdminProductDetails";
+import { EditOutlined, DeleteOutlined, AppstoreAddOutlined, ProductOutlined, HistoryOutlined } from "@ant-design/icons";
+
 const API_URL = process.env.REACT_APP_API_URL;
 const orderStatusColor = {
   Pending: 'volcano', // Yellow
@@ -21,8 +22,12 @@ const orderStatusColor = {
 const HistoryTableForAdmin = () => {
   const [orders, setOrders] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [productDetails, setProductDetails] = useState([])
-  const showModal = () => {
+  const [orderDetails, setOrderDetails] = useState([])
+  const [createProd, setCreateProd] = useState(false);
+  const [singleOrder, setSingleOrder] = useState({});
+
+  const showModal = (order) => {
+    setSingleOrder(order);
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -33,9 +38,35 @@ const HistoryTableForAdmin = () => {
   };
   const showDetails = (record) => {
     console.log("record>>", record)
-    setProductDetails(record.items[0].product)
+    setOrderDetails(record.items[0].product)
     showModal()
   }
+/*
+  const deleteOrder = (productId ) => {
+    setIsLoading(true);
+    axios({
+      method: "PUT",
+      url: `${API_URL}/admin/delete/product`,
+      data: { productId: productId }
+    })
+      .then((response) => {
+        if ((response.status) === 200) {
+          console.log("del>>response.data>>", response.data)
+          getProducts()
+          setIsLoading(false);
+        }
+        else {
+          console.log("response>>", response)
+          return getProducts()
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data: ", error);
+        getProducts()
+        setIsLoading(false);
+      });
+  }
+*/
   const columns = [
     {
       title: "OrderId",
@@ -128,7 +159,16 @@ const HistoryTableForAdmin = () => {
       fixed: 'right',
       render: (_, record) => (
         <div style={{ justifyContent: "center", alignItems: "center", display: "flex" }}>
-          <Button style={{ color: "red" }} icon={<ProductOutlined />} onClick={() => showDetails(record)} />
+          <Button
+            onClick={() => {
+              setCreateProd(false)
+              showModal(record)
+            }}
+            style={{ color: "blue" }}
+            icon={<EditOutlined />}
+          />
+
+          <Button style={{ color: "red" }} icon={<DeleteOutlined />} onClick={()=>{/* deleteOrder(record._id) */}}/>
         </div>
       ),
     },
@@ -160,7 +200,7 @@ const HistoryTableForAdmin = () => {
   return (
     <>
       <Modal title="Order Details" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <ProductDetails product={productDetails}/>
+        <ProductDetails order={singleOrder}/>
       </Modal>
       <Table columns={columns} dataSource={orders} />
     </>
