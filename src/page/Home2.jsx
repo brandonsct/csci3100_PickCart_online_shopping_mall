@@ -509,7 +509,9 @@ const Home2 = ({ test }) => {
               dataSource={paginatedProducts}
               renderItem={(item) => (
                 <List.Item>
-                  <Card title={item.productName}>
+                  <Card title={item.productName}
+                  style={{height: '600px'}}
+                  >
                     <img
                       style={{ width: "100%", height: "auto" }}
                       src={item.imgSrc}
