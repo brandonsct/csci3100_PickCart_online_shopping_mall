@@ -16,6 +16,7 @@ function NoMatch(props) {
       // Item exists in sessionStorage
       navigate("/home");
       // Item does not exist in sessionStorage
+      //This code is for dealing with no wrongly input url
     }
   });
   return (

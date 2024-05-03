@@ -18,31 +18,18 @@ import ProductCRUD from "./page/ProductCRUD.jsx";
 function App() {
   return (
     <div className="App">
+      {/* Set up routing using BrowserRouter */}
       <BrowserRouter>
         <Routes>
+          {/* Define routes and their corresponding components */}
           <Route path="/home" element={<Main Page_component={<Home2 />} />} />
           <Route path="/login" element={<UserLogin />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route
-            path="/profile"
-            element={<Main Page_component={<Profile />} />}
-          />
-          <Route
-            path="/orderHistory"
-            element={<Main Page_component={<OrderHistory />} />}
-          />
-          <Route
-            path="/orderStatus"
-            element={<Main Page_component={<OrderStatus />} />}
-          />
-          <Route
-            path="/productCRUD"
-            element={<Main Page_component={<ProductCRUD />} />}
-          />
-          <Route
-            path="/userCRUD"
-            element={<Main Page_component={<UserCRUD />} />}
-          />
+          <Route path="/profile" element={<Main Page_component={<Profile />} />} />
+          <Route path="/orderHistory" element={<Main Page_component={<OrderHistory />} />} />
+          <Route path="/orderStatus" element={<Main Page_component={<OrderStatus />} />} />
+          <Route path="/productCRUD" element={<Main Page_component={<ProductCRUD />} />} />
+          <Route path="/userCRUD" element={<Main Page_component={<UserCRUD />} />} />
           <Route path="/cart" element={<Main Page_component={<Cart />} />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>

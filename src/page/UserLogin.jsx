@@ -1,3 +1,5 @@
+//This code is for providing the different tabs for user and admin loogin 
+
 import React, { useState } from "react";
 import {
     Button,
@@ -49,6 +51,7 @@ const UserLogin = ({ openfromlink, onSuccess }) => {
             icon: <LoginOutlined />
         }
     ]
+    //tabs for admin and user login 
     const handleAdminClick = (e) => {
         e.preventDefault();
         setHidePhoto(false)
@@ -61,6 +64,7 @@ const UserLogin = ({ openfromlink, onSuccess }) => {
     }
 
     return (
+        //condtional rendering
         <>
             {openfromlink ? (<div style={{ backgroundColor: '#F0F2F5', height: '100vh' }}>
                 <Row justify="center" align="middle">

@@ -1,3 +1,5 @@
+//This code is for admin to edit user information, it will callled a modal upon clicking on the button on the last column
+
 import React, { Component, useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button, Tooltip, Collapse, Space, Modal, notification  } from "antd";
@@ -174,7 +176,7 @@ const UserCRUD = () => {
     loadUserList();
   }, [handleCancel, isModalOpen, showModal]);
   return (
-
+    //conditonal rendering for the modal
     <div
       className="overflow-x-auto w-full m-6"
     >

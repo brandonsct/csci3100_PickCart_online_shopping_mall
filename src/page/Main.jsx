@@ -1,3 +1,5 @@
+//This is the homepage component whcih includes the sideabr, every component is ccalling this componnen as parent component for its sidebar view
+
 import React, { useState, useEffect } from "react";
 import { cloneElement } from "react";
 import axios from "axios";
