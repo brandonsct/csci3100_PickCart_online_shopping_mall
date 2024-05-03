@@ -242,6 +242,7 @@ app.post("/getuser", (req, res) => {
           lastname: item.lastname,
           avatar: item.avatar,
           deleted: item.deleted,
+          payment: item.payment,
         };
       }
 

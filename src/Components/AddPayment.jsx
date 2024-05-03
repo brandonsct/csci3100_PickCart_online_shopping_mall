@@ -28,7 +28,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 const onFinishFailed = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
-const AddPayment = () => {
+const AddPayment = ({user, onSuccess}) => {
   const [form] = useForm();
   const [formData, setFormData] = useState({
     username: "",
@@ -40,32 +40,23 @@ const AddPayment = () => {
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
-  const handleSubmit = async (event) => {
-    console.log("formData>>", formData);
-    try {
-      axios({
-        method: "POST",
-        data: {
-          username: formData.username,
-          password: formData.password,
-        },
-        withCredentials: true,
-        url: `${API_URL}/login`,
-      })
-        .then(async (res) => {
-          console.log("res>>", res);
-          if (res.status == 200) {
-            console.log("res.data>>", res.data);
-          }
-        })
-        .catch((err) => {
-          console.log("reset");
-          form.resetFields();
-          setShowErr(true);
-        });
-    } catch (error) {
-      console.log("error>>", error);
-    }
+  const handleSubmit =  (value) => {
+    let userTobeSent = user
+    userTobeSent.payment = true
+    
+
+    axios
+                .put(`${API_URL}/admin/user`, { formData: userTobeSent })
+                .then((response) => {
+                    if (response.status === 200) {
+                        console.log("response>>", response)
+                        
+                        return onSuccess()
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
   };
   // useEffect(() => {
   //     form.setFieldsValue(userInit)
@@ -162,30 +153,10 @@ const AddPayment = () => {
             </Row>
           </Form.Item>
 
-          {/* <Form.Item
-                        labelCol={{
-                            span: 24,
-                        }}
-                        wrapperCol={{
-                            span: 24,
-                        }}
-                        label="password"
-                        name="password"
-                        rules={[{ required: true, message: "Password is required" }]}
-                        style={{ color: "red", textAlign: "left" }}
-                        validateStatus={showErr ? "error" : "success"}
-                        help={showErr ? "username and password not match" : ""}
-                    >
-                        <Input.Password
-                            placeholder={
-                                !formData.password ? "password is required" : "input password"
-                            }
-                            name="password"
-                            onChange={handleChange}
-                            status={!formData.password ? "error" : ""}
-                            prefix={!formData.password ? <ClockCircleOutlined /> : null}
-                        />
-                    </Form.Item> */}
+          <Button onClick={handleSubmit} type="primary" htmlType="submit" style={{ width: "100%" }}>
+            Save
+          </Button>
+
         </Form>
       </div>
     </>

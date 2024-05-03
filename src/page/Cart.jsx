@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Card, Divider, Button, message, Spin, Space } from "antd";
+import { Card, Divider, Button, message, Spin, Space, Modal } from "antd";
 import axios from "axios";
 import ProductItem from "../Components/cart/productItem";
 import { ShoppingCartOutlined } from '@ant-design/icons'
+import AddPayment from "../Components/AddPayment";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -12,6 +13,22 @@ const Cart = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState();
   const [messageApi, contextHolder] = message.useMessage();
+  const [userDetail, setUserDetails] =useState([])
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
+
+  const showPaymentModal = () => {
+    setIsPaymentModalOpen(true);
+  };
+
+  const handlePaymentOk = () => {
+    setIsPaymentModalOpen(false);
+  };
+
+
+  const handlePaymentCancel = () => {
+    setIsPaymentModalOpen(false);
+  };
 
   useEffect(() => {
     const username = JSON.parse(sessionStorage.getItem("username"))?.value;
@@ -21,7 +38,7 @@ const Cart = () => {
       await axios
         .post(`${API_URL}/getuser`, { username })
         .then((resp) => {
-          // setUserDetails(resp.data);
+          setUserDetails(resp.data);
           response = resp.data;
         })
         .catch((error) => {
@@ -77,6 +94,10 @@ const Cart = () => {
   const savebutton = () => {
     console.log("item saved", cartItems);
     console.log("userId", userId);
+    console.log("userData>>", userDetail)
+    if (userDetail.payment === false){
+      return showPaymentModal()
+    }
     const success = () => {
       messageApi.open({
         type: "success",
@@ -183,6 +204,16 @@ const Cart = () => {
   };
   return (
     <>
+    <Modal
+            title="Add Payment Method"
+            open={isPaymentModalOpen}
+            onOk={handlePaymentOk}
+            onCancel={handlePaymentCancel}
+            width={300}
+            footer={null}
+          >
+            <AddPayment user={userDetail} onSuccess={handlePaymentCancel}/>
+          </Modal>
       {isLoading ? (
         <div
           style={{

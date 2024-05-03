@@ -23,6 +23,7 @@ const LoginSchema = new Schema({
   birthday: { type: Date, default: Date.now },
   cTime: { type: Date, default: Date.now },
   deleted: { type: String, default: "false" },
+  payment: { type: Boolean, default: false },
 });
 
 const TokenSchema = new Schema({
