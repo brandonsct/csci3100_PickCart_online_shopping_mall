@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Divider, Button, message, Spin, Space, Modal } from "antd";
 import axios from "axios";
 import ProductItem from "../Components/cart/productItem";
-import { ShoppingCartOutlined } from '@ant-design/icons'
+import { ShoppingCartOutlined } from "@ant-design/icons";
 import AddPayment from "../Components/AddPayment";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -15,9 +15,8 @@ const Cart = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState();
   const [messageApi, contextHolder] = message.useMessage();
-  const [userDetail, setUserDetails] =useState([])
+  const [userDetail, setUserDetails] = useState([]);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-
 
   const showPaymentModal = () => {
     setIsPaymentModalOpen(true);
@@ -26,7 +25,6 @@ const Cart = () => {
   const handlePaymentOk = () => {
     setIsPaymentModalOpen(false);
   };
-
 
   const handlePaymentCancel = () => {
     setIsPaymentModalOpen(false);
@@ -96,9 +94,9 @@ const Cart = () => {
   const savebutton = () => {
     console.log("item saved", cartItems);
     console.log("userId", userId);
-    console.log("userData>>", userDetail)
-    if (userDetail.payment === false){
-      return showPaymentModal()
+    console.log("userData>>", userDetail);
+    if (userDetail.payment === false) {
+      return showPaymentModal();
     }
     const success = () => {
       messageApi.open({
@@ -206,16 +204,16 @@ const Cart = () => {
   };
   return (
     <>
-    <Modal
-            title="Add Payment Method"
-            open={isPaymentModalOpen}
-            onOk={handlePaymentOk}
-            onCancel={handlePaymentCancel}
-            width={300}
-            footer={null}
-          >
-            <AddPayment user={userDetail} onSuccess={handlePaymentCancel}/>
-          </Modal>
+      <Modal
+        title="Add Payment Method"
+        open={isPaymentModalOpen}
+        onOk={handlePaymentOk}
+        onCancel={handlePaymentCancel}
+        width={300}
+        footer={null}
+      >
+        <AddPayment user={userDetail} onSuccess={handlePaymentCancel} />
+      </Modal>
       {isLoading ? (
         <div
           style={{
@@ -231,13 +229,14 @@ const Cart = () => {
       ) : (
         <div class="w-full h-screen overflow-y-auto">
           {contextHolder}
-          <Card title={
-            <Space>
-              <ShoppingCartOutlined />
-              Cart
-            </Space>
-          }>
-
+          <Card
+            title={
+              <Space>
+                <ShoppingCartOutlined />
+                Cart
+              </Space>
+            }
+          >
             {/* <Card type="inner" title="Inner Card title">
           Inner Card content
         </Card> */}
