@@ -12,21 +12,21 @@ we declare that we have read and understood the University’s policy on the use
 We also understand that assignments without a properly signed declaration by the student concerned and in the case of a group project, by all members of the group concerned, will not be graded by the teacher(s).
 
 Signature(s):					        
-HuenLongYin CheungHouLong LeungKaiKit ChanHonKi KwokLongChing 
+HuenLongYin CheungHouLong LeungKaiKit ChanHonKi KwokLongChing HoKaChun
 
 Date:
-15 December 2023
+4 May 2024
 
 Name(s):							
-Huen Long Yin Cheung Hou Long Leung Kai Kit Chan Hon Ki Kwok Long Ching
+Huen Long Yin Cheung Hou Long Leung Kai Kit Chan Hon Ki Kwok Long Ching Ho Ka Chun
 
 Student ID(s):
-1155159568 1155149115 1155143874 1155158959 1155156653
+1155159568 1155149115 1155143874 1155158959 1155156653 1155176593
 
 Course code:						
-CSCI2720
+CSCI3100
 
 Course title:
-Building Web Applications
+Software Engineering
 
 */
