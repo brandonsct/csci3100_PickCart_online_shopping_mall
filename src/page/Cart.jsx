@@ -9,6 +9,16 @@ import AddPayment from "../Components/AddPayment";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+/**
+ * Renders the Cart component.
+ *
+ * @returns {JSX.Element} The Cart component.
+ */
+/**
+ * Renders the Cart component.
+ *
+ * @returns {JSX.Element} The Cart component.
+ */
 const Cart = () => {
   // return <Checkbox>Checkbox</Checkbox>;
   const [cartItems, setCartItems] = useState([]);

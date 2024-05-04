@@ -1,4 +1,4 @@
-//This is for dealing with getting he order status from user 
+//This is for dealing with getting he order status from user
 
 import React, { useEffect, useState } from "react";
 import { SmileOutlined } from "@ant-design/icons";
@@ -7,6 +7,11 @@ import axios from "axios";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+/**
+ * Renders the order status page.
+ *
+ * @returns {JSX.Element} The rendered OrderStatus component.
+ */
 const OrderStatus = () => {
   const [orderList, setOrderList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

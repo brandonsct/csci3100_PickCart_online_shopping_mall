@@ -51,6 +51,17 @@ const categories = {
   BreakfastNBakery: '#eb2f96', // Pink
 };
 
+/**
+ * Home2 component represents the home page of the shopping mall application.
+ * It displays a header with search functionality and a carousel of images.
+ * The component fetches and displays a list of products, allows filtering and sorting,
+ * and provides the ability to add products to the cart.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.test - A test prop.
+ * @returns {JSX.Element} The rendered Home2 component.
+ */
 const Home2 = ({ test }) => {
   // console.log("test>>", test);
   const {

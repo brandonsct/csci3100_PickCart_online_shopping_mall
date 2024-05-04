@@ -36,6 +36,14 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 const { Header, Sider, Content } = Layout;
 
+/**
+ * Main component for the shopping mall application.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {React.Component} props.Page_component - The component to be rendered inside the Main component.
+ * @returns {JSX.Element} The rendered Main component.
+ */
 const Main = ({ Page_component }) => {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);

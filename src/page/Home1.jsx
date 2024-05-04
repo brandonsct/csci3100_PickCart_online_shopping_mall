@@ -107,6 +107,12 @@ const data = [
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
+/**
+ * Home1 component represents the home page of the shopping mall application.
+ * It displays a sidebar with navigation options, a search bar, and a list of items.
+ *
+ * @returns {JSX.Element} The rendered Home1 component.
+ */
 const Home1 = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
